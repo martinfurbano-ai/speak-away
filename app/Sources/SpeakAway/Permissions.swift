@@ -25,8 +25,10 @@ enum Permission: CaseIterable {
     var granted: Bool {
         switch self {
         case .microphone: return AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
-        case .fnKey: return CGPreflightListenEventAccess()
-        case .paste: return CGPreflightPostEventAccess()
+        // The preflight calls cache their first answer until the app restarts, so a permission granted
+        // while Speak Away runs would still read as missing. Asking for a real event tap is always current.
+        case .fnKey: return CGPreflightListenEventAccess() || Self.canListen()
+        case .paste: return CGPreflightPostEventAccess() || AXIsProcessTrusted()
         }
     }
 
@@ -53,4 +55,23 @@ enum Permission: CaseIterable {
     }
 
     static var allGranted: Bool { allCases.allSatisfy(\.granted) }
+
+    /// True if macOS lets us listen to the keyboard right now (Input Monitoring).
+    static func canListen() -> Bool {
+        guard let probe = CGEvent.tapCreate(tap: .cgSessionEventTap, place: .tailAppendEventTap, options: .listenOnly,
+                                            eventsOfInterest: CGEventMask(1 << CGEventType.flagsChanged.rawValue),
+                                            callback: { _, _, event, _ in Unmanaged.passUnretained(event) }, userInfo: nil)
+        else { return false }
+        CFMachPortInvalidate(probe)
+        return true
+    }
+
+    /// Some macOS versions only apply a new permission after a restart: reopen Speak Away cleanly.
+    @MainActor static func relaunch() {
+        let config = NSWorkspace.OpenConfiguration()
+        config.createsNewApplicationInstance = true
+        NSWorkspace.shared.openApplication(at: Bundle.main.bundleURL, configuration: config) { _, _ in
+            DispatchQueue.main.async { NSApp.terminate(nil) }
+        }
+    }
 }

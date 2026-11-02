@@ -55,6 +55,10 @@ struct WelcomeView: View {
                 Link("Hecho por Martín Urbano · Open Source Everything", destination: Settings.instagram)
                     .font(.footnote)
                 Spacer()
+                if !Permission.allGranted {
+                    Button("Reiniciar Speak Away") { Permission.relaunch() }
+                        .help("Si ya diste el permiso y sigue sin marcarse, macOS lo aplica al reiniciar la app.")
+                }
                 Button(Permission.allGranted ? "Listo" : "Después") { onDone() }
                     .keyboardShortcut(.defaultAction)
                     .controlSize(.large)
