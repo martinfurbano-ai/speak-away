@@ -8,6 +8,9 @@
 <meta property="og:title" content="Speak Away">
 <meta name="author" content="Martín Urbano">
 <meta property="og:description" content="Dictado por voz y notas de reuniones que corren en tu Mac. Open source, gratis y sin API key.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:image" content="https://speakaway.heliospanama.com/icon-512.png">
 <meta name="theme-color" content="#f3f4f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0f10" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
@@ -96,9 +99,7 @@ nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(
 nav.scrolled { border-color: var(--line); }
 nav .wrap { height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.02em; text-decoration: none; font-size: 18px; }
-.mark { width: 28px; height: 28px; border-radius: 999px; background: var(--fg); display: grid; place-items: center; }
-.mark span { display: flex; gap: 2px; align-items: center; }
-.mark b { width: 2.5px; border-radius: 2px; background: var(--bg); display: block; }
+.mark { width: 32px; height: 28px; flex: none; }
 .navlinks { display: flex; gap: 28px; align-items: center; font-size: 15px; color: var(--muted); }
 .navlinks a { text-decoration: none; transition: color .2s; }
 .navlinks a:hover { color: var(--fg); }
@@ -133,12 +134,8 @@ nav .wrap { height: 68px; display: flex; align-items: center; justify-content: s
   box-shadow: 0 18px 40px -12px rgb(0 0 0 / .55), inset 0 1px 0 rgb(255 255 255 / .08);
   transition: width .5s var(--ease), opacity .4s var(--ease);
 }
-.orb { width: 38px; height: 38px; border-radius: 999px; position: relative; flex: none;
-  background: radial-gradient(circle at 35% 30%, #ff9ea2, var(--accent) 45%, #5a1416 100%); }
-.orb::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 1.5px solid transparent;
-  border-top-color: rgb(255 255 255 / .7); border-right-color: rgb(255 255 255 / .18); animation: spin 1.1s linear infinite; opacity: 0; transition: opacity .3s; }
-.hud[data-state="thinking"] .orb::after { opacity: 1; }
-@keyframes spin { to { transform: rotate(360deg); } }
+/* The logo bubble: its three bars follow the voice, then turn into typing dots while Whisper writes. */
+.orb { width: 42px; height: 37px; flex: none; overflow: visible; }
 .bars { display: flex; align-items: center; gap: 3px; height: 28px; }
 .bars b { width: 3px; height: 4px; border-radius: 3px; background: var(--hud-fg); opacity: .9; transition: height .12s linear; }
 .hud-state { font: 500 12px "JetBrains Mono", monospace; letter-spacing: .06em; display: flex; align-items: center; gap: 7px; min-width: 92px; }
@@ -257,7 +254,7 @@ footer a:hover { color: var(--fg); }
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
 }
 @media (prefers-reduced-motion: reduce) {
-  .key.press, .orb::after, .rec { animation: none !important; }
+  .key.press, .rec { animation: none !important; }
   html { scroll-behavior: auto; }
 }
 
@@ -296,7 +293,7 @@ footer a:hover { color: var(--fg); }
 <nav id="nav">
   <div class="wrap">
     <a class="brand" href="#" aria-label="Speak Away">
-      <span class="mark" aria-hidden="true"><span><b style="height:7px"></b><b style="height:13px"></b><b style="height:9px"></b><b style="height:5px"></b></span></span>
+      <svg class="mark bubble" id="brand-bubble" viewBox="222 262 580 506" aria-hidden="true"><g fill="var(--accent)"><path d="M512 262C682 262 802 354 802 486C802 618 682 710 512 710C478 710 446 706 416 699L304 761C292 768 278 756 283 743L315 657C257 616 222 555 222 486C222 354 342 262 512 262Z"/></g><g class="vb" fill="var(--bg)"><rect x="342" y="438" width="84" height="96" rx="42"/><rect x="470" y="368" width="84" height="236" rx="42"/><rect x="598" y="411" width="84" height="150" rx="42"/></g></svg>
       Speak Away
     </a>
     <div class="navlinks">
@@ -328,7 +325,7 @@ footer a:hover { color: var(--fg); }
       <div class="stage-label mono"><i class="ph ph-cursor-text"></i><span id="stage-app">Gmail</span></div>
       <p class="typed" id="typed" aria-live="polite"></p>
       <div class="hud" id="hud" data-state="idle" aria-hidden="true">
-        <div class="orb"></div>
+        <svg class="orb bubble" viewBox="222 262 580 506" aria-hidden="true"><defs><linearGradient id="bg-hud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7666b"/><stop offset="1" stop-color="#d23a40"/></linearGradient></defs><g fill="url(#bg-hud)"><path d="M512 262C682 262 802 354 802 486C802 618 682 710 512 710C478 710 446 706 416 699L304 761C292 768 278 756 283 743L315 657C257 616 222 555 222 486C222 354 342 262 512 262Z"/></g><g class="vb" fill="#fff"><rect x="342" y="438" width="84" height="96" rx="42"/><rect x="470" y="368" width="84" height="236" rx="42"/><rect x="598" y="411" width="84" height="150" rx="42"/></g></svg>
         <div class="bars" id="bars"></div>
         <div class="hud-state"><span class="rec"></span><span id="hud-label">REC</span></div>
       </div>
@@ -446,7 +443,7 @@ footer a:hover { color: var(--fg); }
     <div class="reveal">
       <h2 data-i18n="oss.title">Código abierto, de verdad.</h2>
       <p class="lede" data-i18n="oss.sub">Licencia MIT. Lo descargas, lo lees, lo cambias. Si mañana dejamos de trabajar en él, sigue siendo tuyo.</p>
-      <p class="note" data-i18n="oss.note">La primera vez que la abras, macOS puede decir que no la reconoce: abre Ajustes del Sistema › Privacidad y seguridad › «Abrir igualmente». Pasa con apps que no vienen del App Store.</p>
+      <p class="note" data-i18n="oss.note">Está firmada y notarizada por Apple: se abre como cualquier app. También va camino a la Mac App Store.</p>
       <div class="cta"><a class="btn btn-ghost" href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i><span data-i18n="cta.github">Ver en GitHub</span></a></div>
     </div>
     <pre class="term mono reveal"><span class="c" data-i18n="oss.c1"># compílala tú mismo</span>
@@ -475,7 +472,7 @@ footer a:hover { color: var(--fg); }
 <footer>
   <div class="wrap">
     <span><span data-i18n="foot.l">Hecho por Martín Urbano para</span> <a class="credit" href="https://www.instagram.com/opensourceeverything/">Open Source Everything</a>. <span data-i18n="foot.mit">Licencia MIT.</span></span>
-    <span class="foot-links"><a href="https://www.instagram.com/opensourceeverything/"><i class="ph ph-instagram-logo"></i> @opensourceeverything</a><a href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i> GitHub</a></span>
+    <span class="foot-links"><a href="https://www.instagram.com/opensourceeverything/"><i class="ph ph-instagram-logo"></i> @opensourceeverything</a><a href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i> GitHub</a><a href="/privacidad/" data-i18n="foot.privacy">Privacidad</a></span>
   </div>
 </footer>
 
@@ -514,7 +511,7 @@ footer a:hover { color: var(--fg); }
     "priv.f1": "Whisper runs on your Apple chip", "priv.f2": "Notes are your own files", "priv.f3": "Keys go to the Keychain", "priv.f4": "No accounts, no telemetry",
     "oss.title": "Open source, for real.",
     "oss.sub": "MIT license. Download it, read it, change it. If we stop working on it tomorrow, it is still yours.",
-    "oss.note": "The first time you open it, macOS may say it does not recognize it: go to System Settings › Privacy & Security › \"Open Anyway\". It happens with apps that do not come from the App Store.",
+    "oss.note": "It is signed and notarized by Apple, so it opens like any other app. It is also on its way to the Mac App Store.",
     "oss.c1": "# build it yourself", "oss.c2": "# you get app/dist/SpeakAway.dmg",
     "faq.title": "Questions",
     "faq.q1": "Is it really free?", "faq.a1": "Yes. No paid plan, no account. The only thing you might pay for is your own API key, if you choose to use one, and that goes straight to the provider.",
@@ -523,7 +520,7 @@ footer a:hover { color: var(--fg); }
     "faq.q4": "Does it work on Windows or Linux?", "faq.a4": "Not yet. We started with Apple Silicon Macs because Whisper runs fastest there. Windows and Linux are planned.",
     "faq.q5": "Is it legal to record a meeting?", "faq.a5": "It depends on where you are. Speak Away shows an indicator while recording and can post a notice in the meeting chat. Ask the others first.",
     "faq.q6": "Is it like Wispr Flow?", "faq.a6": "The idea is similar: talk instead of type. The difference is that Speak Away is open source, runs on your Mac and has no subscription.",
-    "soon": "Coming soon", "foot.l": "Made by Martín Urbano for", "foot.mit": "MIT license."
+    "soon": "Coming soon", "foot.l": "Made by Martín Urbano for", "foot.mit": "MIT license.", "foot.privacy": "Privacy"
   };
 
   const SAMPLES = {
@@ -595,8 +592,29 @@ footer a:hover { color: var(--fg); }
   for (let i = 0; i < N; i++) bars.appendChild(document.createElement("b"));
   const barEls = [...bars.children];
   let level = 0, rafId = 0, t0 = performance.now();
+  // Same motion as the app (SpeakAwayCore/BubbleMotion.swift): heights are a fraction of the tallest bar (236).
+  const LOGO = [96 / 236, 1, 150 / 236], DOT = 84 / 236, WEIGHTS = [.62, 1, .78];
+  function bubbleBars(phase, lvl, t) {
+    if (phase === "listening") {
+      const raw = WEIGHTS.map((w, i) => DOT + (1 - DOT) * lvl * w * (i === 1 ? 1 : .775 + .225 * Math.sin(t * 7 + i * 1.9)));
+      return raw.map((h, i) => ({ h: i === 1 ? h : Math.min(h, raw[1]), lift: 0 }));
+    }
+    if (phase === "thinking") return [0, 1, 2].map(i => ({ h: DOT, lift: .18 * Math.max(0, Math.sin(2 * Math.PI * t / 1.2 - i * .9)) }));
+    return LOGO.map(h => ({ h, lift: 0 }));
+  }
+  function drawBubble(svg, phase, lvl, t) {
+    [...svg.querySelectorAll(".vb rect")].forEach((r, i) => {
+      const b = bubbleBars(phase, lvl, t)[i], h = Math.max(84, 236 * b.h);
+      r.setAttribute("height", h.toFixed(1)); r.setAttribute("y", (486 - h / 2 - 236 * b.lift).toFixed(1));
+    });
+  }
+  const hudBubble = document.querySelector(".hud .bubble"), brandBubble = document.getElementById("brand-bubble");
   function animateBars(now) {
     const t = (now - t0) / 1000;
+    const st = hud.dataset.state;
+    drawBubble(hudBubble, st === "listening" ? "listening" : st === "thinking" ? "thinking" : "idle", Math.min(1, level * (.75 + .25 * Math.sin(t * 5.3))), t);
+    // The nav logo types for a moment after the page opens, then says it.
+    drawBubble(brandBubble, t < 2.4 ? "thinking" : "idle", 0, t);
     barEls.forEach((b, i) => {
       const center = 1 - Math.abs(i - (N - 1) / 2) / (N / 2);
       const wave = .5 + .5 * Math.sin(t * 9 + i * .9) * Math.sin(t * 3.7 + i * .4);

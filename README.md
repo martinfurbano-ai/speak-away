@@ -43,7 +43,7 @@ Keys live in the macOS Keychain, are only sent to the provider they belong to, a
 ## Install
 
 1. Download [SpeakAway.dmg](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg) and drag Speak Away to Applications.
-2. Open it. If macOS says it cannot verify the developer, go to System Settings › Privacy & Security and click **Open Anyway**.
+2. Open it. It is signed and notarized by Apple, so it opens without warnings.
 3. Grant Microphone, Input Monitoring (for the Fn key) and Accessibility (to paste). The voice model (about 630 MB) downloads once.
 4. If Fn opens the emoji picker: System Settings › Keyboard › "Press 🌐 key to" › Do Nothing.
 

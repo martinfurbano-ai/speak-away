@@ -15,11 +15,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private let statusLine = NSMenuItem(title: "", action: nil, keyEquivalent: "")
     private var welcome: WelcomeWindow?
-    private var mode = Mode.idle
+    private let stats = StatsStore()
+    private var home: HomeWindow?
+    private var mode = Mode.idle { didSet { animateGlyph() } }
     private var tap = FnTap()
     private var hideWork: DispatchWorkItem?
     private var bag = Set<AnyCancellable>()
     private var permissionTimer: Timer?
+    private var glyphTimer: Timer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildMenu()
@@ -45,7 +48,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        if !Settings.welcomed || !Permission.allGranted { showWelcome() }
+        if !Settings.welcomed || !Permission.allGranted { showWelcome() } else { showHome() }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        showHome()
+        return true
     }
 
     // MARK: Dictation
@@ -95,6 +103,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 let text = SpeechGate.clean(try await engine.transcribe(audio))
                 guard !text.isEmpty else { return hideHUD(after: 0) }
                 Paster.paste(text)
+                stats.record(text: text, seconds: Double(audio.count) / Double(Recorder.sampleRate))
                 hudModel.phase = Permission.paste.granted ? .pasted : .note("COPIADO, USA ⌘V")
                 hideHUD(after: 1.1)
             } catch {
@@ -125,16 +134,37 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: work)
     }
 
+    // MARK: Menu bar glyph
+
+    /// The bubble in the menu bar moves like the HUD: voice bars while recording, typing dots while transcribing.
+    private func animateGlyph() {
+        glyphTimer?.invalidate()
+        glyphTimer = nil
+        guard mode != .idle else {
+            statusItem?.button?.image = BubbleMark.menuBarImage(BubbleMotion.bars(.idle, level: 0, time: 0))
+            return
+        }
+        glyphTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 15, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                guard let self else { return }
+                let phase: BubbleMotion.Phase = self.mode == .recording ? .listening : .thinking
+                let bars = BubbleMotion.bars(phase, level: self.hudModel.level, time: ProcessInfo.processInfo.systemUptime)
+                self.statusItem.button?.image = BubbleMark.menuBarImage(bars)
+            }
+        }
+    }
+
     // MARK: Menu
 
     private func buildMenu() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        statusItem.button?.image = NSImage(systemSymbolName: "waveform", accessibilityDescription: "Speak Away")
+        statusItem.button?.image = BubbleMark.menuBarImage(BubbleMotion.bars(.idle, level: 0, time: 0))
 
         let menu = NSMenu()
         statusLine.isEnabled = false
         menu.addItem(statusLine)
         menu.addItem(.separator())
+        menu.addItem(item("Abrir Speak Away", #selector(openHome)))
         menu.addItem(submenu("Idioma", options: Settings.languages, current: { Settings.language }) { Settings.language = $0 })
         menu.addItem(submenu("Modelo", options: Settings.models, current: { Settings.model }) { [weak self] id in
             Settings.model = id
@@ -188,6 +218,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func openWelcome() { showWelcome() }
+    @objc private func openHome() { showHome() }
+
+    private func showHome() {
+        if home == nil { home = HomeWindow(store: stats, engine: engine) }
+        NSApp.activate(ignoringOtherApps: true)
+        home?.makeKeyAndOrderFront(nil)
+    }
     @objc private func openWebsite() { NSWorkspace.shared.open(Settings.website) }
     @objc private func openGitHub() { NSWorkspace.shared.open(Settings.github) }
     @objc private func openInstagram() { NSWorkspace.shared.open(Settings.instagram) }
@@ -197,6 +234,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             welcome = WelcomeWindow(engine: engine) { [weak self] in
                 Settings.welcomed = true
                 self?.welcome?.close()
+                self?.showHome()
             }
         }
         NSApp.activate(ignoringOtherApps: true)

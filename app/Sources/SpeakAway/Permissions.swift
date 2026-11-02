@@ -26,7 +26,7 @@ enum Permission: CaseIterable {
         switch self {
         case .microphone: return AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
         case .fnKey: return CGPreflightListenEventAccess()
-        case .paste: return AXIsProcessTrusted()
+        case .paste: return CGPreflightPostEventAccess()
         }
     }
 
@@ -41,8 +41,8 @@ enum Permission: CaseIterable {
         case .fnKey:
             if !CGRequestListenEventAccess() { openSettings("Privacy_ListenEvent") }
         case .paste:
-            let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-            if !AXIsProcessTrustedWithOptions(options) { openSettings("Privacy_Accessibility") }
+            // Works inside the App Store sandbox too: macOS lists the app under Accessibility.
+            if !CGRequestPostEventAccess() { openSettings("Privacy_Accessibility") }
         }
     }
 

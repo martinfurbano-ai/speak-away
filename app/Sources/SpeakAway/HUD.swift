@@ -1,4 +1,5 @@
 import AppKit
+import SpeakAwayCore
 import SwiftUI
 
 /// The floating pill at the bottom of the screen: orb, voice bars and state.
@@ -57,20 +58,13 @@ struct HUDView: View {
         }
     }
 
+    /// The logo bubble: bars follow the voice while listening, typing dots while Whisper writes.
     private func orb(_ t: Double) -> some View {
-        ZStack {
-            Circle().fill(RadialGradient(
-                colors: [Color(red: 1, green: 0.62, blue: 0.64), accent, Color(red: 0.35, green: 0.08, blue: 0.09)],
-                center: UnitPoint(x: 0.35, y: 0.3), startRadius: 1, endRadius: 22))
-                .scaleEffect(model.phase == .listening ? 1 + CGFloat(model.level) * 0.12 : 1)
-            if model.phase == .transcribing {
-                Circle().trim(from: 0, to: 0.28)
-                    .stroke(.white.opacity(0.8), style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
-                    .frame(width: 42, height: 42)
-                    .rotationEffect(.radians(t * 5.5))
-            }
-        }
-        .frame(width: 34, height: 34)
+        let phase: BubbleMotion.Phase = model.phase == .listening ? .listening
+            : model.phase == .transcribing ? .thinking : .idle
+        return BubbleView(bars: BubbleMotion.bars(phase, level: model.level, time: t))
+            .frame(width: 36, height: 32)
+            .scaleEffect(model.phase == .listening ? 1 + CGFloat(model.level) * 0.06 : 1)
     }
 
     private func bars(_ t: Double) -> some View {

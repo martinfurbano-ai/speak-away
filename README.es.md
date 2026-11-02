@@ -13,7 +13,7 @@ Creado por **Martín Urbano** para [Open Source Everything](https://www.instagra
 ## Instalar
 
 1. Descarga el .dmg y arrastra Speak Away a Aplicaciones.
-2. Ábrela. Si macOS dice que no puede verificar al desarrollador: Ajustes del Sistema › Privacidad y seguridad › **Abrir igualmente**.
+2. Ábrela. Está firmada y notarizada por Apple, así que abre sin avisos.
 3. Da los permisos de Micrófono, Monitoreo de entrada (tecla Fn) y Accesibilidad (pegar). El modelo de voz (unos 630 MB) se descarga una sola vez.
 4. Si Fn abre los emojis: Ajustes del Sistema › Teclado › «Pulsar la tecla 🌐 para» › No hacer nada.
 

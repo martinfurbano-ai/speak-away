@@ -36,7 +36,8 @@ class Brain(Protocol):
 ```
 app/Sources/SpeakAwayCore/   FnTap (double tap), SpeechGate (silence, cleanup), Providers: tested, no AppKit
 app/Sources/SpeakAway/       menu bar, FnListener (event tap), Recorder (16 kHz), Engine (WhisperKit), Paster, HUD, Welcome
-app/scripts/build-app.sh     .app + .dmg; signs with SIGN_IDENTITY and notarizes with NOTARY_PROFILE when set
+app/scripts/build-app.sh     .app + .dmg (Developer ID, notarized) or TARGET=appstore .pkg (sandboxed)
+app/Resources/SpeakAway.icon the app icon, an Icon Composer file (Liquid Glass on macOS 26)
 ```
 
 The Python package keeps the provider rules and will host the MCP connector. **Windows and Linux** later, through `faster-whisper` behind the same interface.

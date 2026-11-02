@@ -7,7 +7,7 @@
 | 0.3 | **Notetaker, local.** Must work exactly like Wispr Flow's notetaker. Mic + system audio, chunks, `live.ndjson`, Markdown note | A 30-minute call produces a note with "Me" and "Them" lines |
 | 0.4 | **Summaries.** Summary template, "Copy for ChatGPT" button | Note gets Summary, Decisions, Action items, Open questions |
 | 0.5 | **Connectors.** MCP server: stdio for Claude Desktop, HTTP + tunnel for ChatGPT | "Summarize my last meeting" works from both |
-| 1.0 | **Notarized.** Developer ID signature and notarization, so macOS opens it without the "Open Anyway" step | Someone who never opened Terminal installs and dictates in under 3 minutes |
+| 1.0 | **Polished.** Notarized .dmg (done in 0.1.1) and Mac App Store listing (submitted in 0.1.1) | Someone who never opened Terminal installs and dictates in under 3 minutes |
 | Later | Windows and Linux (faster-whisper), speaker separation inside "Them", custom vocabulary | |
 
 ## Open decisions

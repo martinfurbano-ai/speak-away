@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacidad · Speak Away</title>
+<meta name="description" content="Speak Away no recoge datos. Tu voz se transcribe en tu Mac y no sale de ella.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #f3f4f5; --fg: #131416; --muted: #565b61; --line: #dcdfe2; --accent: #c7353b; color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0e0f10; --fg: #eceef0; --muted: #a2a8ae; --line: #2a2d30; --accent: #ff6369; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0e0f10; --fg: #eceef0; --muted: #a2a8ae; --line: #2a2d30; --accent: #ff6369; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 17px/1.65 "Satoshi", ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+main { max-width: 680px; margin: 0 auto; padding: 56px 16px 96px; }
+a { color: inherit; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; letter-spacing: -.02em; }
+.brand svg { width: 30px; height: 26px; }
+h1 { font-size: clamp(34px, 6vw, 48px); letter-spacing: -.035em; line-height: 1.05; margin: 48px 0 12px; text-wrap: balance; }
+h2 { font-size: 20px; letter-spacing: -.02em; margin: 36px 0 8px; }
+p, li { color: var(--muted); text-wrap: pretty; }
+p strong, li strong { color: var(--fg); font-weight: 500; }
+ul { padding-left: 20px; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 64px 0 0; }
+.lang { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-top: 56px; font-weight: 500; }
+footer { margin-top: 40px; font-size: 14px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <a class="brand" href="/" aria-label="Speak Away">
+    <svg viewBox="222 262 580 506" aria-hidden="true"><path fill="var(--accent)" d="M512 262C682 262 802 354 802 486C802 618 682 710 512 710C478 710 446 706 416 699L304 761C292 768 278 756 283 743L315 657C257 616 222 555 222 486C222 354 342 262 512 262Z"/><g fill="var(--bg)"><rect x="342" y="438" width="84" height="96" rx="42"/><rect x="470" y="368" width="84" height="236" rx="42"/><rect x="598" y="411" width="84" height="150" rx="42"/></g></svg>
+    Speak Away
+  </a>
+
+  <h1>Privacidad</h1>
+  <p><strong>Speak Away no recoge datos.</strong> No hay cuentas, ni analítica, ni publicidad, ni servidores nuestros. Última actualización: 2 de noviembre de 2026.</p>
+
+  <h2>Tu voz</h2>
+  <p>El audio se graba solo mientras dictas, se transcribe con Whisper dentro de tu Mac y se borra de la memoria al terminar. No se guarda en disco ni se manda a internet.</p>
+
+  <h2>El texto</h2>
+  <p>El texto se pega donde está tu cursor usando el portapapeles, y después Speak Away devuelve lo que tenías copiado. No guarda un historial de lo que dictas.</p>
+
+  <h2>Internet</h2>
+  <ul>
+    <li>La primera vez descarga el modelo de voz de Whisper (unos 630 MB) desde Hugging Face. Después funciona sin internet.</li>
+    <li>Los enlaces del menú (la web, GitHub, Instagram) abren tu navegador solo cuando los tocas.</li>
+  </ul>
+
+  <h2>Permisos</h2>
+  <ul>
+    <li><strong>Micrófono:</strong> para escucharte mientras dictas.</li>
+    <li><strong>Monitoreo de entrada:</strong> para notar cuando tocas la tecla Fn. Speak Away solo mira la tecla Fn; no lee ni guarda lo que escribes.</li>
+    <li><strong>Accesibilidad:</strong> para mandar ⌘V y pegar el texto.</li>
+  </ul>
+
+  <h2>Código abierto</h2>
+  <p>Todo el código está en <a href="https://github.com/martinfurbano-ai/speak-away">GitHub</a> con licencia MIT, así que cualquiera puede revisar que esto es cierto. Preguntas: <a href="https://github.com/martinfurbano-ai/speak-away/issues">abre un issue</a>.</p>
+
+  <hr>
+  <p class="lang">English</p>
+  <h1>Privacy</h1>
+  <p><strong>Speak Away collects no data.</strong> No accounts, no analytics, no ads and no servers of ours. Last updated: November 2, 2026.</p>
+  <h2>Your voice</h2>
+  <p>Audio is recorded only while you dictate, transcribed by Whisper on your Mac and dropped from memory when you finish. It is never written to disk or sent over the internet.</p>
+  <h2>Your text</h2>
+  <p>Text is pasted at your cursor through the clipboard, and Speak Away then puts back what you had copied. It keeps no history of what you dictate.</p>
+  <h2>Internet</h2>
+  <ul>
+    <li>On first launch it downloads the Whisper voice model (about 630 MB) from Hugging Face. After that it works offline.</li>
+    <li>Menu links (website, GitHub, Instagram) open your browser only when you click them.</li>
+  </ul>
+  <h2>Permissions</h2>
+  <ul>
+    <li><strong>Microphone:</strong> to hear you while you dictate.</li>
+    <li><strong>Input Monitoring:</strong> to notice the Fn key. Speak Away only looks at Fn; it does not read or store what you type.</li>
+    <li><strong>Accessibility:</strong> to send ⌘V and paste the text.</li>
+  </ul>
+  <h2>Open source</h2>
+  <p>All the code is on <a href="https://github.com/martinfurbano-ai/speak-away">GitHub</a> under the MIT license, so anyone can check this is true. Questions: <a href="https://github.com/martinfurbano-ai/speak-away/issues">open an issue</a>.</p>
+
+  <footer>Hecho por Martín Urbano para <a href="https://www.instagram.com/opensourceeverything/">Open Source Everything</a>.</footer>
+</main>
+</body>
+</html>

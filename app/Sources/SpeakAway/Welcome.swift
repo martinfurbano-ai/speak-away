@@ -1,4 +1,5 @@
 import AppKit
+import SpeakAwayCore
 import SwiftUI
 
 /// First-run window: grant three permissions while the model downloads.
@@ -12,7 +13,16 @@ struct WelcomeView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
             VStack(alignment: .leading, spacing: 6) {
-                Text("Speak Away").font(.system(size: 28, weight: .bold)).kerning(-0.6)
+                HStack(spacing: 12) {
+                    // Typing dots, then the logo: something about to be said, then said.
+                    TimelineView(.animation) { timeline in
+                        let t = timeline.date.timeIntervalSinceReferenceDate
+                        let phase: BubbleMotion.Phase = t.truncatingRemainder(dividingBy: 4) < 2.4 ? .thinking : .idle
+                        BubbleView(bars: BubbleMotion.bars(phase, level: 0, time: t))
+                    }
+                    .frame(width: 44, height: 39)
+                    Text("Speak Away").font(.system(size: 28, weight: .bold)).kerning(-0.6)
+                }
                 Text("Toca Fn dos veces, habla, y toca Fn otra vez. El texto aparece donde está tu cursor.")
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -52,6 +62,7 @@ struct WelcomeView: View {
         }
         .padding(28)
         .frame(width: 500)
+        .background(Theme.background)
         .onReceive(timer) { _ in tick += 1 }
     }
 
@@ -89,6 +100,7 @@ final class WelcomeWindow: NSWindow {
     init(engine: Engine, onDone: @escaping () -> Void) {
         super.init(contentRect: .zero, styleMask: [.titled, .closable], backing: .buffered, defer: false)
         title = "Bienvenido a Speak Away"
+        backgroundColor = Theme.backgroundNS
         isReleasedWhenClosed = false
         contentView = NSHostingView(rootView: WelcomeView(engine: engine, onDone: onDone))
         center()
