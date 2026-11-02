@@ -1,0 +1,8 @@
+{
+  // Landing de Speak Away: solo archivos estáticos de site/, servidos por Workers.
+  "name": "speak-away-site",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./site", "not_found_handling": "404-page" },
+  "workers_dev": false,
+  "routes": [{ "pattern": "speakaway.heliospanama.com", "custom_domain": true }]
+}
