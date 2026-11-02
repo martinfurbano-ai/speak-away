@@ -10,7 +10,7 @@
 set -euo pipefail
 
 APP_DIR=${0:A:h:h}
-VERSION=${VERSION:-0.1.1}
+VERSION=${VERSION:-0.2.0}
 BUILD=${BUILD:-1}
 TARGET=${TARGET:-dmg}
 DIST=$APP_DIR/dist
