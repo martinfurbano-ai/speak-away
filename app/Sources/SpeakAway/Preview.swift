@@ -61,4 +61,32 @@ enum Preview {
         window.orderOut(nil)
         exit(0)
     }
+
+    /// `SpeakAway --preview-pill out` writes out-<state>.png of the dictation pill over a light and a dark backdrop.
+    static func pill(to base: String) -> Never {
+        _ = NSApplication.shared
+        let model = HUDModel()
+        let panel = HUDPanel(model: model)
+        let backdrop = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 90), styleMask: [.borderless], backing: .buffered, defer: false)
+        let states: [(String, HUDModel.Phase, Bool, Float)] = [
+            ("idle", .hidden, false, 0), ("hover", .hidden, true, 0), ("listening", .listening, false, 0.7),
+            ("thinking", .transcribing, false, 0), ("pasted", .pasted, false, 0), ("note", .note("SELECCIONA TEXTO PRIMERO"), false, 0),
+        ]
+        for (shade, color) in [("light", NSColor(white: 0.96, alpha: 1)), ("dark", NSColor(white: 0.12, alpha: 1))] {
+            backdrop.backgroundColor = color
+            for (name, phase, hover, level) in states {
+                model.phase = phase; model.hovering = hover; model.level = level
+                panel.setFrameOrigin(NSPoint(x: 300, y: 300))
+                backdrop.setFrame(NSRect(x: 270, y: 282, width: 420, height: 90), display: true)
+                backdrop.orderFrontRegardless()
+                panel.orderFrontRegardless()
+                RunLoop.main.run(until: Date().addingTimeInterval(0.9))
+                let shot = Process()
+                shot.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
+                shot.arguments = ["-x", "-R", "270,\(Int((NSScreen.main?.frame.height ?? 900) - 372)),420,90", "\(base)-\(shade)-\(name).png"]
+                try? shot.run(); shot.waitUntilExit()
+            }
+        }
+        exit(0)
+    }
 }

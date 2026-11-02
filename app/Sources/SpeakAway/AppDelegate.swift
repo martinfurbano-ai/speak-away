@@ -11,7 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let recorder = Recorder()
     private let fn = FnListener()
     private let hudModel = HUDModel()
-    private lazy var hud = HUDPanel(model: hudModel)
+    private lazy var hud = HUDPanel(model: hudModel) { [weak self] in self?.pillClicked() }
 
     private var statusItem: NSStatusItem!
     private let statusLine = NSMenuItem(title: "", action: nil, keyEquivalent: "")
@@ -57,6 +57,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             DispatchQueue.main.async { self?.otherKeyPressed() }
         }
         fn.start()
+        hud.showOnActiveScreen()
         startMeetingWatcher()
         // Input Monitoring can be granted while the app runs: keep trying until the Fn listener is on.
         permissionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
@@ -98,7 +99,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var now: TimeInterval { ProcessInfo.processInfo.systemUptime }
 
+    /// Like Wispr Flow: clicking the pill starts hands-free dictation, clicking again stops it.
+    private func pillClicked() {
+        DebugLog.write("pill click mode \(mode)")
+        switch mode {
+        case .idle:
+            commandMode = false
+            startRecording()
+        case .recording: stopRecording()
+        case .transcribing: break
+        }
+    }
+
     private func run(_ action: FnTap.Action?, command: Bool) {
+        if let action { DebugLog.write("action \(action) mode \(mode)") }
         switch action {
         case .start, .startHold:
             commandMode = command
@@ -120,7 +134,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func startRecording() {
         guard mode == .idle else { return }
-        guard engine.isReady else { return flash(waitingLabel) }
+        guard engine.isReady else { DebugLog.write("not ready: \(waitingLabel)"); return flash(waitingLabel) }
         guard Permission.microphone.granted else {
             Permission.microphone.request()
             return flash("FALTA EL MICRÓFONO")
@@ -128,6 +142,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         do {
             try recorder.start()
         } catch {
+            DebugLog.write("mic error: \(error)")
             return flash("SIN MICRÓFONO")
         }
         let front = NSWorkspace.shared.frontmostApplication
@@ -237,7 +252,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hideWork?.cancel()
         let work = DispatchWorkItem { [weak self] in
             guard let self, self.mode != .recording else { return }
-            self.hud.orderOut(nil)
             self.hudModel.phase = .hidden
         }
         hideWork = work

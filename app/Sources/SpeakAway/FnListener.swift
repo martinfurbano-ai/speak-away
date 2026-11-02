@@ -33,6 +33,7 @@ final class FnListener {
         let source = CFMachPortCreateRunLoopSource(nil, tap, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
         CGEvent.tapEnable(tap: tap, enable: true)
+        DebugLog.write("fn listener on")
         self.tap = tap
         isRunning = true
         return true
@@ -45,15 +46,19 @@ final class FnListener {
             return
         }
         if type == .keyDown {
+            // The Fn/Globe key itself can arrive as a key press (63 or 179); it must not count as "another key".
+            let code = event.getIntegerValueField(.keyboardEventKeycode)
+            if code == 63 || code == 179 { return }
             onOtherKey?()
             return
         }
         let down = event.flags.contains(.maskSecondaryFn)
         if down && !fnDown {
             commandHeld = event.flags.contains(.maskControl)
+            DebugLog.write("fn down\(commandHeld ? " +control" : "")")
             onFnDown?()
         }
-        if !down && fnDown { onFnUp?() }
+        if !down && fnDown { DebugLog.write("fn up"); onFnUp?() }
         fnDown = down
     }
 }
