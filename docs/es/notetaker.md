@@ -1,5 +1,7 @@
 # Cómo funciona el notetaker
 
+**Regla:** tiene que funcionar exactamente como el notetaker de Wispr Flow. Lo de abajo es cómo lo hacemos en local y sin API key.
+
 La idea: entras a una reunión, Speak Away la transcribe en tu Mac mientras hablan, y al colgar tienes una nota en Markdown con la transcripción. El resumen es opcional y lo puede hacer tu Mac, tu propia llave, o tu ChatGPT.
 
 ## El recorrido
@@ -41,7 +43,7 @@ Tener dos pistas regala algo: sin ningún modelo extra ya sabes qué dijiste tú
 
 ### 3. Transcribir en trozos
 
-El audio se corta cada ~20 segundos, siempre en un silencio para no partir palabras. Cada trozo pasa por el mismo Whisper del dictado (`whisper-large-v3-turbo` con MLX). Una Mac M1 transcribe más rápido de lo que la gente habla, así que la transcripción va casi en vivo.
+El audio se corta cada ~20 segundos, siempre en un silencio para no partir palabras. Cada trozo pasa por el mismo Whisper del dictado (`large-v3 turbo` con WhisperKit, en el Neural Engine). Una Mac M1 transcribe más rápido de lo que la gente habla, así que la transcripción va casi en vivo.
 
 ### 4. Transcripción en vivo
 
@@ -98,5 +100,5 @@ Grabar a otros puede requerir su permiso según el país. Mientras graba, Speak 
 
 ## Qué ya existe y qué falta
 
-- Ya existe (en whisper-flow): micrófono, Whisper local con MLX, HUD.
+- Ya existe (app 0.1): micrófono, Whisper local con WhisperKit, HUD.
 - Falta: audio del sistema, trozos con detección de silencio, `live.ndjson`, la nota, el detector de reuniones, el resumen y el conector.

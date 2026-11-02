@@ -4,7 +4,18 @@ Dictado por voz y notas de reuniones, de código abierto, que corren en tu propi
 
 Tocas una tecla dos veces, hablas, y el texto aparece donde tengas el cursor. Prendes el notetaker y cada reunión queda como una nota en Markdown en una carpeta tuya. Sin cuenta, sin suscripción y sin API key.
 
-> Estado: esqueleto. El dictado que ya funciona viene de [whisper-flow](https://github.com/Sofiache26/whisper-flow) de Sofiache26 y se está mudando aquí. Todavía no se instala. Ver [docs/roadmap.md](docs/roadmap.md).
+Creado por **Martín Urbano** para [Open Source Everything](https://www.instagram.com/opensourceeverything/): versiones gratis y abiertas de las apps por las que la gente paga suscripción.
+
+**[Descargar para Mac](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg)** · [Sitio](https://speakaway.heliospanama.com)
+
+> La versión 0.1 trae el dictado. El notetaker viene después, ver [docs/roadmap.md](docs/roadmap.md).
+
+## Instalar
+
+1. Descarga el .dmg y arrastra Speak Away a Aplicaciones.
+2. Ábrela. Si macOS dice que no puede verificar al desarrollador: Ajustes del Sistema › Privacidad y seguridad › **Abrir igualmente**.
+3. Da los permisos de Micrófono, Monitoreo de entrada (tecla Fn) y Accesibilidad (pegar). El modelo de voz (unos 630 MB) se descarga una sola vez.
+4. Si Fn abre los emojis: Ajustes del Sistema › Teclado › «Pulsar la tecla 🌐 para» › No hacer nada.
 
 ## Qué hace
 

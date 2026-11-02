@@ -8,3 +8,6 @@ dist/
 *.wav
 *.m4a
 config.toml
+.build/
+app/dist/
+.wrangler/

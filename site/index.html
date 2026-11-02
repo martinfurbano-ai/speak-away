@@ -6,6 +6,7 @@
 <title>Speak Away</title>
 <meta name="description" content="Dictado por voz y notas de reuniones que corren en tu Mac. Open source, gratis y sin API key.">
 <meta property="og:title" content="Speak Away">
+<meta name="author" content="Martín Urbano">
 <meta property="og:description" content="Dictado por voz y notas de reuniones que corren en tu Mac. Open source, gratis y sin API key.">
 <meta name="theme-color" content="#f3f4f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0f10" media="(prefers-color-scheme: dark)">
@@ -239,6 +240,11 @@ details p { padding: 0 40px 24px 0; color: var(--muted); }
 footer { padding: 48px 0 64px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: center; }
 footer a { text-decoration: none; }
+footer .credit { color: var(--fg); font-weight: 500; }
+.foot-links { display: inline-flex; gap: 20px; }
+.foot-links a { display: inline-flex; align-items: center; gap: 6px; }
+.soon { display: inline-flex; height: 28px; align-items: center; padding: 0 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font: 500 12px "JetBrains Mono", monospace; letter-spacing: .04em; margin-bottom: 18px; }
+.hero-note { margin-top: 16px; font-size: 14px; color: var(--muted); }
 footer a:hover { color: var(--fg); }
 
 /* Reveal on scroll */
@@ -301,7 +307,7 @@ footer a:hover { color: var(--fg); }
     </div>
     <div class="navright">
       <button class="lang" id="lang" type="button" aria-label="Cambiar idioma">EN</button>
-      <a class="btn btn-primary btn-sm gh" href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i><span data-i18n="cta.github">Ver en GitHub</span></a>
+      <a class="btn btn-primary btn-sm gh" href="https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg"><i class="ph ph-download-simple"></i><span data-i18n="cta.dl.short">Descargar</span></a>
     </div>
   </div>
 </nav>
@@ -312,9 +318,10 @@ footer a:hover { color: var(--fg); }
       <h1 data-i18n-html="hero.title">Habla.<br><em style="white-space:nowrap">Se escribe solo.</em></h1>
       <p class="lede" data-i18n="hero.sub">Dictado y notas de reuniones que corren en tu Mac. Open source, gratis y sin API key.</p>
       <div class="cta">
-        <a class="btn btn-primary" href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i><span data-i18n="cta.github">Ver en GitHub</span></a>
-        <a class="btn btn-ghost" href="#como"><span data-i18n="cta.how">Cómo funciona</span><i class="ph ph-arrow-down"></i></a>
+        <a class="btn btn-primary" href="https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg"><i class="ph ph-apple-logo"></i><span data-i18n="cta.dl">Descargar para Mac</span></a>
+        <a class="btn btn-ghost" href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i><span data-i18n="cta.github">Ver en GitHub</span></a>
       </div>
+      <p class="hero-note" data-i18n="hero.note">Gratis. Mac con Apple Silicon y macOS 14 o más nuevo.</p>
     </div>
 
     <div class="stage" aria-label="Demostración del dictado">
@@ -340,7 +347,7 @@ footer a:hover { color: var(--fg); }
       <div class="key press second k2" aria-hidden="true"><i class="ph ph-globe"></i>fn</div>
       <div class="flow-step"><strong data-i18n="how.s1t">Hablas normal</strong><p data-i18n="how.s1">En español, en inglés o mezclando los dos, como hablas de verdad.</p></div>
       <div class="key press third k3" aria-hidden="true"><i class="ph ph-globe"></i>fn</div>
-      <div class="flow-step"><strong data-i18n="how.s2t">El texto aparece donde está tu cursor</strong><p data-i18n="how.s2">Sin copiar ni pegar. Si activas el cerebro, llega con puntuación y sin muletillas.</p></div>
+      <div class="flow-step"><strong data-i18n="how.s2t">El texto aparece donde está tu cursor</strong><p data-i18n="how.s2">Sin copiar ni pegar, con puntuación y en el idioma en que hablaste.</p></div>
     </div>
     <div class="apps reveal" aria-label="Apps">
       <span><i class="ph ph-envelope-simple"></i>Gmail</span>
@@ -358,6 +365,7 @@ footer a:hover { color: var(--fg); }
 <section class="notes" id="notas">
   <div class="wrap">
     <div class="reveal">
+      <span class="soon" data-i18n="soon">Próximamente</span>
       <h2 data-i18n="notes.title">Tus reuniones, en notas que son tuyas.</h2>
       <p class="lede" data-i18n="notes.sub">Zoom, Meet, Teams, FaceTime o WhatsApp. Speak Away transcribe mientras hablan y al colgar te deja la nota.</p>
       <div class="notes-points">
@@ -387,6 +395,7 @@ footer a:hover { color: var(--fg); }
 <section class="brains" id="llave">
   <div class="wrap">
     <div class="reveal">
+      <span class="soon" data-i18n="soon">Próximamente</span>
       <h2 data-i18n="key.title">Nunca te vamos a pedir una API key.</h2>
       <p class="lede" data-i18n="key.sub">Transcribir siempre es local y gratis. Para los resúmenes eliges el cerebro, y todos los caminos tienen una opción sin pagar nada extra.</p>
     </div>
@@ -437,17 +446,15 @@ footer a:hover { color: var(--fg); }
     <div class="reveal">
       <h2 data-i18n="oss.title">Código abierto, de verdad.</h2>
       <p class="lede" data-i18n="oss.sub">Licencia MIT. Lo descargas, lo lees, lo cambias. Si mañana dejamos de trabajar en él, sigue siendo tuyo.</p>
-      <p class="note" data-i18n="oss.note">Necesita una Mac con Apple Silicon y macOS 13.5 o más nuevo. La app firmada, sin Terminal, llega con la versión 1.0.</p>
+      <p class="note" data-i18n="oss.note">La primera vez que la abras, macOS puede decir que no la reconoce: abre Ajustes del Sistema › Privacidad y seguridad › «Abrir igualmente». Pasa con apps que no vienen del App Store.</p>
+      <div class="cta"><a class="btn btn-ghost" href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i><span data-i18n="cta.github">Ver en GitHub</span></a></div>
     </div>
-    <pre class="term mono reveal"><span class="c" data-i18n="oss.c1"># descarga e instala</span>
+    <pre class="term mono reveal"><span class="c" data-i18n="oss.c1"># compílala tú mismo</span>
 <span class="p">$ </span>git clone https://github.com/martinfurbano-ai/speak-away
-<span class="p">$ </span>cd speak-away &amp;&amp; ./install.command
+<span class="p">$ </span>cd speak-away/app
+<span class="p">$ </span>./scripts/build-app.sh
 
-<span class="c" data-i18n="oss.c2"># dictado</span>
-<span class="p">$ </span>speakaway dictate
-
-<span class="c" data-i18n="oss.c3"># conecta Claude Desktop o ChatGPT</span>
-<span class="p">$ </span>speakaway mcp</pre>
+<span class="c" data-i18n="oss.c2"># queda en app/dist/SpeakAway.dmg</span></pre>
   </div>
 </section>
 
@@ -456,7 +463,7 @@ footer a:hover { color: var(--fg); }
     <h2 class="reveal" data-i18n="faq.title">Preguntas</h2>
     <div class="reveal">
       <details><summary><span data-i18n="faq.q1">¿Es gratis de verdad?</span><i class="ph ph-plus"></i></summary><p data-i18n="faq.a1">Sí. No hay plan pago ni cuenta. Lo único que podrías pagar es una API key propia, si decides usarla, y eso va directo al proveedor.</p></details>
-      <details><summary><span data-i18n="faq.q2">¿Necesito internet?</span><i class="ph ph-plus"></i></summary><p data-i18n="faq.a2">Solo para descargar el modelo la primera vez (unos 1,5 GB). Después el dictado y las notas funcionan sin conexión.</p></details>
+      <details><summary><span data-i18n="faq.q2">¿Necesito internet?</span><i class="ph ph-plus"></i></summary><p data-i18n="faq.a2">Solo para descargar el modelo de voz la primera vez (unos 630 MB). Después el dictado y las notas funcionan sin conexión.</p></details>
       <details><summary><span data-i18n="faq.q3">¿Puedo usar mi ChatGPT Plus en vez de una llave?</span><i class="ph ph-plus"></i></summary><p data-i18n="faq.a3">Sí, al revés de lo que uno pensaría: ChatGPT se conecta a Speak Away y lee tus notas. También puedes copiar y pegar la transcripción, que funciona con cualquier plan.</p></details>
       <details><summary><span data-i18n="faq.q4">¿Funciona en Windows o Linux?</span><i class="ph ph-plus"></i></summary><p data-i18n="faq.a4">Todavía no. Empezamos por Mac con Apple Silicon porque ahí Whisper corre más rápido. Windows y Linux están en el plan.</p></details>
       <details><summary><span data-i18n="faq.q5">¿Es legal grabar una reunión?</span><i class="ph ph-plus"></i></summary><p data-i18n="faq.a5">Depende del país. Speak Away muestra un indicador mientras graba y puede avisar en el chat de la reunión. Pide permiso a los demás.</p></details>
@@ -467,8 +474,8 @@ footer a:hover { color: var(--fg); }
 
 <footer>
   <div class="wrap">
-    <span data-i18n="foot.l">Speak Away. Open source con licencia MIT.</span>
-    <span><a href="https://github.com/martinfurbano-ai/speak-away">GitHub</a></span>
+    <span><span data-i18n="foot.l">Hecho por Martín Urbano para</span> <a class="credit" href="https://www.instagram.com/opensourceeverything/">Open Source Everything</a>. <span data-i18n="foot.mit">Licencia MIT.</span></span>
+    <span class="foot-links"><a href="https://www.instagram.com/opensourceeverything/"><i class="ph ph-instagram-logo"></i> @opensourceeverything</a><a href="https://github.com/martinfurbano-ai/speak-away"><i class="ph ph-github-logo"></i> GitHub</a></span>
   </div>
 </footer>
 
@@ -478,13 +485,14 @@ footer a:hover { color: var(--fg); }
 
   const EN = {
     "nav.how": "How it works", "nav.notes": "Meeting notes", "nav.key": "No API key", "nav.faq": "FAQ",
-    "cta.github": "View on GitHub", "cta.how": "How it works",
+    "cta.github": "View on GitHub", "cta.how": "How it works", "cta.dl": "Download for Mac", "cta.dl.short": "Download",
+    "hero.note": "Free. Apple Silicon Mac with macOS 14 or newer.",
     "hero.title": "Talk.<br><em style=\"white-space:nowrap\">It types itself.</em>",
     "hero.sub": "Dictation and meeting notes that run on your Mac. Open source, free, no API key.",
     "how.title": "Two taps to start. One to finish.",
     "how.sub": "Works in any app where you can type. Whisper transcribes on your Mac, without sending your voice anywhere.",
     "how.s1t": "Talk normally", "how.s1": "In Spanish, English or both at once, the way you actually talk.",
-    "how.s2t": "Text appears at your cursor", "how.s2": "No copy and paste. Turn on the brain and it arrives punctuated, without filler words.",
+    "how.s2t": "Text appears at your cursor", "how.s2": "No copy and paste, punctuated, in the language you spoke.",
     "how.more": "anywhere you type",
     "notes.title": "Your meetings, as notes you own.",
     "notes.sub": "Zoom, Meet, Teams, FaceTime or WhatsApp. Speak Away transcribes while you talk and leaves the note when you hang up.",
@@ -506,16 +514,16 @@ footer a:hover { color: var(--fg); }
     "priv.f1": "Whisper runs on your Apple chip", "priv.f2": "Notes are your own files", "priv.f3": "Keys go to the Keychain", "priv.f4": "No accounts, no telemetry",
     "oss.title": "Open source, for real.",
     "oss.sub": "MIT license. Download it, read it, change it. If we stop working on it tomorrow, it is still yours.",
-    "oss.note": "Requires an Apple Silicon Mac with macOS 13.5 or newer. The signed app, no Terminal needed, ships with 1.0.",
-    "oss.c1": "# download and install", "oss.c2": "# dictation", "oss.c3": "# connect Claude Desktop or ChatGPT",
+    "oss.note": "The first time you open it, macOS may say it does not recognize it: go to System Settings › Privacy & Security › \"Open Anyway\". It happens with apps that do not come from the App Store.",
+    "oss.c1": "# build it yourself", "oss.c2": "# you get app/dist/SpeakAway.dmg",
     "faq.title": "Questions",
     "faq.q1": "Is it really free?", "faq.a1": "Yes. No paid plan, no account. The only thing you might pay for is your own API key, if you choose to use one, and that goes straight to the provider.",
-    "faq.q2": "Do I need internet?", "faq.a2": "Only to download the model the first time (about 1.5 GB). After that, dictation and notes work offline.",
+    "faq.q2": "Do I need internet?", "faq.a2": "Only to download the voice model the first time (about 630 MB). After that, dictation and notes work offline.",
     "faq.q3": "Can I use my ChatGPT Plus instead of a key?", "faq.a3": "Yes, the other way around: ChatGPT connects to Speak Away and reads your notes. You can also copy and paste the transcript, which works on any plan.",
     "faq.q4": "Does it work on Windows or Linux?", "faq.a4": "Not yet. We started with Apple Silicon Macs because Whisper runs fastest there. Windows and Linux are planned.",
     "faq.q5": "Is it legal to record a meeting?", "faq.a5": "It depends on where you are. Speak Away shows an indicator while recording and can post a notice in the meeting chat. Ask the others first.",
     "faq.q6": "Is it like Wispr Flow?", "faq.a6": "The idea is similar: talk instead of type. The difference is that Speak Away is open source, runs on your Mac and has no subscription.",
-    "foot.l": "Speak Away. Open source under the MIT license."
+    "soon": "Coming soon", "foot.l": "Made by Martín Urbano for", "foot.mit": "MIT license."
   };
 
   const SAMPLES = {

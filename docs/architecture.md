@@ -31,6 +31,12 @@ class Brain(Protocol):
 
 ## Platform choice
 
-**v1: Python + PyObjC, Mac only.** The dictation core already works this way in whisper-flow, and MLX Whisper is the fastest local option on Apple Silicon. Shipped as a signed, notarized `.app` (py2app or Briefcase) so permissions belong to "Speak Away" and not to Terminal.
+**The Mac app is native Swift** (`app/`), with WhisperKit running Whisper on the Neural Engine through Core ML. A Python `.app` with MLX was the first idea, but it is fragile to package and weighs hundreds of MB; the Swift .dmg is about 2 MB and the model downloads on first launch.
 
-**Later: Windows and Linux** through `faster-whisper` behind the same `SpeechToText` interface. A Tauri shell is the option if the UI outgrows PyObjC.
+```
+app/Sources/SpeakAwayCore/   FnTap (double tap), SpeechGate (silence, cleanup), Providers: tested, no AppKit
+app/Sources/SpeakAway/       menu bar, FnListener (event tap), Recorder (16 kHz), Engine (WhisperKit), Paster, HUD, Welcome
+app/scripts/build-app.sh     .app + .dmg; signs with SIGN_IDENTITY and notarizes with NOTARY_PROFILE when set
+```
+
+The Python package keeps the provider rules and will host the MCP connector. **Windows and Linux** later, through `faster-whisper` behind the same interface.
