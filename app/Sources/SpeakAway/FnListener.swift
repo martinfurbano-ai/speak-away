@@ -4,6 +4,7 @@ import Foundation
 /// Listens to the Fn (Globe) key anywhere in macOS. Needs Input Monitoring permission.
 final class FnListener {
     var onFnDown: (() -> Void)?
+    var onFnUp: (() -> Void)?
     var onOtherKey: (() -> Void)?
     private(set) var isRunning = false
 
@@ -47,6 +48,7 @@ final class FnListener {
         }
         let down = event.flags.contains(.maskSecondaryFn)
         if down && !fnDown { onFnDown?() }
+        if !down && fnDown { onFnUp?() }
         fnDown = down
     }
 }
