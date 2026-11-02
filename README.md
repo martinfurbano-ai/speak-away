@@ -2,13 +2,13 @@
 
 Open-source voice dictation and meeting notes that run on your own computer.
 
-Double-tap a key, talk, and the text appears wherever your cursor is. Turn on the notetaker and every meeting becomes a clean Markdown note in a folder you own. No account, no subscription, and no API key required.
+A free, open source alternative to paid dictation apps like Wispr Flow. Hold Fn, talk, let go, and the text appears wherever your cursor is. Turn on the notetaker and every meeting becomes a clean note with a summary. No account, no subscription, and no API key required. Fork it and make it yours.
 
 Created by **Martín Urbano** for [Open Source Everything](https://www.instagram.com/opensourceeverything/): free, open versions of the apps people pay a subscription for.
 
 **[Download for Mac](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg)** · [Website](https://speakaway.heliospanama.com)
 
-> Version 0.1 ships dictation. The notetaker is next, see [docs/roadmap.md](docs/roadmap.md).
+> Version 0.2 ships dictation, Command Mode, meeting notes, dictionary, voice shortcuts, styles per app, history and a scratchpad. The Mac App Store version is in review. What comes next: [docs/roadmap.md](docs/roadmap.md).
 
 [Leer en español](README.es.md)
 
@@ -16,10 +16,12 @@ Created by **Martín Urbano** for [Open Source Everything](https://www.instagram
 
 | | |
 |---|---|
-| **Dictation** | Fn twice to start, Fn to stop. Whisper runs on your Mac, the text is pasted where you were typing. |
-| **Notetaker** | Records your mic and the call audio as two tracks, transcribes live, saves a note when the meeting ends. |
-| **Brain (optional)** | Cleans up dictation and writes meeting summaries. Off by default. |
-| **Connectors** | ChatGPT, Claude and other MCP clients can read your notes and summarize them with your own subscription. |
+| **Dictation** | Hold Fn to talk, or tap Fn twice for hands-free. Whisper runs on your Mac, the text is pasted where you were typing. Speak Away keeps the Fn key to itself, so the emoji picker never gets in the way. |
+| **Command Mode** | Select text, hold Control + Fn and say "make it shorter" or "translate to Spanish". Runs on Apple's on-device model. |
+| **Notetaker** | Records your mic and the call audio as two tracks (Me and Them), no bots, transcribes live and writes a summary with action items when the meeting ends. |
+| **Your voice** | Personal dictionary, voice shortcuts ("my address" types the whole thing), a style per app, history and a scratchpad. |
+| **Brain** | Cleanup and summaries with Apple Intelligence on your Mac, or your own key if you prefer. |
+| **Connectors (coming soon)** | ChatGPT, Claude and other MCP clients can read your notes and summarize them with your own subscription. |
 
 ## You never need an API key
 
@@ -45,7 +47,7 @@ Keys live in the macOS Keychain, are only sent to the provider they belong to, a
 1. Download [SpeakAway.dmg](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg) and drag Speak Away to Applications.
 2. Open it. It is signed and notarized by Apple, so it opens without warnings.
 3. Grant Microphone, Input Monitoring (for the Fn key) and Accessibility (to paste). The voice model (about 630 MB) downloads once.
-4. If Fn opens the emoji picker: System Settings › Keyboard › "Press 🌐 key to" › Do Nothing.
+4. While it runs, Speak Away sets "Press 🌐 key to" to Do Nothing so Fn never opens the emoji picker, and puts your setting back when you quit.
 
 Requires a Mac with Apple Silicon (M1 or newer) and macOS 14 or later.
 
