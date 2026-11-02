@@ -65,10 +65,11 @@ final class Engine: ObservableObject {
         }
     }
 
-    func transcribe(_ audio: [Float]) async throws -> String {
+    /// `prompt`: words from the personal dictionary, so Whisper spells names and jargon right.
+    func transcribe(_ audio: [Float], prompt: String = "") async throws -> String {
         guard let kit else { return "" }
         let language = Settings.language == "auto" ? nil : Settings.language
-        let options = DecodingOptions(
+        var options = DecodingOptions(
             task: .transcribe,
             language: language,
             temperature: 0,
@@ -78,6 +79,9 @@ final class Engine: ObservableObject {
             withoutTimestamps: true,
             chunkingStrategy: .vad
         )
+        if !prompt.isEmpty, let tokenizer = kit.tokenizer {
+            options.promptTokens = tokenizer.encode(text: " " + prompt).filter { $0 < tokenizer.specialTokens.specialTokenBegin }
+        }
         let results: [TranscriptionResult] = try await kit.transcribe(audioArray: audio, decodeOptions: options)
         return results.map(\.text).joined(separator: " ")
     }

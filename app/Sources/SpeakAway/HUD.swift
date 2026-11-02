@@ -8,6 +8,8 @@ final class HUDModel: ObservableObject {
     enum Phase: Equatable { case hidden, listening, transcribing, pasted, note(String) }
     @Published var phase: Phase = .hidden
     @Published var level: Float = 0
+    /// Listening for a Command Mode instruction instead of dictation.
+    @Published var command = false
 }
 
 struct HUDView: View {
@@ -42,7 +44,7 @@ struct HUDView: View {
     private var label: String {
         switch model.phase {
         case .hidden: return ""
-        case .listening: return "ESCUCHANDO"
+        case .listening: return model.command ? "COMANDO" : "ESCUCHANDO"
         case .transcribing: return "WHISPER"
         case .pasted: return "PEGADO"
         case .note(let text): return text

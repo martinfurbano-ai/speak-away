@@ -7,6 +7,8 @@ final class FnListener {
     var onFnUp: (() -> Void)?
     var onOtherKey: (() -> Void)?
     private(set) var isRunning = false
+    /// True when Control was held as Fn went down: Wispr Flow style Command Mode.
+    private(set) var commandHeld = false
 
     private var tap: CFMachPort?
     private var fnDown = false
@@ -47,7 +49,10 @@ final class FnListener {
             return
         }
         let down = event.flags.contains(.maskSecondaryFn)
-        if down && !fnDown { onFnDown?() }
+        if down && !fnDown {
+            commandHeld = event.flags.contains(.maskControl)
+            onFnDown?()
+        }
         if !down && fnDown { onFnUp?() }
         fnDown = down
     }

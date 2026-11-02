@@ -34,6 +34,18 @@ enum Settings {
         set { store.set(newValue, forKey: "sounds") }
     }
 
+    /// Remove filler words and apply spoken corrections ("a las 2, no, a las 3").
+    static var autoEdit: Bool {
+        get { store.object(forKey: "autoEdit") as? Bool ?? true }
+        set { store.set(newValue, forKey: "autoEdit") }
+    }
+
+    /// Light rewrite with Apple's on-device model after dictating (Wispr Flow's Polish). Off by default: slower.
+    static var polish: Bool {
+        get { store.bool(forKey: "polish") }
+        set { store.set(newValue, forKey: "polish") }
+    }
+
     static var welcomed: Bool {
         get { store.bool(forKey: "welcomed") }
         set { store.set(newValue, forKey: "welcomed") }

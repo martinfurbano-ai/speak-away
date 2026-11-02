@@ -19,10 +19,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let stats = StatsStore()
     private let history = HistoryStore()
     private let scratchpad = ScratchpadStore()
+    private let dictionary = ObservableJSONStore(file: StorePaths.file(StorePaths.dictionary), default: PersonalDictionary())
+    private let snippets = ObservableJSONStore(file: StorePaths.file(StorePaths.snippets), default: Snippets())
+    private let styles = ObservableJSONStore(file: StorePaths.file(StorePaths.style), default: StyleSettings())
     private var home: HubWindow?
     private let sounds = Sounds()
     private var mode = Mode.idle { didSet { animateGlyph() } }
-    private var tap = FnTap()
+    private var tap = FnTap(pushToTalk: true)
+    private var commandMode = false
+    private var targetBundleID: String?
+    private var targetAppName: String?
     private var hideWork: DispatchWorkItem?
     private var bag = Set<AnyCancellable>()
     private var permissionTimer: Timer?
@@ -39,8 +45,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fn.onFnDown = { [weak self] in
             DispatchQueue.main.async { self?.fnPressed() }
         }
+        fn.onFnUp = { [weak self] in
+            DispatchQueue.main.async { self?.fnReleased() }
+        }
         fn.onOtherKey = { [weak self] in
-            DispatchQueue.main.async { self?.tap = self?.tap.otherKey() ?? FnTap() }
+            DispatchQueue.main.async { self?.otherKeyPressed() }
         }
         fn.start()
         // Input Monitoring can be granted while the app runs: keep trying until the Fn listener is on.
@@ -62,14 +71,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: Dictation
 
+    // Hold Fn to talk, or tap twice for hands-free. Control + Fn speaks a command for the selected text.
     private func fnPressed() {
-        let (next, action) = tap.press(at: ProcessInfo.processInfo.systemUptime, recording: mode == .recording)
+        let (next, action) = tap.press(at: now, recording: mode == .recording)
         tap = next
+        run(action, command: fn.commandHeld)
+    }
+
+    private func fnReleased() {
+        let (next, action) = tap.release(at: now, recording: mode == .recording)
+        tap = next
+        run(action, command: commandMode)
+    }
+
+    private func otherKeyPressed() {
+        let (next, action) = tap.otherKey(at: now, recording: mode == .recording)
+        tap = next
+        run(action, command: commandMode)
+    }
+
+    private var now: TimeInterval { ProcessInfo.processInfo.systemUptime }
+
+    private func run(_ action: FnTap.Action?, command: Bool) {
         switch action {
-        case .start: startRecording()
+        case .start, .startHold:
+            commandMode = command
+            startRecording()
         case .stop: stopRecording()
+        case .discard: discardRecording()
         case nil: break
         }
+    }
+
+    /// A tap too short to be a hold: drop the audio quietly (it may be the first of a double tap).
+    private func discardRecording() {
+        guard mode == .recording else { return }
+        _ = recorder.stop()
+        mode = .idle
+        hudModel.level = 0
+        hideHUD(after: 0)
     }
 
     private func startRecording() {
@@ -84,9 +124,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         } catch {
             return flash("SIN MICRÓFONO")
         }
+        let front = NSWorkspace.shared.frontmostApplication
+        targetBundleID = front?.bundleIdentifier
+        targetAppName = front?.localizedName
         mode = .recording
         hideWork?.cancel()
         hudModel.level = 0
+        hudModel.command = commandMode
         hudModel.phase = .listening
         hud.showOnActiveScreen()
         sounds.play(.start)
@@ -103,20 +147,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         mode = .transcribing
         hudModel.phase = .transcribing
+        let isCommand = commandMode
         Task {
             defer { mode = .idle }
             do {
-                let text = SpeechGate.clean(try await engine.transcribe(audio))
-                guard !text.isEmpty else { return hideHUD(after: 0) }
+                let language = Settings.language == "auto" ? nil : Settings.language
+                let raw = SpeechGate.clean(try await engine.transcribe(audio, prompt: dictionary.value.whisperPrompt()))
+                guard !raw.trimmingCharacters(in: .whitespaces).isEmpty else { return hideHUD(after: 0) }
+                if isCommand { return await runCommand(raw, language: language) }
+                let style = styles.value.style(forBundleID: targetBundleID)
+                var text = TextPipeline.process(raw: raw, language: language, dictionary: dictionary.value,
+                                                snippets: snippets.value, style: style, autoEdit: Settings.autoEdit)
+                if Settings.polish, LocalBrain.availability.isUsable {
+                    text = (try? await LocalBrain.polish(text, style: style.rawValue, language: language)) ?? text
+                }
                 Paster.paste(text)
                 sounds.play(.paste)
                 stats.record(text: text, seconds: Double(audio.count) / Double(Recorder.sampleRate))
-                history.add(text: text, raw: text, app: NSWorkspace.shared.frontmostApplication?.localizedName)
+                history.add(text: text, raw: raw, app: targetAppName)
                 hudModel.phase = Permission.paste.granted ? .pasted : .note("COPIADO, USA ⌘V")
                 hideHUD(after: 1.1)
             } catch {
                 flash("NO SE PUDO TRANSCRIBIR")
             }
+        }
+    }
+
+    /// Command Mode: the spoken instruction rewrites the selected text, with Apple's on-device model.
+    private func runCommand(_ instruction: String, language: String?) async {
+        let availability = LocalBrain.availability
+        guard availability.isUsable else { return flash("ACTIVA APPLE INTELLIGENCE") }
+        guard let selected = await SelectionGrabber.grab(), !selected.isEmpty else { return flash("SELECCIONA TEXTO PRIMERO") }
+        do {
+            let result = try await LocalBrain.command(instruction.trimmingCharacters(in: .whitespaces), on: selected, language: language)
+            Paster.paste(result)
+            sounds.play(.paste)
+            hudModel.phase = .note("LISTO")
+            hideHUD(after: 1.1)
+        } catch {
+            flash("NO SE PUDO")
         }
     }
 
