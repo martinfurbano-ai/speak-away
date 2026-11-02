@@ -56,6 +56,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fn.onOtherKey = { [weak self] in
             DispatchQueue.main.async { self?.otherKeyPressed() }
         }
+        FnSetting.takeOver()
         fn.start()
         hud.showOnActiveScreen()
         startMeetingWatcher()
@@ -63,12 +64,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         permissionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                if !self.fn.isRunning { self.fn.start() }
+                if !self.fn.isGuarding { self.fn.start() }
                 self.refreshStatus()
             }
         }
 
         if !Settings.welcomed || !Permission.allGranted { showWelcome() } else { showHome() }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        // A relaunch (new permission) leaves a fresh copy running that still needs the Globe key off.
+        let id = Bundle.main.bundleIdentifier ?? ""
+        let copies = NSRunningApplication.runningApplications(withBundleIdentifier: id)
+            .filter { $0.processIdentifier != ProcessInfo.processInfo.processIdentifier }
+        if copies.isEmpty { FnSetting.restore() }
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
