@@ -1,0 +1,29 @@
+[project]
+name = "speak-away"
+version = "0.0.1"
+description = "Open-source voice dictation and meeting notes that run on your own computer."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+# Apple Silicon: the engine that already works in whisper-flow.
+mac = [
+  "mlx-whisper==0.4.3",
+  "numpy",
+  "sounddevice",
+  "pyobjc-framework-Cocoa",
+  "pyobjc-framework-Quartz",
+  "keyring",
+]
+# Windows and Linux, later.
+cpu = ["faster-whisper", "numpy", "sounddevice", "keyring"]
+mcp = ["mcp"]
+
+[project.scripts]
+speakaway = "speakaway.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,23 @@
+# Copy to ~/.config/speakaway/config.toml
+# API keys never go here. Add them in Settings > Keys (stored in the macOS Keychain).
+
+language = "auto"          # "es", "en" or "auto"
+hotkey = "fn-double"       # double-tap Fn to start, Fn to stop
+
+[providers]
+stt = "auto"               # auto = local Whisper. Or: openai, groq, elevenlabs, deepgram (needs your key)
+brain = "auto"             # auto = first key you added, else none. Or: none, ollama, mcp, anthropic, openai, groq, openrouter
+
+[local]
+whisper_model = "mlx-community/whisper-large-v3-turbo"
+ollama_model = "llama3.2"
+
+[notetaker]
+folder = "~/Documents/Speak Away/Notes"
+keep_audio = false         # delete audio once it is transcribed
+auto_detect_meetings = true
+announce_in_chat = false   # post "this meeting is being transcribed" when supported
+
+[mcp]
+write_tools = false        # true lets ChatGPT/Claude save summaries back into your notes
+http_port = 8765

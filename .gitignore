@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+build/
+dist/
+*.egg-info/
+.DS_Store
+*.wav
+*.m4a
+config.toml
