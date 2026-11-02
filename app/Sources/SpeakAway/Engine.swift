@@ -77,7 +77,8 @@ final class Engine: ObservableObject {
             detectLanguage: language == nil,
             skipSpecialTokens: true,
             withoutTimestamps: true,
-            chunkingStrategy: .vad
+            // Whisper sees 30 s at once: cutting short dictations at pauses loses context and garbles them.
+            chunkingStrategy: audio.count > 29 * Recorder.sampleRate ? .vad : ChunkingStrategy.none
         )
         if !prompt.isEmpty, let tokenizer = kit.tokenizer {
             options.promptTokens = tokenizer.encode(text: " " + prompt).filter { $0 < tokenizer.specialTokens.specialTokenBegin }
