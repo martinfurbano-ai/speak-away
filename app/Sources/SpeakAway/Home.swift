@@ -51,6 +51,8 @@ final class StatsStore: ObservableObject {
 struct HomeView: View {
     @ObservedObject var store: StatsStore
     @ObservedObject var engine: Engine
+    /// Only for `--preview-home`, which has no model loaded.
+    var previewReady = false
 
     private var today: DayKey { DayKey(Date()) }
 
@@ -104,6 +106,7 @@ struct HomeView: View {
 
     private var statusPill: some View {
         let (text, color): (String, Color) = {
+            if previewReady { return ("Listo para dictar", .green) }
             switch engine.state {
             case .ready: return Permission.allGranted ? ("Listo para dictar", .green) : ("Faltan permisos", .orange)
             case .downloading(let p): return ("Descargando \(Int(p * 100)) %", .orange)
@@ -268,8 +271,8 @@ private struct Keycap: View {
 }
 
 final class HomeWindow: NSWindow {
-    init(store: StatsStore, engine: Engine) {
-        let host = NSHostingController(rootView: HomeView(store: store, engine: engine))
+    init(store: StatsStore, engine: Engine, previewReady: Bool = false) {
+        let host = NSHostingController(rootView: HomeView(store: store, engine: engine, previewReady: previewReady))
         super.init(contentRect: NSRect(x: 0, y: 0, width: 720, height: 640),
                    styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView], backing: .buffered, defer: false)
         contentViewController = host

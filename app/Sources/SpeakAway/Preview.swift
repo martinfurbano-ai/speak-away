@@ -13,7 +13,7 @@ enum Preview {
             let words = 120 + (back * 37) % 900
             stats = stats.recording(words: words, seconds: Double(words) / 2.4, on: today.adding(-back))
         }
-        let window = HomeWindow(store: StatsStore(preview: stats), engine: Engine())
+        let window = HomeWindow(store: StatsStore(preview: stats), engine: Engine(), previewReady: true)
         for (name, appearance) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
             window.appearance = NSAppearance(named: appearance)
             window.setFrameOrigin(NSPoint(x: -4000, y: -4000))

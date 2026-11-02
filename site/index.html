@@ -143,6 +143,10 @@ nav .wrap { height: 68px; display: flex; align-items: center; justify-content: s
 .hud[data-state="listening"] .rec { animation: blink 1s steps(1) infinite; }
 .hud[data-state="done"] .rec { background: #45c37a; }
 
+/* Streak window */
+.streak-shot { display: block; margin-top: 48px; }
+.streak-shot img { display: block; width: 100%; max-width: 720px; height: auto; margin: 0 auto; border-radius: 14px; box-shadow: var(--shadow), 0 0 0 1px var(--line); }
+
 /* Keys row */
 .keys-head { max-width: 640px; }
 .keys-head .lede { margin-top: 18px; }
@@ -359,6 +363,19 @@ footer a:hover { color: var(--fg); }
   </div>
 </section>
 
+<section id="racha">
+  <div class="wrap">
+    <div class="keys-head reveal">
+      <h2 data-i18n="streak.title">Tu racha, cada día.</h2>
+      <p class="lede" data-i18n="streak.sub">Días seguidos dictando, palabras por minuto y el tiempo que ahorras. Solo guarda números: lo que dictas nunca se guarda.</p>
+    </div>
+    <picture class="streak-shot reveal">
+      <source srcset="/racha-oscuro.png" media="(prefers-color-scheme: dark)">
+      <img src="/racha-claro.png" width="720" height="720" loading="lazy" alt="Ventana de Speak Away con la racha de días, palabras dictadas, palabras por minuto, tiempo ahorrado y actividad">
+    </picture>
+  </div>
+</section>
+
 <section class="notes" id="notas">
   <div class="wrap">
     <div class="reveal">
@@ -520,7 +537,7 @@ footer a:hover { color: var(--fg); }
     "faq.q4": "Does it work on Windows or Linux?", "faq.a4": "Not yet. We started with Apple Silicon Macs because Whisper runs fastest there. Windows and Linux are planned.",
     "faq.q5": "Is it legal to record a meeting?", "faq.a5": "It depends on where you are. Speak Away shows an indicator while recording and can post a notice in the meeting chat. Ask the others first.",
     "faq.q6": "Is it like Wispr Flow?", "faq.a6": "The idea is similar: talk instead of type. The difference is that Speak Away is open source, runs on your Mac and has no subscription.",
-    "soon": "Coming soon", "foot.l": "Made by Martín Urbano for", "foot.mit": "MIT license.", "foot.privacy": "Privacy"
+    "soon": "Coming soon", "foot.l": "Made by Martín Urbano for", "foot.mit": "MIT license.", "foot.privacy": "Privacy", "streak.title": "Keep your streak.", "streak.sub": "Days in a row, words per minute and the time you save. It only keeps numbers: what you say is never stored."
   };
 
   const SAMPLES = {
