@@ -13,17 +13,21 @@ enum Preview {
             let words = 120 + (back * 37) % 900
             stats = stats.recording(words: words, seconds: Double(words) / 2.4, on: today.adding(-back))
         }
-        let window = HomeWindow(store: StatsStore(preview: stats), engine: Engine(), previewReady: true)
+        let window = HubWindow(store: StatsStore(preview: stats), engine: Engine(), previewReady: true)
+        if let s = ProcessInfo.processInfo.environment["SECTION"], let section = HubSection(rawValue: s) { window.model.section = section }
         for (name, appearance) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
             window.appearance = NSAppearance(named: appearance)
-            window.setFrameOrigin(NSPoint(x: -4000, y: -4000))
+            window.center()
             window.orderFrontRegardless()
-            RunLoop.main.run(until: Date().addingTimeInterval(0.6))
-            guard let view = window.contentView?.superview,
-                  let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { continue }
-            view.cacheDisplay(in: view.bounds, to: rep)
-            try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: "\(base)-\(name).png"))
+            RunLoop.main.run(until: Date().addingTimeInterval(1.5))
+            // Real window capture: offscreen caching misses the Liquid Glass layers.
+            let shot = Process()
+            shot.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
+            shot.arguments = ["-x", "-o", "-l", String(window.windowNumber), "\(base)-\(name).png"]
+            try? shot.run()
+            shot.waitUntilExit()
         }
+        window.orderOut(nil)
         exit(0)
     }
 }

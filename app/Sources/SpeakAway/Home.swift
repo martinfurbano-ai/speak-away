@@ -73,11 +73,7 @@ struct HomeView: View {
             activityCard(stats)
             footer
         }
-        .padding(.horizontal, 28)
-        .padding(.top, 30)
-        .padding(.bottom, 24)
-        .frame(width: 720)
-        .background(Theme.background)
+        .padding(28)
     }
 
     // MARK: Pieces
@@ -251,14 +247,11 @@ struct HomeView: View {
             Text("habla").font(.system(size: 12)).foregroundStyle(.secondary)
             Keycap("fn")
             Spacer()
-            Link("Hecho por Martín Urbano · Open Source Everything", destination: Settings.instagram)
-                .font(.system(size: 12))
-                .foregroundStyle(.secondary)
         }
     }
 }
 
-private struct Keycap: View {
+struct Keycap: View {
     let label: String
     init(_ label: String) { self.label = label }
     var body: some View {
@@ -267,21 +260,5 @@ private struct Keycap: View {
             .frame(width: 28, height: 24)
             .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(Theme.card))
             .overlay(RoundedRectangle(cornerRadius: 6, style: .continuous).strokeBorder(Theme.line))
-    }
-}
-
-final class HomeWindow: NSWindow {
-    init(store: StatsStore, engine: Engine, previewReady: Bool = false) {
-        let host = NSHostingController(rootView: HomeView(store: store, engine: engine, previewReady: previewReady))
-        super.init(contentRect: NSRect(x: 0, y: 0, width: 720, height: 640),
-                   styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView], backing: .buffered, defer: false)
-        contentViewController = host
-        title = "Speak Away"
-        titleVisibility = .hidden
-        titlebarAppearsTransparent = true
-        backgroundColor = Theme.backgroundNS
-        isReleasedWhenClosed = false
-        setContentSize(host.view.fittingSize)
-        center()
     }
 }

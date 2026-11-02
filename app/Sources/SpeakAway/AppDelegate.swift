@@ -1,6 +1,7 @@
 import AppKit
 import Combine
 import SpeakAwayCore
+import SwiftUI
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -16,7 +17,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let statusLine = NSMenuItem(title: "", action: nil, keyEquivalent: "")
     private var welcome: WelcomeWindow?
     private let stats = StatsStore()
-    private var home: HomeWindow?
+    private var home: HubWindow?
+    private let sounds = Sounds()
     private var mode = Mode.idle { didSet { animateGlyph() } }
     private var tap = FnTap()
     private var hideWork: DispatchWorkItem?
@@ -85,11 +87,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hudModel.level = 0
         hudModel.phase = .listening
         hud.showOnActiveScreen()
+        sounds.play(.start)
     }
 
     private func stopRecording() {
         guard mode == .recording else { return }
         let audio = recorder.stop()
+        sounds.play(.stop)
         hudModel.level = 0
         guard SpeechGate.check(audio, sampleRate: Recorder.sampleRate) == .speech else {
             mode = .idle
@@ -103,6 +107,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 let text = SpeechGate.clean(try await engine.transcribe(audio))
                 guard !text.isEmpty else { return hideHUD(after: 0) }
                 Paster.paste(text)
+                sounds.play(.paste)
                 stats.record(text: text, seconds: Double(audio.count) / Double(Recorder.sampleRate))
                 hudModel.phase = Permission.paste.granted ? .pasted : .note("COPIADO, USA ⌘V")
                 hideHUD(after: 1.1)
@@ -221,7 +226,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func openHome() { showHome() }
 
     private func showHome() {
-        if home == nil { home = HomeWindow(store: stats, engine: engine) }
+        if home == nil {
+            home = HubWindow(store: stats, engine: engine, openPermissions: { [weak self] in self?.showWelcome() })
+        }
         NSApp.activate(ignoringOtherApps: true)
         home?.makeKeyAndOrderFront(nil)
     }

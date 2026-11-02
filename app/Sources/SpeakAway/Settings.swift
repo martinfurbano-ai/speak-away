@@ -23,6 +23,17 @@ enum Settings {
         set { store.set(newValue, forKey: "language") }
     }
 
+    /// Device UID of the chosen mic; empty means the system default.
+    static var microphone: String {
+        get { store.string(forKey: "microphone") ?? "" }
+        set { store.set(newValue, forKey: "microphone") }
+    }
+
+    static var sounds: Bool {
+        get { store.object(forKey: "sounds") as? Bool ?? true }
+        set { store.set(newValue, forKey: "sounds") }
+    }
+
     static var welcomed: Bool {
         get { store.bool(forKey: "welcomed") }
         set { store.set(newValue, forKey: "welcomed") }

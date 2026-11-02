@@ -14,6 +14,7 @@ final class Recorder {
 
     func start() throws {
         let engine = AVAudioEngine()
+        Microphones.apply(Settings.microphone, to: engine)
         let input = engine.inputNode
         let inFormat = input.outputFormat(forBus: 0)
         guard inFormat.sampleRate > 0, inFormat.channelCount > 0 else { throw Failure.noMicrophone }
