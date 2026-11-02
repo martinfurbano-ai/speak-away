@@ -24,6 +24,9 @@ enum SelfTest {
                 let started = Date()
                 let text = SpeechGate.clean(try await engine.transcribe(audio))
                 print(String(format: "TEXT (%.1f s): %@", Date().timeIntervalSince(started), text))
+                let piped = TextPipeline.process(raw: text, language: nil, dictionary: PersonalDictionary(), snippets: Snippets(),
+                                                 style: .casual, autoEdit: true)
+                print("PIPE (casual, auto-edit): \(piped)")
                 exit(0)
             } catch {
                 fail(error.localizedDescription)

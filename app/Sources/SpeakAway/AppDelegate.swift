@@ -22,6 +22,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let dictionary = ObservableJSONStore(file: StorePaths.file(StorePaths.dictionary), default: PersonalDictionary())
     private let snippets = ObservableJSONStore(file: StorePaths.file(StorePaths.snippets), default: Snippets())
     private let styles = ObservableJSONStore(file: StorePaths.file(StorePaths.style), default: StyleSettings())
+    private lazy var meetings = MeetingsModel(recorder: MeetingRecorder { [weak self] audio in
+        try await self?.engine.transcribe(audio) ?? ""
+    })
+    private let watcher = MeetingWatcher()
+    private var meetingPrompt: MeetingPromptPanel?
     private var home: HubWindow?
     private let sounds = Sounds()
     private var mode = Mode.idle { didSet { animateGlyph() } }
@@ -52,6 +57,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             DispatchQueue.main.async { self?.otherKeyPressed() }
         }
         fn.start()
+        startMeetingWatcher()
         // Input Monitoring can be granted while the app runs: keep trying until the Fn listener is on.
         permissionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
             Task { @MainActor in
@@ -173,6 +179,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    // MARK: Meetings
+
+    /// Like Wispr Flow: when a call starts, ask once whether to take notes; when it ends, save the note.
+    private func startMeetingWatcher() {
+        watcher.isBusy = { [weak self] in self?.meetings.recorder.isRecording == true }
+        watcher.onMeetingStarted = { [weak self] app in
+            guard let self, !self.meetings.recorder.isRecording else { return }
+            self.meetingPrompt?.orderOut(nil)
+            let panel = MeetingPromptPanel(app: app.name, onYes: { [weak self] in
+                self?.meetingPrompt?.orderOut(nil)
+                self?.meetings.start(app: app.name)
+            }, onNo: { [weak self] in self?.meetingPrompt?.orderOut(nil) })
+            self.meetingPrompt = panel
+            panel.show()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 20) { [weak panel] in panel?.orderOut(nil) }
+        }
+        watcher.onMeetingEnded = { [weak self] in
+            guard let self else { return }
+            self.meetingPrompt?.orderOut(nil)
+            if self.meetings.recorder.isRecording {
+                self.meetings.stop()
+                self.flash("NOTA GUARDADA")
+            }
+        }
+        watcher.start()
+    }
+
     /// Command Mode: the spoken instruction rewrites the selected text, with Apple's on-device model.
     private func runCommand(_ instruction: String, language: String?) async {
         let availability = LocalBrain.availability
@@ -242,6 +275,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(statusLine)
         menu.addItem(.separator())
         menu.addItem(item("Abrir Speak Away", #selector(openHome)))
+        menu.addItem(item("Bloc de notas", #selector(openScratchpad)))
+        menu.addItem(item("Tomar notas de una reunión", #selector(startMeeting)))
         menu.addItem(submenu("Idioma", options: Settings.languages, current: { Settings.language }) { Settings.language = $0 })
         menu.addItem(submenu("Modelo", options: Settings.models, current: { Settings.model }) { [weak self] id in
             Settings.model = id
@@ -296,10 +331,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func openWelcome() { showWelcome() }
     @objc private func openHome() { showHome() }
+    @objc private func openScratchpad() { showHome(); home?.model.section = .bloc }
+    @objc private func startMeeting() {
+        showHome()
+        home?.model.section = .reuniones
+        if !meetings.recorder.isRecording { meetings.start() }
+    }
 
     private func showHome() {
         if home == nil {
-            home = HubWindow(stores: HubStores(stats: stats, history: history, scratchpad: scratchpad), engine: engine, openPermissions: { [weak self] in self?.showWelcome() })
+            home = HubWindow(stores: HubStores(stats: stats, history: history, scratchpad: scratchpad, dictionary: dictionary,
+                                                snippets: snippets, styles: styles, meetings: meetings), engine: engine, openPermissions: { [weak self] in self?.showWelcome() })
         }
         NSApp.activate(ignoringOtherApps: true)
         home?.makeKeyAndOrderFront(nil)

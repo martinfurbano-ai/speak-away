@@ -257,7 +257,8 @@ struct Keycap: View {
     var body: some View {
         Text(label)
             .font(.system(size: 11, weight: .semibold, design: .rounded))
-            .frame(width: 28, height: 24)
+            .padding(.horizontal, 7)
+            .frame(minWidth: 28, minHeight: 24)
             .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(Theme.card))
             .overlay(RoundedRectangle(cornerRadius: 6, style: .continuous).strokeBorder(Theme.line))
     }

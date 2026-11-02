@@ -25,7 +25,26 @@ enum Preview {
         let pad = ScratchpadStore(folder: temp.appendingPathComponent("Notes"))
         pad.add("Ideas para el video de Speak Away\n\nAbrir con la pregunta: ¿cuánto pagas al año por dictar? Mostrar Fn Fn en WhatsApp y cerrar con el link.")
         pad.add("Lista del súper: café, avena, limones")
-        let window = HubWindow(stores: HubStores(stats: StatsStore(preview: stats), history: history, scratchpad: pad), engine: Engine(), previewReady: true)
+        let dict = ObservableJSONStore(file: temp.appendingPathComponent("d.json"), default: PersonalDictionary(entries: [
+            DictionaryEntry(word: "Speak Away", replacing: ["spik away", "speakaway"]), DictionaryEntry(word: "WhisperKit"),
+            DictionaryEntry(word: "Open Source Everything"), DictionaryEntry(word: "Panamá Pacífico", replacing: ["panama pacifico"]),
+        ]))
+        let snips = ObservableJSONStore(file: temp.appendingPathComponent("s.json"), default: Snippets(items: [
+            Snippet(trigger: "mi link de calendario", expansion: "Agenda una llamada conmigo aquí: cal.com/tu-nombre/30min"),
+            Snippet(trigger: "mi dirección", expansion: "Calle 50, Edificio Global, piso 12, Ciudad de Panamá"),
+        ]))
+        let styles = ObservableJSONStore(file: temp.appendingPathComponent("st.json"), default: StyleSettings())
+        let store = NotesStore(folder: temp.appendingPathComponent("Meetings"))
+        let start = Date().addingTimeInterval(-7_200)
+        _ = try? store.save(Meeting(title: "Llamada con el equipo de diseño", app: "Zoom", startedAt: start, endedAt: start.addingTimeInterval(1_860), lines: [
+            TranscriptLine(speaker: .them, start: 4, text: "¿Ya viste la nueva versión del logo?"),
+            TranscriptLine(speaker: .me, start: 9, text: "Sí, me encanta la burbuja. Solo cambiaría el rojo por uno un poco más cálido."),
+            TranscriptLine(speaker: .them, start: 17, text: "Perfecto, lo ajusto hoy y te lo mando antes de las 5."),
+        ], summary: "**Resumen.** Se aprobó el logo con un rojo más cálido.\n\n**Pendientes.** Ajustar el color y enviarlo hoy antes de las 5."))
+        let meetings = MeetingsModel(recorder: MeetingRecorder { _ in "" }, store: store)
+        let window = HubWindow(stores: HubStores(stats: StatsStore(preview: stats), history: history, scratchpad: pad, dictionary: dict,
+                                                 snippets: snips, styles: styles, meetings: meetings), engine: Engine(), previewReady: true)
+        if ProcessInfo.processInfo.environment["OPEN"] == "1" { meetings.openID = meetings.meetings.first?.id }
         if let s = ProcessInfo.processInfo.environment["SECTION"], let section = HubSection(rawValue: s) { window.model.section = section }
         for (name, appearance) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
             window.appearance = NSAppearance(named: appearance)

@@ -30,6 +30,8 @@
 	<string>public.app-category.productivity</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Speak Away escucha tu voz mientras dictas y la transcribe en tu Mac. El audio no sale de tu computadora.</string>
+	<key>NSAudioCaptureUsageDescription</key>
+	<string>Speak Away escucha el audio de tu llamada para escribir lo que dicen los demás en tus notas de reunión. El audio no sale de tu Mac.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Hecho por Martín Urbano. Open Source Everything. Licencia MIT.</string>
 </dict>

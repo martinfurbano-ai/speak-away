@@ -105,6 +105,14 @@ struct HubView: View {
             HistoryPage(history: stores.history)
         } else if s == .bloc {
             ScratchpadPage(store: stores.scratchpad)
+        } else if s == .reuniones {
+            MeetingsPage(model: stores.meetings, recorder: stores.meetings.recorder)
+        } else if s == .diccionario {
+            DictionaryPage(store: stores.dictionary)
+        } else if s == .atajos {
+            SnippetsPage(store: stores.snippets)
+        } else if s == .estilo {
+            StylePage(store: stores.styles)
         } else if s == .ajustes {
             SettingsPage(engine: engine, openPermissions: openPermissions)
         } else if let custom = pages[s] {

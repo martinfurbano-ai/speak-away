@@ -8,6 +8,10 @@ struct HubStores {
     let stats: StatsStore
     let history: HistoryStore
     let scratchpad: ScratchpadStore
+    let dictionary: ObservableJSONStore<PersonalDictionary>
+    let snippets: ObservableJSONStore<Snippets>
+    let styles: ObservableJSONStore<StyleSettings>
+    let meetings: MeetingsModel
 }
 
 // MARK: Historial
