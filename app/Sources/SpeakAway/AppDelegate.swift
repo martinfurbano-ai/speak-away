@@ -17,6 +17,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let statusLine = NSMenuItem(title: "", action: nil, keyEquivalent: "")
     private var welcome: WelcomeWindow?
     private let stats = StatsStore()
+    private let history = HistoryStore()
+    private let scratchpad = ScratchpadStore()
     private var home: HubWindow?
     private let sounds = Sounds()
     private var mode = Mode.idle { didSet { animateGlyph() } }
@@ -109,6 +111,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 Paster.paste(text)
                 sounds.play(.paste)
                 stats.record(text: text, seconds: Double(audio.count) / Double(Recorder.sampleRate))
+                history.add(text: text, raw: text, app: NSWorkspace.shared.frontmostApplication?.localizedName)
                 hudModel.phase = Permission.paste.granted ? .pasted : .note("COPIADO, USA ⌘V")
                 hideHUD(after: 1.1)
             } catch {
@@ -227,7 +230,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func showHome() {
         if home == nil {
-            home = HubWindow(store: stats, engine: engine, openPermissions: { [weak self] in self?.showWelcome() })
+            home = HubWindow(stores: HubStores(stats: stats, history: history, scratchpad: scratchpad), engine: engine, openPermissions: { [weak self] in self?.showWelcome() })
         }
         NSApp.activate(ignoringOtherApps: true)
         home?.makeKeyAndOrderFront(nil)

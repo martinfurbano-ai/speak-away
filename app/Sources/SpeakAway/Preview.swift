@@ -13,7 +13,19 @@ enum Preview {
             let words = 120 + (back * 37) % 900
             stats = stats.recording(words: words, seconds: Double(words) / 2.4, on: today.adding(-back))
         }
-        let window = HubWindow(store: StatsStore(preview: stats), engine: Engine(), previewReady: true)
+        let temp = FileManager.default.temporaryDirectory.appendingPathComponent("speakaway-preview-\(UUID().uuidString)")
+        let history = HistoryStore(folder: temp, defaults: UserDefaults(suiteName: "speakaway-preview")!)
+        let samples: [(String, String, Double)] = [
+            ("Hola Carla, te mando la cotización hoy antes de las 5. El martes te llamo para revisarla juntos.", "Mail", -600),
+            ("dale, nos vemos a las 3 en la oficina", "WhatsApp", -3_000),
+            ("Pendientes de la semana: cerrar la propuesta del cliente, revisar el diseño del sitio y llamar al banco.", "Notas", -90_000),
+            ("Thanks for the call today. I'll send the summary and next steps by Friday.", "Slack", -95_000),
+        ]
+        for (text, app, ago) in samples { history.add(text: text, raw: text, app: app, date: Date().addingTimeInterval(ago)) }
+        let pad = ScratchpadStore(folder: temp.appendingPathComponent("Notes"))
+        pad.add("Ideas para el video de Speak Away\n\nAbrir con la pregunta: ¿cuánto pagas al año por dictar? Mostrar Fn Fn en WhatsApp y cerrar con el link.")
+        pad.add("Lista del súper: café, avena, limones")
+        let window = HubWindow(stores: HubStores(stats: StatsStore(preview: stats), history: history, scratchpad: pad), engine: Engine(), previewReady: true)
         if let s = ProcessInfo.processInfo.environment["SECTION"], let section = HubSection(rawValue: s) { window.model.section = section }
         for (name, appearance) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
             window.appearance = NSAppearance(named: appearance)

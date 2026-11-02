@@ -42,7 +42,7 @@ final class HubModel: ObservableObject {
 
 struct HubView: View {
     @ObservedObject var model: HubModel
-    @ObservedObject var store: StatsStore
+    let stores: HubStores
     @ObservedObject var engine: Engine
     var previewReady = false
     var openPermissions: () -> Void = {}
@@ -100,7 +100,11 @@ struct HubView: View {
 
     @ViewBuilder private func page(_ s: HubSection) -> some View {
         if s == .inicio {
-            HomeView(store: store, engine: engine, previewReady: previewReady)
+            HomeView(store: stores.stats, engine: engine, previewReady: previewReady)
+        } else if s == .historial {
+            HistoryPage(history: stores.history)
+        } else if s == .bloc {
+            ScratchpadPage(store: stores.scratchpad)
         } else if s == .ajustes {
             SettingsPage(engine: engine, openPermissions: openPermissions)
         } else if let custom = pages[s] {
@@ -235,10 +239,10 @@ struct SettingsPage: View {
 final class HubWindow: NSWindow {
     let model = HubModel()
 
-    init(store: StatsStore, engine: Engine, previewReady: Bool = false, openPermissions: @escaping () -> Void = {}, pages: [HubSection: AnyView] = [:]) {
+    init(stores: HubStores, engine: Engine, previewReady: Bool = false, openPermissions: @escaping () -> Void = {}, pages: [HubSection: AnyView] = [:]) {
         super.init(contentRect: NSRect(x: 0, y: 0, width: 1000, height: 720),
                    styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView], backing: .buffered, defer: false)
-        contentViewController = NSHostingController(rootView: HubView(model: model, store: store, engine: engine, previewReady: previewReady, openPermissions: openPermissions, pages: pages))
+        contentViewController = NSHostingController(rootView: HubView(model: model, stores: stores, engine: engine, previewReady: previewReady, openPermissions: openPermissions, pages: pages))
         title = "Speak Away"
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
