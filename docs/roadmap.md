@@ -8,6 +8,8 @@
 | 0.4 | **Summaries.** Summary template, "Copy for ChatGPT" button | Note gets Summary, Decisions, Action items, Open questions |
 | 0.5 | **Connectors.** MCP server: stdio for Claude Desktop, HTTP + tunnel for ChatGPT | "Summarize my last meeting" works from both |
 | 1.0 | **Polished.** Notarized .dmg (done in 0.1.1) and Mac App Store listing (submitted in 0.1.1) | Someone who never opened Terminal installs and dictates in under 3 minutes |
+| 0.2 | **Wispr Flow parity, local.** Hub with Liquid Glass sidebar; history, scratchpad, dictionary, voice snippets, styles per app, auto-edits and backtracking, hold-to-talk, Command Mode and meeting summaries with Apple's on-device model (no key), notetaker with mic + system audio, sounds, mic picker | Everything Wispr Flow does on Mac, without an account or a key |
+| Pro (later) | **Paid, optional, about $5/month.** Cloud sync of notes and history across devices in our own database, and hosted model keys for meeting summaries so nobody needs their own. The free local app stays complete | Same app, signs in only if you want sync |
 | Later | Windows and Linux (faster-whisper), speaker separation inside "Them", custom vocabulary | |
 
 ## Open decisions
