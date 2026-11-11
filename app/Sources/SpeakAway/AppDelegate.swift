@@ -47,14 +47,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         recorder.onLevel = { [weak self] level in
             DispatchQueue.main.async { self?.hudModel.level = level }
         }
-        fn.onFnDown = { [weak self] in
-            DispatchQueue.main.async { self?.fnPressed() }
+        // The listener calls from its own thread with the time each key moved, so a busy main thread
+        // can delay these but never change whether a press was a tap or a hold.
+        fn.onFnDown = { [weak self] time, command in
+            DispatchQueue.main.async { self?.fnPressed(at: time, command: command) }
         }
-        fn.onFnUp = { [weak self] in
-            DispatchQueue.main.async { self?.fnReleased() }
+        fn.onFnUp = { [weak self] time in
+            DispatchQueue.main.async { self?.fnReleased(at: time) }
         }
-        fn.onOtherKey = { [weak self] in
-            DispatchQueue.main.async { self?.otherKeyPressed() }
+        fn.onOtherKey = { [weak self] time in
+            DispatchQueue.main.async { self?.otherKeyPressed(at: time) }
         }
         FnSetting.takeOver()
         fn.start()
@@ -88,25 +90,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: Dictation
 
     // Hold Fn to talk, or tap twice for hands-free. Control + Fn speaks a command for the selected text.
-    private func fnPressed() {
-        let (next, action) = tap.press(at: now, recording: mode == .recording)
+    private func fnPressed(at time: TimeInterval, command: Bool) {
+        let (next, action) = tap.press(at: time, recording: mode == .recording)
         tap = next
-        run(action, command: fn.commandHeld)
+        run(action, command: command)
     }
 
-    private func fnReleased() {
-        let (next, action) = tap.release(at: now, recording: mode == .recording)
-        tap = next
-        run(action, command: commandMode)
-    }
-
-    private func otherKeyPressed() {
-        let (next, action) = tap.otherKey(at: now, recording: mode == .recording)
+    private func fnReleased(at time: TimeInterval) {
+        let (next, action) = tap.release(at: time, recording: mode == .recording)
         tap = next
         run(action, command: commandMode)
     }
 
-    private var now: TimeInterval { ProcessInfo.processInfo.systemUptime }
+    private func otherKeyPressed(at time: TimeInterval) {
+        let (next, action) = tap.otherKey(at: time, recording: mode == .recording)
+        tap = next
+        run(action, command: commandMode)
+    }
 
     /// Like Wispr Flow: clicking the pill starts hands-free dictation, clicking again stops it.
     private func pillClicked() {
@@ -191,7 +191,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 if Settings.polish, LocalBrain.availability.isUsable {
                     text = (try? await LocalBrain.polish(text, style: style.rawValue, language: language)) ?? text
                 }
-                Paster.paste(text)
+                Paster.paste(text, send: Permission.paste.granted)
                 sounds.play(.paste)
                 stats.record(text: text, seconds: Double(audio.count) / Double(Recorder.sampleRate))
                 history.add(text: text, raw: raw, app: targetAppName)

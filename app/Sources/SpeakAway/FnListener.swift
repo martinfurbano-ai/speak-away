@@ -5,10 +5,16 @@ import SpeakAwayCore
 /// Listens to the Fn (Globe) key anywhere in macOS. Needs Input Monitoring permission.
 /// With Accessibility it also swallows the Fn key itself (`FnKeyGuard`), so macOS never opens the emoji
 /// panel on top of the app where the dictation is about to be pasted.
+///
+/// The tap runs on its own thread, never on the main one. An active tap sits in front of every key press
+/// on the Mac, including the Cmd+V that pastes a dictation: on the main thread any busy moment (starting
+/// the microphone, saving the history) held those keys back, Fn presses arrived merged, and a late Cmd+V
+/// pasted whatever the clipboard held by then. Callbacks get the time the key moved and run on this thread.
 final class FnListener {
-    var onFnDown: (() -> Void)?
-    var onFnUp: (() -> Void)?
-    var onOtherKey: (() -> Void)?
+    /// Fn went down: when, and whether Control was held (Command Mode).
+    var onFnDown: ((TimeInterval, Bool) -> Void)?
+    var onFnUp: ((TimeInterval) -> Void)?
+    var onOtherKey: ((TimeInterval) -> Void)?
     private(set) var isRunning = false
     /// True when the tap can drop events (Accessibility granted), false when it only listens.
     private(set) var isGuarding = false
@@ -18,6 +24,24 @@ final class FnListener {
     private var tap: CFMachPort?
     private var source: CFRunLoopSource?
     private var fnDown = false
+
+    /// The run loop of the listener's own thread, started on first use.
+    private lazy var runLoop: CFRunLoop = {
+        var loop: CFRunLoop?
+        let ready = DispatchSemaphore(value: 0)
+        let thread = Thread {
+            loop = CFRunLoopGetCurrent()
+            // A run loop without sources returns at once: a port keeps it alive.
+            RunLoop.current.add(NSMachPort(), forMode: .default)
+            ready.signal()
+            RunLoop.current.run()
+        }
+        thread.name = "Speak Away keys"
+        thread.qualityOfService = .userInteractive
+        thread.start()
+        ready.wait()
+        return loop!
+    }()
 
     /// Starts listening, guarding the Fn key when macOS allows it. Called again later it upgrades a
     /// listen-only tap to a guarding one once Accessibility is granted.
@@ -53,9 +77,10 @@ final class FnListener {
 
     private func install(_ newTap: CFMachPort, guarding: Bool) {
         if let tap { CGEvent.tapEnable(tap: tap, enable: false); CFMachPortInvalidate(tap) }
-        if let source { CFRunLoopRemoveSource(CFRunLoopGetMain(), source, .commonModes) }
+        if let source { CFRunLoopRemoveSource(runLoop, source, .commonModes) }
         let newSource = CFMachPortCreateRunLoopSource(nil, newTap, 0)
-        CFRunLoopAddSource(CFRunLoopGetMain(), newSource, .commonModes)
+        CFRunLoopAddSource(runLoop, newSource, .commonModes)
+        CFRunLoopWakeUp(runLoop)
         CGEvent.tapEnable(tap: newTap, enable: true)
         DebugLog.write(guarding ? "fn listener on, guarding the Fn key" : "fn listener on, listen only")
         tap = newTap
@@ -71,22 +96,23 @@ final class FnListener {
             if let tap { CGEvent.tapEnable(tap: tap, enable: true) }
             return false
         }
+        let time = ProcessInfo.processInfo.systemUptime
         let code = event.getIntegerValueField(.keyboardEventKeycode)
         let swallow = isGuarding && FnKeyGuard.swallows(Self.kind(type), keyCode: code)
         if type == .keyUp { return swallow }
         if type == .keyDown {
             // The Fn/Globe key itself can arrive as a key press (63 or 179); it must not count as "another key".
             if code == FnKeyGuard.fnKeyCode || code == FnKeyGuard.globeKeyCode { return swallow }
-            onOtherKey?()
+            onOtherKey?(time)
             return false
         }
         let down = event.flags.contains(.maskSecondaryFn)
         if down && !fnDown {
             commandHeld = event.flags.contains(.maskControl)
             DebugLog.write("fn down\(commandHeld ? " +control" : "")")
-            onFnDown?()
+            onFnDown?(time, commandHeld)
         }
-        if !down && fnDown { DebugLog.write("fn up"); onFnUp?() }
+        if !down && fnDown { DebugLog.write("fn up"); onFnUp?(time) }
         fnDown = down
         return swallow
     }
