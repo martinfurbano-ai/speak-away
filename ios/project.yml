@@ -53,6 +53,7 @@ targets:
       - path: SpeakAway
         excludes:
           - SpeakAway.entitlements
+      - path: Shared
       - path: ../app/Resources/SpeakAway.icon
         buildPhase: resources
     dependencies:
@@ -100,6 +101,7 @@ targets:
       - path: SpeakAwayKeyboard
         excludes:
           - SpeakAwayKeyboard.entitlements
+      - path: Shared
     dependencies:
       - target: SpeakAwayCore
     info:

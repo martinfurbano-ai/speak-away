@@ -1,26 +1,20 @@
 import SwiftUI
-import SpeakAwayBrain
+import SpeakAwayCore
 
 @main
 struct SpeakAwayApp: App {
+    @StateObject private var model = AppModel()
+
+    init() {
+        SelfTest.runIfRequested()
+    }
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environmentObject(model)
+                .environmentObject(model.session)
+                .onOpenURL { model.open($0) }
         }
-    }
-}
-
-/// Placeholder home screen. The real screens arrive with the session bridge.
-struct ContentView: View {
-    var body: some View {
-        VStack(spacing: 8) {
-            Text("Speak Away")
-                .font(.largeTitle.weight(.semibold))
-            // Proves the SpeakAwayBrain framework is linked into the app.
-            Text(LocalBrain.availability.isUsable ? "On-device brain ready" : "On-device brain not available")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .padding()
     }
 }
