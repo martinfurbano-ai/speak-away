@@ -1,0 +1,129 @@
+name: SpeakAway
+options:
+  bundleIdPrefix: com.opensourceeverything
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: false
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.3.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    CLANG_ENABLE_MODULES: YES
+
+targets:
+  # The shared logic is compiled straight from the Swift package sources, so the iOS
+  # project never has to resolve WhisperKit (that dependency belongs to the Mac app only).
+  SpeakAwayCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../app/Sources/SpeakAwayCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.opensourceeverything.speakaway.core
+        GENERATE_INFOPLIST_FILE: YES
+        DEFINES_MODULE: YES
+        SKIP_INSTALL: YES
+        TARGETED_DEVICE_FAMILY: "1"
+
+  SpeakAwayBrain:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../app/Sources/SpeakAwayBrain
+    dependencies:
+      - target: SpeakAwayCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.opensourceeverything.speakaway.brain
+        GENERATE_INFOPLIST_FILE: YES
+        DEFINES_MODULE: YES
+        SKIP_INSTALL: YES
+        TARGETED_DEVICE_FAMILY: "1"
+
+  SpeakAway:
+    type: application
+    platform: iOS
+    sources:
+      - path: SpeakAway
+        excludes:
+          - SpeakAway.entitlements
+      - path: ../app/Resources/SpeakAway.icon
+        buildPhase: resources
+    dependencies:
+      - target: SpeakAwayCore
+      - target: SpeakAwayBrain
+      - target: SpeakAwayKeyboard
+    info:
+      path: SpeakAway/Info.plist
+      properties:
+        CFBundleDisplayName: Speak Away
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
+        LSApplicationCategoryType: public.app-category.productivity
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIBackgroundModes:
+          - audio
+        NSMicrophoneUsageDescription: Speak Away listens to your voice while you dictate and turns it into text on this iPhone. The audio never leaves your phone.
+        NSSpeechRecognitionUsageDescription: Speak Away uses Apple's on-device speech recognition to turn your voice into text. Nothing is sent to a server.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.opensourceeverything.speakaway
+            CFBundleURLSchemes:
+              - speakaway
+    entitlements:
+      path: SpeakAway/SpeakAway.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.opensourceeverything.speakaway
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.opensourceeverything.speakaway
+        ASSETCATALOG_COMPILER_APPICON_NAME: SpeakAway
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1"
+        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks
+
+  SpeakAwayKeyboard:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: SpeakAwayKeyboard
+        excludes:
+          - SpeakAwayKeyboard.entitlements
+    dependencies:
+      - target: SpeakAwayCore
+    info:
+      path: SpeakAwayKeyboard/Info.plist
+      properties:
+        CFBundleDisplayName: Speak Away
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController
+          NSExtensionAttributes:
+            IsASCIICapable: true
+            PrefersRightToLeft: false
+            PrimaryLanguage: en-US
+            RequestsOpenAccess: true
+    entitlements:
+      path: SpeakAwayKeyboard/SpeakAwayKeyboard.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.opensourceeverything.speakaway
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.opensourceeverything.speakaway.keyboard
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1"
+        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @executable_path/../../Frameworks
