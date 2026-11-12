@@ -8,12 +8,15 @@ public enum SessionMessage: Equatable, Sendable {
     case stop
     /// Drop the recording without transcribing.
     case cancel
-    /// Command Mode: apply a spoken `instruction` to `on`, the text the keyboard picked.
+    /// Command Mode, spoken: start recording an instruction for `on`, the text the keyboard picked
+    /// (`CommandTarget.text`). `stop` ends it; the result replaces that text.
+    case startCommand(on: String)
+    /// Command Mode, already written: apply `instruction` to `on` right away, without recording.
     case command(instruction: String, on: String)
 }
 
 extension SessionMessage: Codable {
-    private enum Kind: String, Codable { case start, stop, cancel, command }
+    private enum Kind: String, Codable { case start, stop, cancel, startCommand, command }
     private enum Key: String, CodingKey { case type, instruction, text }
 
     // Stored as {"type": "command", "instruction": "...", "text": "..."}: readable, and stable if cases are added.
@@ -23,6 +26,7 @@ extension SessionMessage: Codable {
         case .start: self = .start
         case .stop: self = .stop
         case .cancel: self = .cancel
+        case .startCommand: self = .startCommand(on: try c.decode(String.self, forKey: .text))
         case .command:
             self = .command(instruction: try c.decode(String.self, forKey: .instruction),
                             on: try c.decode(String.self, forKey: .text))
@@ -35,6 +39,9 @@ extension SessionMessage: Codable {
         case .start: try c.encode(Kind.start, forKey: .type)
         case .stop: try c.encode(Kind.stop, forKey: .type)
         case .cancel: try c.encode(Kind.cancel, forKey: .type)
+        case .startCommand(let text):
+            try c.encode(Kind.startCommand, forKey: .type)
+            try c.encode(text, forKey: .text)
         case .command(let instruction, let text):
             try c.encode(Kind.command, forKey: .type)
             try c.encode(instruction, forKey: .instruction)
@@ -44,15 +51,37 @@ extension SessionMessage: Codable {
 }
 
 /// The file the keyboard writes: a message with an id, so the app can ignore one it already handled.
+/// It also says what kind of field the keyboard is in and which style the user picked for it.
 public struct SessionRequest: Codable, Equatable, Identifiable, Sendable {
     public let id: UUID
     public let sentAt: Date
     public let message: SessionMessage
+    public let field: FieldContext
 
-    public init(id: UUID = UUID(), sentAt: Date = Date(), message: SessionMessage) {
+    public init(id: UUID = UUID(), sentAt: Date = Date(), message: SessionMessage, field: FieldContext = .general) {
         self.id = id
         self.sentAt = sentAt
         self.message = message
+        self.field = field
+    }
+
+    /// The request a keyboard builds from the traits of the field it is typing into.
+    /// `keyboardType` and `contentType` are `UIKeyboardType.rawValue` and `UITextContentType.rawValue`.
+    public static func make(_ message: SessionMessage, keyboardType: Int, contentType: String?,
+                            styleOverride: WritingStyle? = nil, id: UUID = UUID(), sentAt: Date = Date()) -> SessionRequest {
+        SessionRequest(id: id, sentAt: sentAt, message: message,
+                       field: FieldContext(keyboardType: keyboardType, contentType: contentType, styleOverride: styleOverride))
+    }
+
+    private enum Key: String, CodingKey { case id, sentAt, message, field }
+
+    // A file written before `field` existed still decodes: it reads as a general field.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: Key.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        sentAt = try c.decode(Date.self, forKey: .sentAt)
+        message = try c.decode(SessionMessage.self, forKey: .message)
+        field = try c.decodeIfPresent(FieldContext.self, forKey: .field) ?? .general
     }
 }
 
@@ -136,4 +165,6 @@ public enum SessionChannel {
 
     /// Opened by the keyboard when no session is running.
     public static let startURL = URL(string: "\(urlScheme)://session/start")!
+    /// Opened by the keyboard when it needs Full Access or the keyboard is not set up yet.
+    public static let setupURL = URL(string: "\(urlScheme)://setup")!
 }

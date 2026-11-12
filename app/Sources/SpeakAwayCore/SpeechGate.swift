@@ -9,8 +9,13 @@ public enum SpeechGate {
     public static let silencePeak: Float = 0.015
 
     public static func check(_ audio: [Float], sampleRate: Int) -> Verdict {
-        if Double(audio.count) < Double(sampleRate) * minSeconds { return .tooShort }
         let peak = audio.reduce(Float(0)) { max($0, abs($1)) }
+        return check(duration: Double(audio.count) / Double(sampleRate), peak: peak)
+    }
+
+    /// The same verdict from what was measured while recording, when the audio itself is not kept (iPhone).
+    public static func check(duration: Double, peak: Float) -> Verdict {
+        if duration < minSeconds { return .tooShort }
         return peak < silencePeak ? .silent : .speech
     }
 

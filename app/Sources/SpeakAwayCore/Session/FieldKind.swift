@@ -3,7 +3,7 @@ import Foundation
 /// What kind of text field the keyboard is typing into, from the field's traits.
 /// It takes raw values (`UIKeyboardType.rawValue`, `UITextContentType.rawValue`) so this file
 /// stays Foundation only and can be tested on the Mac.
-public enum FieldKind: Equatable, Sendable {
+public enum FieldKind: String, Codable, Equatable, Sendable {
     case email
     case web
     case numeric

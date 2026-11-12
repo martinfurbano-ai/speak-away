@@ -28,4 +28,22 @@ final class SpeechGateTests: XCTestCase {
         XCTAssertEqual(SpeechGate.clean(" [BLANK_AUDIO] "), "")
         XCTAssertEqual(SpeechGate.clean("(música)"), "")
     }
+
+    // MARK: Measured while recording (the audio itself is never kept)
+
+    func testDurationAndPeakGiveTheSameVerdictAsTheSamples() {
+        XCTAssertEqual(SpeechGate.check(duration: 0.2, peak: 0.3), .tooShort)
+        XCTAssertEqual(SpeechGate.check(duration: 1, peak: 0.004), .silent)
+        XCTAssertEqual(SpeechGate.check(duration: 1, peak: 0.2), .speech)
+    }
+
+    func testTheShortLimitIsExactlyTheMinimumSeconds() {
+        XCTAssertEqual(SpeechGate.check(duration: SpeechGate.minSeconds, peak: 0.2), .speech)
+        XCTAssertEqual(SpeechGate.check(duration: SpeechGate.minSeconds - 0.01, peak: 0.2), .tooShort)
+    }
+
+    func testThePeakLimitIsExactlyTheSilenceLevel() {
+        XCTAssertEqual(SpeechGate.check(duration: 1, peak: SpeechGate.silencePeak), .speech)
+        XCTAssertEqual(SpeechGate.check(duration: 1, peak: SpeechGate.silencePeak - 0.001), .silent)
+    }
 }
