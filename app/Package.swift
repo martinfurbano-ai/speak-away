@@ -13,9 +13,11 @@ let package = Package(
     targets: [
         // Pure logic, no AppKit: tested on its own.
         .target(name: "SpeakAwayCore"),
+        // The on-device brain (Foundation Models), shared by the Mac and iPhone apps.
+        .target(name: "SpeakAwayBrain", dependencies: ["SpeakAwayCore"]),
         .executableTarget(
             name: "SpeakAway",
-            dependencies: ["SpeakAwayCore", .product(name: "WhisperKit", package: "WhisperKit")]
+            dependencies: ["SpeakAwayCore", "SpeakAwayBrain", .product(name: "WhisperKit", package: "WhisperKit")]
         ),
         .testTarget(name: "SpeakAwayCoreTests", dependencies: ["SpeakAwayCore"]),
     ]

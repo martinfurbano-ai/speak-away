@@ -4,15 +4,15 @@ import SpeakAwayCore
 import FoundationModels
 #endif
 
-/// The brain: cleanup, Command Mode and meeting summaries, all on this Mac with Apple's
-/// on-device model. No API key, no network. When it is not available every call says so
-/// (or, for `polish`, leaves the text as it was).
-enum LocalBrain {
+/// The brain: cleanup, Command Mode and meeting summaries, all on this device with Apple's
+/// on-device model. Shared by the Mac and iPhone apps. No API key, no network. When it is not
+/// available every call says so (or, for `polish`, leaves the text as it was).
+public enum LocalBrain {
     // MARK: Availability
 
-    static var availability: BrainAvailability {
+    public static var availability: BrainAvailability {
         #if canImport(FoundationModels)
-        if #available(macOS 26.0, *) {
+        if #available(macOS 26.0, iOS 26.0, *) {
             switch SystemLanguageModel.default.availability {
             case .available:
                 return .available
@@ -32,10 +32,10 @@ enum LocalBrain {
     // MARK: Polish
 
     /// Light cleanup of a dictation. Returns the original text on any failure.
-    static func polish(_ text: String, style: String, language: String?) async throws -> String {
+    public static func polish(_ text: String, style: String, language: String?) async throws -> String {
         guard availability.isUsable, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return text }
         #if canImport(FoundationModels)
-        if #available(macOS 26.0, *) {
+        if #available(macOS 26.0, iOS 26.0, *) {
             do {
                 let limit = BrainLimits.maxCommandChars(contextTokens: SystemLanguageModel.default.contextSize)
                 let pieces = TextChunker.chunks(text, maxChars: limit)
@@ -57,11 +57,11 @@ enum LocalBrain {
     // MARK: Command Mode
 
     /// "hazlo más formal", "tradúcelo al inglés", "resúmelo en 3 bullets", applied to `selected`.
-    static func command(_ instruction: String, on selected: String, language: String?) async throws -> String {
+    public static func command(_ instruction: String, on selected: String, language: String?) async throws -> String {
         let status = availability
         guard status.isUsable else { throw BrainError.unavailable(status) }
         #if canImport(FoundationModels)
-        if #available(macOS 26.0, *) {
+        if #available(macOS 26.0, iOS 26.0, *) {
             let limit = BrainLimits.maxCommandChars(contextTokens: SystemLanguageModel.default.contextSize)
             guard selected.count <= limit else { throw BrainError.tooLong }
             let p = BrainPrompts.command(instruction: instruction, selected: selected, language: language)
@@ -85,11 +85,11 @@ enum LocalBrain {
 
     /// Summarizes a transcript of any length: chunks that fit the context window are summarized
     /// one by one and then merged.
-    static func summarize(transcript: String, language: String?) async throws -> MeetingSummary {
+    public static func summarize(transcript: String, language: String?) async throws -> MeetingSummary {
         let status = availability
         guard status.isUsable else { throw BrainError.unavailable(status) }
         #if canImport(FoundationModels)
-        if #available(macOS 26.0, *) {
+        if #available(macOS 26.0, iOS 26.0, *) {
             var limit = BrainLimits.maxChunkChars(contextTokens: SystemLanguageModel.default.contextSize)
             // If a chunk still overflows the window, halve the chunk size and start over.
             for attempt in 0..<3 {
@@ -120,7 +120,7 @@ enum LocalBrain {
     #if canImport(FoundationModels)
     // MARK: Foundation Models plumbing
 
-    @available(macOS 26.0, *)
+    @available(macOS 26.0, iOS 26.0, *)
     @Generable
     struct GeneratedNotes {
         @Guide(description: "A short summary of what was discussed, one or two paragraphs.")
@@ -134,14 +134,14 @@ enum LocalBrain {
     }
 
     /// A fresh session per call: the brain keeps no conversation between requests.
-    @available(macOS 26.0, *)
+    @available(macOS 26.0, iOS 26.0, *)
     private static func run(_ p: BrainPrompt, temperature: Double) async throws -> String {
         let session = LanguageModelSession(instructions: p.instructions)
         let response = try await session.respond(to: p.prompt, options: GenerationOptions(temperature: temperature))
         return response.content
     }
 
-    @available(macOS 26.0, *)
+    @available(macOS 26.0, iOS 26.0, *)
     private static func summarizeChunk(_ chunk: String, language: String?, part: Int, of total: Int) async throws -> MeetingSummary {
         let p = BrainPrompts.chunkSummary(transcript: chunk, language: language, part: part, of: total)
         let session = LanguageModelSession(instructions: p.instructions)
@@ -152,7 +152,7 @@ enum LocalBrain {
     }
 
     /// Condenses partial summaries into one text, in rounds when even the summaries do not fit one call.
-    @available(macOS 26.0, *)
+    @available(macOS 26.0, iOS 26.0, *)
     private static func mergeSummaryTexts(_ texts: [String], language: String?, limit: Int) async throws -> String {
         var current = texts.map { String($0.prefix(limit)) }.filter { !$0.isEmpty }
         for _ in 0..<4 {
@@ -174,7 +174,7 @@ enum LocalBrain {
         return current.joined(separator: "\n\n")
     }
 
-    @available(macOS 26.0, *)
+    @available(macOS 26.0, iOS 26.0, *)
     private static func map(_ error: Error) -> BrainError {
         guard let generation = error as? LanguageModelSession.GenerationError else {
             return .failed(error.localizedDescription)

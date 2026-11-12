@@ -1,4 +1,5 @@
 import AppKit
+import SpeakAwayBrain
 import SpeakAwayCore
 import SwiftUI
 
