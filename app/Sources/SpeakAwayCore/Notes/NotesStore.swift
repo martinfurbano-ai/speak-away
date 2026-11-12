@@ -8,7 +8,7 @@ public struct NotesStore: Sendable {
 
     public static var defaultFolder: URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support", isDirectory: true)
+            ?? URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true).appendingPathComponent("Library/Application Support", isDirectory: true)
         return base.appendingPathComponent("Speak Away", isDirectory: true).appendingPathComponent("Meetings", isDirectory: true)
     }
 
