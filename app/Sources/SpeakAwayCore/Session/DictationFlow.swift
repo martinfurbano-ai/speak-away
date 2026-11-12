@@ -23,4 +23,13 @@ public enum DictationFlow {
                                         style: style, autoEdit: autoEdit)
         return PreparedDictation(raw: raw, text: text, style: style)
     }
+
+    /// The text to insert after the on-device brain polished a dictation: its words, with the same
+    /// leading and trailing space the keyboard needs to continue in the same field. A blank answer
+    /// keeps the prepared text.
+    public static func polished(_ polished: String, replacing prepared: PreparedDictation) -> String {
+        let (lead, _, trail) = TextEnvelope.split(prepared.text)
+        let core = polished.trimmingCharacters(in: .whitespacesAndNewlines)
+        return core.isEmpty ? prepared.text : lead + core + trail
+    }
 }
