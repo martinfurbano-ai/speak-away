@@ -65,7 +65,15 @@ struct MeetingsList: View {
     @ViewBuilder private var recordButton: some View {
         if Features.meetingRecorder {
             Button { model.startMeetingRecording() } label: {
-                PrimaryButtonLabel(title: "Record meeting", systemImage: "record.circle")
+                // Not a `Label`: in a list row a label draws its icon in the accent color, which is the color of this
+                // button, so the icon vanished. Drawn by hand, in white like the title.
+                HStack(spacing: 8) {
+                    Image(systemName: "record.circle").foregroundStyle(.white)
+                    Text("Record meeting")
+                }
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
             }
             .buttonStyle(.glassProminent)
             .controlSize(.large)
