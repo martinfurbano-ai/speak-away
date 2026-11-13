@@ -203,6 +203,7 @@ struct KeyboardView: View {
         case .recording: return String(localized: "Stop dictation")
         case .transcribing: return String(localized: "Writing it down")
         case .idle: return String(localized: "Dictate. Opens Speak Away to start.")
+        case .meeting: return String(localized: "Dictation is off while a meeting is recorded.")
         default: return String(localized: "Dictate")
         }
     }
@@ -216,6 +217,9 @@ struct KeyboardView: View {
         case .recording: return model.commandActive ? String(localized: "Say how to change the text") : String(localized: "Listening")
         case .transcribing: return String(localized: "Writing it down")
         case .failed(let reason): return reason
+        case .meeting(let paused):
+            return paused ? String(localized: "Meeting paused. Dictation waits until it ends.")
+                          : String(localized: "Recording a meeting. Dictation waits until it ends.")
         }
     }
 }

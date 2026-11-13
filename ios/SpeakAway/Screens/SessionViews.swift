@@ -16,6 +16,7 @@ struct SessionPill: View {
         case .listening: return Theme.accent
         case .writing: return .orange
         case .problem: return .red
+        case .meeting(let paused): return paused ? .orange : .red
         }
     }
 
@@ -37,6 +38,12 @@ struct SessionPill: View {
             Text("Writing it down")
         case .problem:
             Text("Something went wrong")
+        case .meeting(let paused):
+            if paused {
+                Text("Meeting paused")
+            } else {
+                Text("Recording a meeting")
+            }
         }
     }
 }

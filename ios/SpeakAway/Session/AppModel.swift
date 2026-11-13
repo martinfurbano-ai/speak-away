@@ -83,7 +83,7 @@ final class AppModel: ObservableObject {
         case .home: tab = .home
         case .history: tab = .history
         case .notes: tab = .notes
-        case .meetings:
+        case .meetings, .meetingRecording:
             tab = .notes
             notesSegment = .meetings
         case .meetingDetail:

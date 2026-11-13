@@ -212,8 +212,8 @@ final class KeyboardModel: ObservableObject {
                 haptic(.light)
                 client.send(.stop, field: field)
             }
-        case .transcribing:
-            break
+        case .transcribing, .meeting:
+            break   // a meeting owns the microphone; the status line says so
         case .idle, .failed:
             host.open(SessionChannel.startURL)
         case .ready, .done:

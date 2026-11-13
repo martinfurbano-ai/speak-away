@@ -43,6 +43,13 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Un toque suave al empezar, detener o copiar." } }
       }
     },
+    "A meeting is being recorded. Dictation is back when it ends." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A meeting is being recorded. Dictation is back when it ends." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se está grabando una reunión. El dictado vuelve cuando termine." } }
+      }
+    },
     "A session keeps the microphone ready so the keyboard can start dictating at once." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -379,6 +386,13 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Dictado" } }
       }
     },
+    "Dictation is off while a meeting is recorded." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictation is off while a meeting is recorded." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El dictado está apagado mientras se graba una reunión." } }
+      }
+    },
     "Dictation needs Full Access. Open Speak Away to see how to turn it on." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -694,6 +708,20 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Yo" } }
       }
     },
+    "Meeting paused" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meeting paused" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reunión en pausa" } }
+      }
+    },
+    "Meeting paused. Dictation waits until it ends." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meeting paused. Dictation waits until it ends." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reunión en pausa. El dictado espera a que termine." } }
+      }
+    },
     "Meetings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -972,6 +1000,20 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Record meeting" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Grabar reunión" } }
+      }
+    },
+    "Recording a meeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording a meeting" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Grabando una reunión" } }
+      }
+    },
+    "Recording a meeting. Dictation waits until it ends." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording a meeting. Dictation waits until it ends." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Grabando una reunión. El dictado espera a que termine." } }
       }
     },
     "Removes “um” and “uh”, and “at 2, no, make it 3” becomes “at 3”." : {

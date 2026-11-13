@@ -92,6 +92,11 @@ final class NoteDictation: ObservableObject {
             message = reason
             messageNeedsSettings = session.problemNeedsSettings
             phase = .idle
+        case .meeting:
+            // A meeting took the microphone: the dictation was dropped.
+            message = String(localized: "A meeting is being recorded. Dictation is back when it ends.")
+            messageNeedsSettings = false
+            phase = .idle
         case .ready, .idle:
             // Back to ready with no text: the recording was empty or was cancelled.
             if phase == .listening || phase == .writing { phase = .idle }
