@@ -136,26 +136,14 @@ final class KeyboardModel: ObservableObject {
                             styleOverride: styleOverride)
     }
 
+    /// The label of the return key in the interface language: "intro", "enviar", "buscar", "ir"...
+    /// Core picks the catalog key from the field's return key type, the catalog holds the words.
     private static func returnTitle(for type: UIReturnKeyType?) -> String {
-        switch type {
-        case .go?: return String(localized: "Go")
-        case .search?, .google?, .yahoo?: return String(localized: "Search")
-        case .send?: return String(localized: "Send")
-        case .done?: return String(localized: "Done")
-        case .next?: return String(localized: "Next")
-        case .join?: return String(localized: "Join")
-        case .route?: return String(localized: "Route")
-        case .continue?: return String(localized: "Continue")
-        case .emergencyCall?: return String(localized: "Call")
-        default: return String(localized: "return")
-        }
+        String(localized: String.LocalizationValue(ReturnKeyLabel.catalogKey(returnKeyType: type?.rawValue ?? 0)))
     }
 
     private static func isPlainReturn(_ type: UIReturnKeyType?) -> Bool {
-        switch type {
-        case .go?, .search?, .google?, .yahoo?, .send?, .done?, .next?, .join?, .route?, .continue?, .emergencyCall?: return false
-        default: return true
-        }
+        ReturnKeyLabel.isPlain(returnKeyType: type?.rawValue ?? 0)
     }
 
     // MARK: Mic
