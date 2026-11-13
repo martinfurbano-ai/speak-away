@@ -7,7 +7,8 @@ import SpeakAwayCore
 /// for one), space and return. A thin top row has the style chip, a line of status, and Undo.
 struct KeyboardView: View {
     @ObservedObject var model: KeyboardModel
-    let inputController: UIInputViewController
+    /// `nil` in the app's preview screens, where there is no keyboard controller behind the keys.
+    let inputController: UIInputViewController?
 
     var body: some View {
         GlassEffectContainer(spacing: 4) {
@@ -95,7 +96,7 @@ struct KeyboardView: View {
     private var bottomRow: some View {
         HStack(spacing: 8) {
             if model.needsGlobe {
-                GlobeKey(controller: inputController)
+                globeKey
                     .frame(width: 52, height: 44)
                     .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 14))
             }
@@ -117,9 +118,17 @@ struct KeyboardView: View {
                     .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 14))
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(model.returnTitle == "return" ? "Return" : model.returnTitle)
+            .accessibilityLabel(model.returnIsPlain ? String(localized: "Return") : model.returnTitle)
         }
         .frame(height: 44)
+    }
+
+    @ViewBuilder private var globeKey: some View {
+        if let inputController {
+            GlobeKey(controller: inputController)
+        } else {
+            Image(systemName: "globe").font(.system(size: 18))
+        }
     }
 
     /// Without Full Access the keyboard cannot talk to the app: say so once, and offer the way there.
@@ -191,10 +200,10 @@ struct KeyboardView: View {
 
     private var micLabel: String {
         switch model.state {
-        case .recording: return "Stop dictation"
-        case .transcribing: return "Writing it down"
-        case .idle: return "Dictate. Opens Speak Away to start."
-        default: return "Dictate"
+        case .recording: return String(localized: "Stop dictation")
+        case .transcribing: return String(localized: "Writing it down")
+        case .idle: return String(localized: "Dictate. Opens Speak Away to start.")
+        default: return String(localized: "Dictate")
         }
     }
 
@@ -202,10 +211,10 @@ struct KeyboardView: View {
         if let hint = model.hint { return hint }
         guard model.hasFullAccess else { return "" }
         switch model.state {
-        case .idle: return "Tap the mic. Speak Away opens, then swipe back."
+        case .idle: return String(localized: "Tap the mic. Speak Away opens, then swipe back.")
         case .ready, .done: return ""
-        case .recording: return model.commandActive ? "Say how to change the text" : "Listening"
-        case .transcribing: return "Writing it down"
+        case .recording: return model.commandActive ? String(localized: "Say how to change the text") : String(localized: "Listening")
+        case .transcribing: return String(localized: "Writing it down")
         case .failed(let reason): return reason
         }
     }
@@ -276,7 +285,7 @@ private struct GlobeKey: UIViewRepresentable {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "globe"), for: .normal)
         button.tintColor = .label
-        button.accessibilityLabel = "Next keyboard"
+        button.accessibilityLabel = String(localized: "Next keyboard")
         button.addTarget(controller, action: #selector(UIInputViewController.handleInputModeList(from:with:)), for: .allTouchEvents)
         return button
     }

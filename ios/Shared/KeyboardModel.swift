@@ -26,7 +26,9 @@ final class KeyboardModel: ObservableObject {
     @Published private(set) var effectiveStyle: WritingStyle = .casual
     @Published private(set) var hasFullAccess = false
     @Published private(set) var needsGlobe = false
-    @Published private(set) var returnTitle = "return"
+    @Published private(set) var returnTitle = String(localized: "return")
+    /// The return key is the plain one (not Go, Search, Send...).
+    @Published private(set) var returnIsPlain = true
     @Published private(set) var canUndo = false
     /// A short message under the keys (Command Mode with nothing to rewrite, for example). Clears itself.
     @Published private(set) var hint: String?
@@ -51,6 +53,22 @@ final class KeyboardModel: ObservableObject {
         self.client = client
         self.stores = stores
         self.now = now
+    }
+
+    /// A keyboard that only shows a state, for the app's preview screens: no text field, no app, and every file it
+    /// could touch lives in `folder`, never in the real shared folder.
+    init(preview state: SessionState, folder: URL, command: Bool = false, effective: WritingStyle = .casual,
+         canUndo: Bool = false, now: @escaping () -> Date = Date.init) {
+        self.host = nil
+        self.client = SessionClient(files: SessionFiles(folder: folder))
+        self.stores = SharedStores(folder: folder)
+        self.now = now
+        self.state = state
+        self.commandActive = command
+        self.effectiveStyle = effective
+        self.hasFullAccess = true
+        self.needsGlobe = true
+        self.canUndo = canUndo
     }
 
     // MARK: Lifecycle
@@ -92,6 +110,7 @@ final class KeyboardModel: ObservableObject {
         needsGlobe = host.needsGlobeKey
         let returnKey: UIReturnKeyType? = host.proxy.returnKeyType
         returnTitle = Self.returnTitle(for: returnKey)
+        returnIsPlain = Self.isPlainReturn(returnKey)
         guard hasFullAccess else {
             state = .idle
             commandActive = false
@@ -119,16 +138,23 @@ final class KeyboardModel: ObservableObject {
 
     private static func returnTitle(for type: UIReturnKeyType?) -> String {
         switch type {
-        case .go?: return "Go"
-        case .search?, .google?, .yahoo?: return "Search"
-        case .send?: return "Send"
-        case .done?: return "Done"
-        case .next?: return "Next"
-        case .join?: return "Join"
-        case .route?: return "Route"
-        case .continue?: return "Continue"
-        case .emergencyCall?: return "Call"
-        default: return "return"
+        case .go?: return String(localized: "Go")
+        case .search?, .google?, .yahoo?: return String(localized: "Search")
+        case .send?: return String(localized: "Send")
+        case .done?: return String(localized: "Done")
+        case .next?: return String(localized: "Next")
+        case .join?: return String(localized: "Join")
+        case .route?: return String(localized: "Route")
+        case .continue?: return String(localized: "Continue")
+        case .emergencyCall?: return String(localized: "Call")
+        default: return String(localized: "return")
+        }
+    }
+
+    private static func isPlainReturn(_ type: UIReturnKeyType?) -> Bool {
+        switch type {
+        case .go?, .search?, .google?, .yahoo?, .send?, .done?, .next?, .join?, .route?, .continue?, .emergencyCall?: return false
+        default: return true
         }
     }
 
@@ -194,7 +220,7 @@ final class KeyboardModel: ObservableObject {
             let proxy = host.proxy
             guard let target = CommandTarget.resolve(selectedText: proxy.selectedText,
                                                      documentContextBeforeInput: proxy.documentContextBeforeInput) else {
-                show("Select some text, or write a sentence first, then tap the wand and say what to change.")
+                show(String(localized: "Select some text, or write a sentence first, then tap the wand and say what to change."))
                 return
             }
             commandTarget = target
@@ -206,7 +232,7 @@ final class KeyboardModel: ObservableObject {
 
     // MARK: Style chip
 
-    var chipText: String { StyleOverride.chipText(override: styleOverride, effective: effectiveStyle) }
+    var chipText: String { StyleText.chip(override: styleOverride, effective: effectiveStyle) }
 
     func chipTapped() {
         styleOverride = StyleOverride.next(after: styleOverride)
