@@ -140,7 +140,13 @@ final class MeetingRecorder: ObservableObject {
         smoother = LevelSmoother()
         defaultTitle = MeetingTitle.resolved("", startedAt: now(), english: english)
         stage = .preparing
-        startTask = Task { await self.start(run: thisRun) }
+        // A start that was cancelled a moment ago gives back the microphone before this one takes it, so its
+        // clean-up can never close the gate or release the microphone of the meeting that replaced it.
+        let winding = startTask
+        startTask = Task {
+            await winding?.value
+            await self.start(run: thisRun)
+        }
         return true
     }
 
@@ -257,8 +263,8 @@ final class MeetingRecorder: ObservableObject {
     /// The user gave up before the first word. Whatever the start had already taken, it gives back when it notices.
     private func cancelStart() {
         run = UUID()
+        // The cancelled start stays in `startTask`: the next `begin()` waits for it to finish giving things back.
         startTask?.cancel()
-        startTask = nil
         speechProgress = nil
         stage = .idle
     }
