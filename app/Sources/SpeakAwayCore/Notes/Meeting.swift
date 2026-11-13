@@ -82,7 +82,7 @@ public struct Meeting: Codable, Equatable, Sendable, Identifiable {
     }
 
     /// Lines ordered by time, with consecutive lines of the same speaker merged under the first one's time.
-    static func turns(_ lines: [TranscriptLine]) -> [TranscriptLine] {
+    public static func turns(_ lines: [TranscriptLine]) -> [TranscriptLine] {
         let ordered = lines.enumerated()
             .sorted { $0.element.start != $1.element.start ? $0.element.start < $1.element.start : $0.offset < $1.offset }
             .map(\.element)
