@@ -43,6 +43,18 @@ final class AppleSpeech: Transcriber {
         _ = try? await AssetInventory.reserve(locale: locale)
     }
 
+    /// Where the speech model for this language stands on this phone, without downloading anything.
+    static func modelState(for locale: Locale) async -> SpeechModelState {
+        guard await DictationTranscriber.supportedLocale(equivalentTo: locale) != nil else { return .failed }
+        switch await AssetInventory.status(forModules: [makeModule(locale: locale)]) {
+        case .installed: return .installed
+        case .supported: return .missing
+        case .downloading: return .downloading(0)
+        case .unsupported: return .failed
+        @unknown default: return .unknown
+        }
+    }
+
     func startStream(locale: Locale) -> TranscriptionStream {
         AppleSpeechStream(transcriber: Self.makeModule(locale: locale))
     }

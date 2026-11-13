@@ -188,7 +188,11 @@ enum SelfTest {
                                       command: { instruction, text, _ in "[\(instruction)] applied to: \(text)" })
             let controller = SessionController(files: files, stores: stores, brain: brain, makeInput: { dictationAudio })
             let keyboard = SessionClient(files: files)
-            try? stores.save(PhoneSettings().changing { $0.language = value(after: "--locale") ?? "auto" })
+            try? stores.save(PhoneSettings().changing {
+                $0.language = value(after: "--locale") ?? "auto"
+                $0.sounds = false
+                $0.haptics = false
+            })
 
             let loopsBack = await darwinLoopsBack()
             await controller.startSession()

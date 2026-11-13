@@ -6,6 +6,7 @@ import AVFoundation
 final class MicInput: AudioInput {
     let needsMicrophone = true
     var onEvent: ((AudioInputEvent) -> Void)?
+    var preferredInputUID = ""
 
     private let engine = AVAudioEngine()
     private var onBuffer: ((AVAudioPCMBuffer) -> Void)?
@@ -21,6 +22,7 @@ final class MicInput: AudioInput {
         } catch {
             throw AudioInputError.cannotStart(error.localizedDescription)
         }
+        choosePreferredInput(on: session)
         self.onBuffer = onBuffer
         try startEngine()
         running = true
@@ -36,6 +38,14 @@ final class MicInput: AudioInput {
         engine.stop()
         onBuffer = nil
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+    }
+
+    // MARK: Input choice
+
+    /// The microphone picked in Settings, when it is still connected; otherwise the system keeps choosing.
+    private func choosePreferredInput(on session: AVAudioSession) {
+        let wanted = MicrophoneChoices.availableInput(uid: preferredInputUID, in: session.availableInputs ?? [])
+        try? session.setPreferredInput(wanted)
     }
 
     // MARK: Engine

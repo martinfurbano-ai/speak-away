@@ -5,6 +5,7 @@ import AVFoundation
 final class FileInput: AudioInput {
     let needsMicrophone = false
     var onEvent: ((AudioInputEvent) -> Void)?
+    var preferredInputUID = ""
 
     private let url: URL
     private let speed: Double

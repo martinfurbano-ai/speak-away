@@ -6,6 +6,8 @@ protocol AudioInput: AnyObject {
     var needsMicrophone: Bool { get }
     /// Told when the input stops by itself (a call, another app taking the mic) or fails.
     var onEvent: ((AudioInputEvent) -> Void)? { get set }
+    /// The unique id of the input the user picked in Settings. Empty: the one the system picks. Set before `start`.
+    var preferredInputUID: String { get set }
     /// Starts delivering buffers (on any thread) until `stop()`.
     func start(onBuffer: @escaping (AVAudioPCMBuffer) -> Void) async throws
     func stop()

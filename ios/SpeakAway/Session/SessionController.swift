@@ -16,6 +16,10 @@ final class SessionController: ObservableObject {
     @Published private(set) var speechProgress: Double?
     /// Why the session did not start, or the last thing that went wrong. Cleared when a session starts.
     @Published private(set) var problem: String?
+    /// The problem is fixed in the Settings app (the microphone was turned off), so the screen offers to open it.
+    @Published private(set) var problemNeedsSettings = false
+    /// A session is on: the microphone is ready in the background.
+    @Published private(set) var live = false
     /// The speech model for the session's language is on the phone, so a dictation can start.
     @Published private(set) var speechReady = false
     /// The system's own words for the last failure, for the self test and bug reports. Not shown to the user.
@@ -48,6 +52,7 @@ final class SessionController: ObservableObject {
     private var lastRequest: UUID?
     private var speechLocale = Locale(identifier: SpeechLocale.fallback)
     private var starting = false
+    private var sounds: SessionSounds?
 
     /// Requests older than this are ignored: they belong to a moment that has passed.
     static let requestMaxAge: TimeInterval = 10
@@ -66,7 +71,7 @@ final class SessionController: ObservableObject {
         }
     }
 
-    var isActive: Bool { input != nil }
+    var isActive: Bool { live }
 
     // MARK: Session
 
@@ -80,10 +85,12 @@ final class SessionController: ObservableObject {
         starting = true
         defer { starting = false }
         problem = nil
+        problemNeedsSettings = false
         lastErrorDetail = nil
 
         let settings = stores.settings()
         let source = makeInput()
+        source.preferredInputUID = settings.microphone
         source.onEvent = { [weak self] event in
             Task { @MainActor in self?.inputEvent(event) }
         }
@@ -94,11 +101,13 @@ final class SessionController: ObservableObject {
             source.stop()
             let reason = PhoneText.reason(for: error)
             problem = reason
+            problemNeedsSettings = PhoneText.needsSettings(error)
             lastErrorDetail = String(describing: error)
             publish(.failed(reason: reason))
             return
         }
         input = source
+        live = true
         lastRequest = files.readRequest()?.id   // anything already in the file is old news
         speechLocale = await transcriber.resolveLocale(setting: settings.language)
 
@@ -129,6 +138,9 @@ final class SessionController: ObservableObject {
         }
         input?.stop()
         input = nil
+        live = false
+        sounds?.stop()
+        sounds = nil
         sessionEnd = nil
         speechProgress = nil
         speechReady = false
@@ -170,7 +182,7 @@ final class SessionController: ObservableObject {
         guard input != nil, dictation == nil else { return }
         // The very first session downloads the speech model for the language; say so instead of recording into nothing.
         guard speechProgress == nil else {
-            publish(.failed(reason: "Still getting the speech model ready. Try again in a moment."))
+            publish(.failed(reason: String(localized: "Still getting the speech model ready. Try again in a moment.")))
             return
         }
         let stream = transcriber.startStream(locale: speechLocale)
@@ -178,6 +190,7 @@ final class SessionController: ObservableObject {
         gate.open { buffer in stream.feed(buffer) }
         smoother = LevelSmoother()
         publish(.recording(level: 0), command: commandTarget != nil)
+        play(.start)
         levelTimer?.invalidate()
         levelTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.publishLevel() }
@@ -196,6 +209,7 @@ final class SessionController: ObservableObject {
         levelTimer = nil
         let stats = gate.close()
         publish(.transcribing, command: running.commandTarget != nil)
+        play(.stop)
         Task { await complete(running, stats: stats) }
     }
 
@@ -304,9 +318,11 @@ final class SessionController: ObservableObject {
         guard input != nil else { return }
         switch event {
         case .interrupted:
-            problem = "Another app or a call took the microphone, so the session ended."
+            problem = String(localized: "Another app or a call took the microphone, so the session ended.")
+            problemNeedsSettings = false
         case .failed(let error):
             problem = PhoneText.reason(for: error)
+            problemNeedsSettings = PhoneText.needsSettings(error)
             lastErrorDetail = String(describing: error)
         }
         endSession()
@@ -326,9 +342,36 @@ final class SessionController: ObservableObject {
             } catch {
                 speechProgress = nil
                 problem = PhoneText.reason(for: error)
+                problemNeedsSettings = false
                 lastErrorDetail = String(describing: error)
             }
         }
+    }
+
+    // MARK: Used by the app itself
+
+    /// The app took the result for itself (a note being dictated), so the keyboard must not insert it as well.
+    func consumeResult(_ id: UUID) {
+        guard case .done(let current, _) = state, current == id else { return }
+        files.markHandled(id)
+        publish(live ? readyState : .idle)
+    }
+
+    /// The tones for the start and the end of a dictation, when the Sounds setting is on. The engine is made the
+    /// first time one is needed and freed when the session ends.
+    private func play(_ cue: SessionSounds.Cue) {
+        guard stores.settings().sounds else { return }
+        let player = sounds ?? SessionSounds()
+        sounds = player
+        player.play(cue)
+    }
+
+    /// Shows a made-up session for the preview screens: nothing is recorded, written or scheduled.
+    func showPreview(state: SessionState, sessionEnd: Date?, live: Bool, speechReady: Bool = true) {
+        self.state = state
+        self.sessionEnd = sessionEnd
+        self.live = live
+        self.speechReady = speechReady
     }
 
     // MARK: Publishing
