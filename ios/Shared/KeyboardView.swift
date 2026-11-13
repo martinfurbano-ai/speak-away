@@ -2,13 +2,17 @@ import SwiftUI
 import UIKit
 import SpeakAwayCore
 
-/// The keys. Black and white, Liquid Glass keys, the system's keyboard height. The mic is the largest key and sits in
-/// the middle; the wand (Command Mode) and delete flank it; the bottom row has the globe (only when the system asks
-/// for one), space and return. A thin top row has the style chip, a line of status, and Undo.
+/// The keys. Black and white Liquid Glass keys, the system's keyboard height. The mic is the largest key and sits in
+/// the middle, in the brand red until it listens; the wand (Command Mode) and delete flank it; the bottom row has the
+/// globe (only when the system asks for one), space and return. A thin top row has the style chip, a line of status,
+/// and Undo.
 struct KeyboardView: View {
     @ObservedObject var model: KeyboardModel
     /// `nil` in the app's preview screens, where there is no keyboard controller behind the keys.
     let inputController: UIInputViewController?
+
+    /// The wand and delete keys beside the mic. The mic takes the rest of the row.
+    private let sideKeyWidth: CGFloat = 56
 
     var body: some View {
         GlassEffectContainer(spacing: 4) {
@@ -80,7 +84,7 @@ struct KeyboardView: View {
                     .foregroundStyle(wandActive ? inverse : Color.primary)
             }
             .buttonStyle(.plain)
-            .frame(width: 76)
+            .frame(width: sideKeyWidth)
             .accessibilityLabel("Command Mode")
             .accessibilityHint("Select text or write a sentence, tap, and say how to change it.")
 
@@ -88,7 +92,7 @@ struct KeyboardView: View {
                 .frame(maxWidth: .infinity)
 
             DeleteKey(model: model)
-                .frame(width: 76)
+                .frame(width: sideKeyWidth)
         }
         .frame(maxHeight: .infinity)
     }
@@ -166,8 +170,10 @@ struct KeyboardView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .glassEffect(live ? .regular.tint(.primary).interactive() : .regular.interactive(), in: .rect(cornerRadius: 26))
-        .foregroundStyle(live ? inverse : Color.primary)
+        // Idle: the brand red with a white mic. Listening and writing it down: black in light mode, white in dark mode.
+        .glassEffect(live ? .regular.tint(.primary).interactive() : .regular.tint(BrandColor.accent).interactive(),
+                     in: .rect(cornerRadius: 26))
+        .foregroundStyle(live ? inverse : Color.white)
         .contentShape(RoundedRectangle(cornerRadius: 26))
         // Touch down starts or stops; letting go after a hold ends it (hold to talk). The rules live in `MicGesture`.
         .gesture(

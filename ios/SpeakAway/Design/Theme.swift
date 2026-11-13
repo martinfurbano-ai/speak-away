@@ -5,8 +5,8 @@ import SpeakAwayCore
 /// The look of the app: a light grey grouped background with white cards (true black with dark grey cards in
 /// dark mode) and one red accent, the red of the icon. Every color is one token with a light and a dark value.
 enum Theme {
-    static let accent = dynamic(light: UIColor(red: 0.86, green: 0.23, blue: 0.25, alpha: 1),
-                                dark: UIColor(red: 0.96, green: 0.33, blue: 0.35, alpha: 1))
+    /// Shared with the keyboard (`Shared/BrandColor.swift`), which cannot see this file.
+    static let accent = BrandColor.accent
     static let background = dynamic(light: UIColor(white: 0.945, alpha: 1), dark: .black)
     static let card = dynamic(light: .white, dark: UIColor(white: 0.11, alpha: 1))
     /// Empty cells of the activity grid, the track of progress bars, the bubble behind a message.
