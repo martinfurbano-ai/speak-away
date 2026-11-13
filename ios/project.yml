@@ -1,6 +1,7 @@
 name: SpeakAway
 options:
   bundleIdPrefix: com.opensourceeverything
+  developmentLanguage: en
   deploymentTarget:
     iOS: "26.0"
   createIntermediateGroups: true
@@ -14,6 +15,9 @@ settings:
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     CLANG_ENABLE_MODULES: YES
+    # Strings live in String Catalogs (English is the development language, Spanish is complete).
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
 
 targets:
   # The shared logic is compiled straight from the Swift package sources, so the iOS
@@ -23,6 +27,7 @@ targets:
     platform: iOS
     sources:
       - path: ../app/Sources/SpeakAwayCore
+      - path: SpeakAwayCore/PrivacyInfo.xcprivacy
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.opensourceeverything.speakaway.core
@@ -64,6 +69,8 @@ targets:
       path: SpeakAway/Info.plist
       properties:
         CFBundleDisplayName: Speak Away
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, es]
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
@@ -108,6 +115,8 @@ targets:
       path: SpeakAwayKeyboard/Info.plist
       properties:
         CFBundleDisplayName: Speak Away
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, es]
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:

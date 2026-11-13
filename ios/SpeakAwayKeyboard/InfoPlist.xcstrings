@@ -1,0 +1,13 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

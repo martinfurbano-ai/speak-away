@@ -1,0 +1,27 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away" } }
+      }
+    },
+    "NSMicrophoneUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away listens to your voice while you dictate and turns it into text on this iPhone. The audio never leaves your phone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away escucha tu voz mientras dictas y la convierte en texto en este iPhone. El audio nunca sale de tu teléfono." } }
+      }
+    },
+    "NSSpeechRecognitionUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away uses Apple's on-device speech recognition to turn your voice into text. Nothing is sent to a server." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away usa el reconocimiento de voz de Apple en tu dispositivo para convertir tu voz en texto. No se envía nada a ningún servidor." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
