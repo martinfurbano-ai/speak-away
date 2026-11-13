@@ -66,7 +66,7 @@ struct HomeView: View {
                            footer: milestoneFooter(stats))
                 numberCard(value: "\(stats.wordsPerMinute)", label: "Palabras por minuto", icon: "speedometer",
                            footer: AnyView(Text("Escribiendo: unas 40").font(.system(size: 12)).foregroundStyle(.secondary)))
-                numberCard(value: timeSaved(stats.minutesSaved()), label: "Tiempo ahorrado", icon: "clock.arrow.circlepath",
+                numberCard(value: StatFormat.timeSaved(minutes: stats.minutesSaved()), label: "Tiempo ahorrado", icon: "clock.arrow.circlepath",
                            footer: AnyView(Text("\(stats.totalSessions.formatted()) dictados").font(.system(size: 12)).foregroundStyle(.secondary)))
             }
             .fixedSize(horizontal: false, vertical: true)
@@ -96,8 +96,11 @@ struct HomeView: View {
     }
 
     private var greeting: String {
-        let hour = Calendar.current.component(.hour, from: Date())
-        return hour < 12 ? "Buenos días" : hour < 19 ? "Buenas tardes" : "Buenas noches"
+        switch Greeting.at(Date()) {
+        case .morning: "Buenos días"
+        case .afternoon: "Buenas tardes"
+        case .evening: "Buenas noches"
+        }
     }
 
     private var statusPill: some View {
@@ -148,29 +151,27 @@ struct HomeView: View {
     }
 
     private func streakMessage(streak: Int, dictatedToday: Bool, best: Int) -> String {
-        if streak == 0 { return "Dicta algo hoy para empezar tu racha." }
-        if !dictatedToday { return "Dicta algo hoy para no perderla." }
-        return best > streak ? "Tu mejor racha: \(best) días." : "Es tu mejor racha. Sigue así."
+        switch StreakNote.make(streak: streak, dictatedToday: dictatedToday, best: best) {
+        case .start: "Dicta algo hoy para empezar tu racha."
+        case .keep: "Dicta algo hoy para no perderla."
+        case .best(let days): "Tu mejor racha: \(days) días."
+        case .record: "Es tu mejor racha. Sigue así."
+        }
     }
 
     private func week(_ stats: UsageStats) -> some View {
         let letters = ["L", "M", "M", "J", "V", "S", "D"]
-        // Monday of this week.
-        let weekday = (Calendar.current.component(.weekday, from: Date()) + 5) % 7
-        let monday = today.adding(-weekday)
         return HStack(spacing: 8) {
-            ForEach(0..<7, id: \.self) { i in
-                let day = monday.adding(i)
-                let done = stats.days[day.ordinal] != nil
+            ForEach(StreakWeek.days(containing: today, stats: stats)) { day in
                 VStack(spacing: 6) {
-                    Text(letters[i]).font(.system(size: 11, weight: .medium)).foregroundStyle(.secondary)
+                    Text(letters[day.index]).font(.system(size: 11, weight: .medium)).foregroundStyle(.secondary)
                     ZStack {
-                        Circle().fill(done ? Theme.accent : Theme.empty)
-                        if done { Image(systemName: "checkmark").font(.system(size: 10, weight: .heavy)).foregroundStyle(.white) }
-                        if day == today && !done { Circle().strokeBorder(Theme.accent, lineWidth: 1.5) }
+                        Circle().fill(day.done ? Theme.accent : Theme.empty)
+                        if day.done { Image(systemName: "checkmark").font(.system(size: 10, weight: .heavy)).foregroundStyle(.white) }
+                        if day.isToday && !day.done { Circle().strokeBorder(Theme.accent, lineWidth: 1.5) }
                     }
                     .frame(width: 24, height: 24)
-                    .opacity(day > today ? 0.45 : 1)
+                    .opacity(day.isFuture ? 0.45 : 1)
                 }
             }
         }
@@ -203,16 +204,9 @@ struct HomeView: View {
         })
     }
 
-    private func timeSaved(_ minutes: Int) -> String {
-        minutes < 60 ? "\(minutes) min" : "\(minutes / 60) h \(minutes % 60) min"
-    }
-
     private func activityCard(_ stats: UsageStats) -> some View {
         let weeks = 20
-        let weekday = (Calendar.current.component(.weekday, from: Date()) + 5) % 7
-        let end = today.adding(6 - weekday) // Sunday of this week
-        let words = stats.activity(endingOn: end, days: weeks * 7)
-        let top = max(1, words.max() ?? 1)
+        let grid = ActivityGrid.make(stats: stats, today: today, weeks: weeks)
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Actividad").font(.system(size: 15, weight: .semibold))
@@ -220,18 +214,15 @@ struct HomeView: View {
                 Text("Últimas \(weeks) semanas").font(.system(size: 12)).foregroundStyle(.secondary)
             }
             HStack(spacing: 4) {
-                ForEach(0..<weeks, id: \.self) { w in
+                ForEach(Array(grid.weeks.enumerated()), id: \.offset) { _, week in
                     VStack(spacing: 4) {
-                        ForEach(0..<7, id: \.self) { d in
-                            let index = w * 7 + d
-                            let day = end.adding(index - weeks * 7 + 1)
-                            let n = words[index]
+                        ForEach(week) { cell in
                             RoundedRectangle(cornerRadius: 4, style: .continuous)
-                                .fill(n == 0 ? Theme.empty : Theme.accent.opacity(0.3 + 0.7 * Double(n) / Double(top)))
+                                .fill(cell.words == 0 ? Theme.empty : Theme.accent.opacity(cell.level))
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 14)
-                                .opacity(day > today ? 0.35 : 1)
-                                .help(n == 0 ? "" : "\(n) palabras")
+                                .opacity(cell.isFuture ? 0.35 : 1)
+                                .help(cell.words == 0 ? "" : "\(cell.words) palabras")
                         }
                     }
                 }
