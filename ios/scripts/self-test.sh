@@ -10,7 +10,9 @@
 #        ~/.claude/heavy.sh ios/scripts/self-test.sh
 #
 # Booting the simulator can add several GB of swap on a Mac with little free memory, and swap lives on the same
-# disk. The script refuses to start with less than 6 GB free and stops everything if free space falls under
+# disk. The very first boot of a runtime also writes its shared cache (about 3 GB, kept afterwards under
+# /Library/Developer/CoreSimulator/Caches). The script refuses to start with less than 4 GB free (set
+# SPEAKAWAY_MIN_START_GB, use 7 when that cache is missing) and stops everything if free space falls under
 # 2.5 GB while it runs. It creates its test audio with `say` in ios/.build/selftest and removes that folder at the end.
 
 export DEVELOPER_DIR=${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}
@@ -20,7 +22,7 @@ GROUP=group.com.opensourceeverything.speakaway
 IOS=${0:A:h:h}
 APP=$IOS/.build/dd/Build/Products/Debug-iphonesimulator/SpeakAway.app
 WORK=$IOS/.build/selftest
-MIN_START_GB=6
+MIN_START_GB=${SPEAKAWAY_MIN_START_GB:-4}
 MIN_RUN_GB=2.5
 failures=0
 
