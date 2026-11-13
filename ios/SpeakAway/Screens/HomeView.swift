@@ -73,12 +73,15 @@ private struct SessionCard: View {
                 if let problem = session.problem {
                     SessionProblem(message: problem, needsSettings: session.problemNeedsSettings)
                 }
-                Button(action: toggle) {
-                    PrimaryButtonLabel(title: session.live ? "End session" : "Start session",
-                                       systemImage: session.live ? "stop.fill" : "mic.fill")
+                if session.live {
+                    EndSessionButton(action: toggle)
+                } else {
+                    Button(action: toggle) {
+                        PrimaryButtonLabel(title: "Start session", systemImage: "mic.fill")
+                    }
+                    .buttonStyle(.glassProminent)
+                    .controlSize(.large)
                 }
-                .buttonStyle(.glassProminent)
-                .controlSize(.large)
             }
         }
     }

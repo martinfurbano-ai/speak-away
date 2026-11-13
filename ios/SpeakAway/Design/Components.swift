@@ -120,3 +120,18 @@ struct PrimaryButtonLabel: View {
         .padding(.vertical, 4)
     }
 }
+
+/// The button that ends a session. It is quiet on purpose: a glass button with red text and icon, because a session
+/// that is on is the good state. Only the button that starts a session is the filled red one.
+struct EndSessionButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            PrimaryButtonLabel(title: "End session", systemImage: "stop.fill")
+                .foregroundStyle(Theme.accent)
+        }
+        .buttonStyle(.glass)
+        .controlSize(.large)
+    }
+}
