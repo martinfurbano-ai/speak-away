@@ -6,7 +6,7 @@ name: iPhone
 
 on:
   push:
-    branches: [iphone]
+    branches: [iphone, "iphone-*"]
     paths:
       - "ios/**"
       - "app/Sources/SpeakAwayCore/**"
