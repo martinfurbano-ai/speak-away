@@ -142,7 +142,8 @@ private final class AppleSpeechStream: TranscriptionStream {
 
 /// Converts microphone buffers to the format the speech engine asked for. The converter is kept between
 /// buffers (sample-rate conversion has state) and rebuilt if the input format changes, as on a route change.
-private final class BufferConverter {
+/// The meeting recorder uses it too.
+final class BufferConverter {
     private let target: AVAudioFormat
     private var converter: AVAudioConverter?
 

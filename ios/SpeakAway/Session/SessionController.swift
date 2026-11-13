@@ -53,6 +53,10 @@ final class SessionController: ObservableObject {
     private var speechLocale = Locale(identifier: SpeechLocale.fallback)
     private var starting = false
     private var sounds: SessionSounds?
+    /// A meeting holds the microphone, recording or paused. A dictation waits until it ends.
+    private var meetingActive = false
+    /// Keeps the keyboard's view of the meeting fresh while it is recorded.
+    private var meetingHeartbeat: Timer?
 
     /// Requests older than this are ignored: they belong to a moment that has passed.
     static let requestMaxAge: TimeInterval = 10
@@ -73,6 +77,11 @@ final class SessionController: ObservableObject {
 
     var isActive: Bool { live }
 
+    /// Who holds the microphone right now.
+    private var micOwner: MicOwner {
+        MicOwner.current(dictationSessionLive: live, meetingActive: meetingActive)
+    }
+
     // MARK: Session
 
     /// Starts the session (the mic stays ready) or, if one is running, restarts its clock. Safe to call twice.
@@ -82,6 +91,12 @@ final class SessionController: ObservableObject {
             return
         }
         guard !starting else { return }
+        // One owner of the microphone: a dictation session never takes it from a meeting.
+        if case .refuse = MicArbiter.decide(.dictation, owner: micOwner) {
+            problem = String(localized: "A meeting is being recorded. Dictation is back when it ends.")
+            problemNeedsSettings = false
+            return
+        }
         starting = true
         defer { starting = false }
         problem = nil
@@ -125,6 +140,13 @@ final class SessionController: ObservableObject {
 
     /// The user stopped it, or the time ran out, or the mic was lost.
     func endSession() {
+        tearDown()
+        // A meeting that is recording owns the published state; the keyboard keeps showing it.
+        if !meetingActive { publish(.idle) }
+    }
+
+    /// Lets go of everything the session holds, without saying anything to the keyboard.
+    private func tearDown() {
         levelTimer?.invalidate()
         levelTimer = nil
         clock?.invalidate()
@@ -144,7 +166,6 @@ final class SessionController: ObservableObject {
         sessionEnd = nil
         speechProgress = nil
         speechReady = false
-        publish(.idle)
     }
 
     private func extendSession() {
@@ -154,6 +175,40 @@ final class SessionController: ObservableObject {
     }
 
     private var readyState: SessionState { .ready(until: sessionEnd) }
+
+    // MARK: Meeting
+
+    /// A meeting takes the microphone. A dictation session that is running ends cleanly first, and the keyboard
+    /// shows that a meeting is recording. `false`: the microphone is not free for it.
+    func beginMeeting() -> Bool {
+        if case .refuse = MicArbiter.decide(.meeting, owner: micOwner) { return false }
+        guard !starting else { return false }
+        if input != nil || live { tearDown() }
+        meetingActive = true
+        problem = nil
+        problemNeedsSettings = false
+        publish(.meeting(paused: false))
+        meetingHeartbeat?.invalidate()
+        meetingHeartbeat = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated { self?.tick() }
+        }
+        return true
+    }
+
+    /// The meeting paused or went on: the keyboard shows which.
+    func meetingPaused(_ paused: Bool) {
+        guard meetingActive else { return }
+        publish(.meeting(paused: paused))
+    }
+
+    /// The meeting is over and the microphone is free again.
+    func endMeeting() {
+        guard meetingActive else { return }
+        meetingActive = false
+        meetingHeartbeat?.invalidate()
+        meetingHeartbeat = nil
+        publish(.idle)
+    }
 
     // MARK: Requests from the keyboard
 

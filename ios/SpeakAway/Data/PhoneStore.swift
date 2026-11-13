@@ -25,6 +25,7 @@ final class PhoneStore: ObservableObject {
         self.stores = SharedStores(folder: folder)
         self.notesFolder = ScratchNotesFolder(directory: folder.appendingPathComponent(SharedFiles.notesFolder, isDirectory: true))
         self.meetingStore = NotesStore(folder: folder.appendingPathComponent("Meetings", isDirectory: true))
+        recoverMeetings()
         reload()
     }
 
@@ -116,5 +117,32 @@ final class PhoneStore: ObservableObject {
     func deleteMeeting(_ id: UUID) {
         meetingStore.delete(id)
         meetings = meetings.filter { $0.id != id }
+    }
+
+    /// Saves a meeting (or its newer version, with a summary) and shows it at once. `false`: it could not be written.
+    @discardableResult
+    func saveMeeting(_ meeting: Meeting) -> Bool {
+        do {
+            try meetingStore.save(meeting)
+        } catch {
+            return false
+        }
+        meetings = ([meeting] + meetings.filter { $0.id != meeting.id }).sorted { $0.startedAt > $1.startedAt }
+        return true
+    }
+
+    /// Where the meetings live, and where the journal of the meeting being recorded is written.
+    var meetingsFolder: URL { meetingStore.folder }
+
+    /// A meeting that was being recorded when the app was killed or the phone restarted left its journal behind:
+    /// whatever was said comes back as a note. A journal that cannot be saved now stays for the next launch.
+    private func recoverMeetings() {
+        let known = Set(meetingStore.list().map(\.id))
+        for leftover in MeetingJournalFile.leftovers(in: meetingStore.folder, english: !UILanguage.isSpanish) {
+            if let meeting = leftover.meeting, !known.contains(meeting.id) {
+                do { try meetingStore.save(meeting) } catch { continue }
+            }
+            try? FileManager.default.removeItem(at: leftover.url)
+        }
     }
 }
