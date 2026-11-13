@@ -213,21 +213,30 @@ struct SettingsView: View {
     }
 }
 
-/// A switch with an icon, a title and a few grey lines under it.
+/// A switch laid out like the picker rows: the icon on the left on the title's line, then the title, the switch on
+/// the right, and a few grey lines under the title, in line with it.
 private struct SettingToggle<Detail: View>: View {
     let title: LocalizedStringKey
     let icon: String
     @Binding var isOn: Bool
     @ViewBuilder var detail: () -> Detail
+    /// The icon column. With the gap after it, the title starts where the titles of the picker rows start.
+    @ScaledMetric(relativeTo: .body) private var iconColumn: CGFloat = 24
 
     var body: some View {
         Toggle(isOn: $isOn) {
-            VStack(alignment: .leading, spacing: 4) {
-                Label(title, systemImage: icon)
-                detail()
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+            HStack(alignment: .firstTextBaseline, spacing: 16) {
+                Image(systemName: icon)
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: iconColumn)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                    detail()
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
         }
     }
