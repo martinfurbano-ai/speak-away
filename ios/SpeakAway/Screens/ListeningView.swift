@@ -20,8 +20,8 @@ struct ListeningView: View {
                         .font(.title2.weight(.bold))
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
-                    if session.live && session.speechProgress == nil {
-                        Text("You can use the keyboard in any app now. The session keeps the microphone ready.")
+                    if isListening {
+                        Text("Swipe back or tap ◀ at the top left to return to your app.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -44,10 +44,22 @@ struct ListeningView: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .topLeading) {
+            if isListening { backHint }
+        }
         .screenBackground()
     }
 
     // MARK: Pieces
+
+    /// A small hint under the status bar, at the top left where iOS puts its own button back to the app.
+    private var backHint: some View {
+        Label("Back to your app", systemImage: "arrow.up.left")
+            .font(.footnote.weight(.medium))
+            .foregroundStyle(.secondary)
+            .padding(.leading, 20)
+            .padding(.top, 8)
+    }
 
     private var mark: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase == .idle)) { context in
@@ -60,13 +72,10 @@ struct ListeningView: View {
     private var buttons: some View {
         VStack(spacing: 12) {
             if session.live {
-                Button {
+                EndSessionButton {
                     Haptics.tap(enabled: store.settings.haptics)
                     session.endSession()
-                } label: {
-                    PrimaryButtonLabel(title: "End session", systemImage: "stop.fill")
                 }
-                .buttonStyle(.glassProminent)
             } else {
                 Button {
                     Haptics.tap(enabled: store.settings.haptics)
@@ -91,10 +100,13 @@ struct ListeningView: View {
 
     // MARK: State
 
+    /// The session is on and the speech model is ready: the person can go back to the app they were typing in.
+    private var isListening: Bool { session.live && session.speechProgress == nil }
+
     private var headline: LocalizedStringKey {
         if !session.live { return "Speak Away is not listening." }
         if session.speechProgress != nil { return "Getting the speech model ready. Stay here until it finishes." }
-        return "Speak Away is listening. Swipe back to keep typing."
+        return "Speak Away is listening"
     }
 
     private var phase: BubbleMotion.Phase {

@@ -169,6 +169,13 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Atrás" } }
       }
     },
+    "Back to your app" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Back to your app" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Volver a tu app" } }
+      }
+    },
     "Brain" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1191,11 +1198,11 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "espacio" } }
       }
     },
-    "Speak Away is listening. Swipe back to keep typing." : {
+    "Speak Away is listening" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away is listening. Swipe back to keep typing." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away está escuchando. Desliza hacia atrás para seguir escribiendo." } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away is listening" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away está escuchando" } }
       }
     },
     "Speak Away is not keeping what you dictate. Turn it on to see it here." : {
@@ -1301,6 +1308,13 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Summary" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Resumen" } }
+      }
+    },
+    "Swipe back or tap ◀ at the top left to return to your app." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Swipe back or tap ◀ at the top left to return to your app." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Desliza hacia atrás o toca ◀ arriba a la izquierda para volver a tu app." } }
       }
     },
     "Tap here and dictate" : {
@@ -1665,13 +1679,6 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Yesterday" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Ayer" } }
-      }
-    },
-    "You can use the keyboard in any app now. The session keeps the microphone ready." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "You can use the keyboard in any app now. The session keeps the microphone ready." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ya puedes usar el teclado en cualquier app. La sesión mantiene el micrófono listo." } }
       }
     },
     "Your best streak: %lld days." : {
