@@ -21,6 +21,7 @@ struct SpeakAwayApp: App {
                 .environmentObject(model.session)
                 .environmentObject(model.store)
                 .environmentObject(model.noteDictation)
+                .environmentObject(model.recorder)
                 .tint(Theme.accent)
                 .preferredColorScheme(model.forcedScheme)
                 .onOpenURL { model.open($0) }

@@ -11,8 +11,8 @@
     "NSMicrophoneUsageDescription" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away listens to your voice while you dictate and turns it into text on this iPhone. The audio never leaves your phone." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away escucha tu voz mientras dictas y la convierte en texto en este iPhone. El audio nunca sale de tu teléfono." } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away listens to your voice while you dictate or record a meeting and turns it into text on this iPhone. The audio never leaves your phone and is never kept." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away escucha tu voz mientras dictas o grabas una reunión y la convierte en texto en este iPhone. El audio nunca sale de tu teléfono ni se guarda." } }
       }
     },
     "NSSpeechRecognitionUsageDescription" : {

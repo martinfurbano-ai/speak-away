@@ -41,7 +41,7 @@
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Speak Away listens to your voice while you dictate and turns it into text on this iPhone. The audio never leaves your phone.</string>
+	<string>Speak Away listens to your voice while you dictate or record a meeting and turns it into text on this iPhone. The audio never leaves your phone and is never kept.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Speak Away uses Apple's on-device speech recognition to turn your voice into text. Nothing is sent to a server.</string>
 	<key>UIApplicationSceneManifest</key>

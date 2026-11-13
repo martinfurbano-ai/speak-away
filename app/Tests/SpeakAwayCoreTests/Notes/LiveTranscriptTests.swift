@@ -128,4 +128,32 @@ final class LiveTranscriptTests: XCTestCase {
         let rebuilt = LiveTranscript(lines: [], volatile: "").applying(phrases[0]).applying(phrases[1]).applying(phrases[2])
         XCTAssertEqual(live.lines, rebuilt.lines)
     }
+
+    // MARK: A guess that never settled
+
+    func testAGuessThatNeverSettledBecomesTheLastWordsWhenTheMeetingEnds() {
+        let transcript = LiveTranscript()
+            .applying(phrase("Empezamos.", 0, 2))
+            .applying(phrase("y lo último que dije", 3, 4, final: false))
+        let last = transcript.unsettledPhrase(endingAt: 8)
+        XCTAssertEqual(last, phrase("y lo último que dije", 3, 8))
+        let kept = last.map(transcript.applying)
+        XCTAssertEqual(kept?.lines.map(\.text), ["Empezamos. y lo último que dije"])
+        XCTAssertEqual(kept?.volatile, "")
+    }
+
+    func testThereIsNoLastPhraseWhenNothingIsPending() {
+        XCTAssertNil(LiveTranscript().unsettledPhrase(endingAt: 5))
+        let settled = LiveTranscript().applying(phrase("Listo.", 0, 1))
+        XCTAssertNil(settled.unsettledPhrase(endingAt: 5))
+    }
+
+    func testTheLastPhraseAlwaysEndsAfterItStarts() {
+        let transcript = LiveTranscript().applying(phrase("casi", 6, 6.2, final: false))
+        let last = transcript.unsettledPhrase(endingAt: 4)
+        XCTAssertNotNil(last)
+        XCTAssertGreaterThan(last?.end ?? 0, last?.start ?? 1)
+        // Applied as a final result it replaces the guess instead of leaving it on screen.
+        XCTAssertEqual(last.map(transcript.applying)?.volatile, "")
+    }
 }

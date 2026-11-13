@@ -70,6 +70,15 @@ public struct LiveTranscript: Equatable, Sendable {
         return LiveTranscript(lines: lines + [line], volatile: nextVolatile, volatileStart: volatileStart, lastEnd: phrase.end)
     }
 
+    /// The guess that never settled, as the final phrase it would have become, ending at `end`. The meeting is
+    /// over (or the engine stopped), so the last words are kept instead of lost. `nil` when nothing is pending.
+    public func unsettledPhrase(endingAt end: TimeInterval) -> RecognizedPhrase? {
+        let guess = volatile.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !guess.isEmpty else { return nil }
+        // A final result only answers a guess that began before it ended, so it always ends a little after it starts.
+        return RecognizedPhrase(text: guess, start: volatileStart, end: max(end, volatileStart + 0.1), isFinal: true)
+    }
+
     /// A note about the recording. It ends the paragraph before it, and drops a guess that will never settle.
     public func appendingMarker(_ text: String, at start: TimeInterval) -> LiveTranscript {
         LiveTranscript(lines: lines + [TranscriptLine(speaker: .marker, start: start, text: text)],

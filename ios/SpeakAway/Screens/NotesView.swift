@@ -43,6 +43,7 @@ struct NotesView: View {
                 switch route {
                 case .note(let id): NoteEditorView(noteID: id)
                 case .meeting(let id): MeetingDetailView(meetingID: id)
+                case .recording: MeetingRecordingView()
                 }
             }
             .screenBackground()

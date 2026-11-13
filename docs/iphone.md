@@ -43,6 +43,16 @@ Keyboard and app talk through the App Group `group.com.opensourceeverything.spea
 
 `Transcriber` protocol with one implementation, `AppleSpeech`: `SpeechAnalyzer` + `DictationTranscriber` for dictation (punctuation on), `SpeechTranscriber` for meetings. Locale from settings (English or Spanish to start, the system language by default). Missing locale models are installed with `AssetInventory` during onboarding, with progress. WhisperKit can come later behind the same protocol.
 
+## Meeting notes
+
+Notes, Meetings, Record meeting. `MeetingRecorder` is the only owner of the microphone while a meeting runs: starting one ends a keyboard session, a dictation cannot start until it ends (`MicArbiter` in Core), and the keyboard says "Recording a meeting" from the shared state file. The screen can be locked while it records (`UIBackgroundModes` audio).
+
+- One microphone hears the whole room, so the notes are paragraphs with their time (`.room`), not "Me" and "Them". A pause, a phone call or a change of microphone (AirPods) is a note inside the transcript (`.marker`), and the meeting carries on by itself when the system gives the microphone back.
+- `SpeechTranscriber` with volatile results feeds the live view (the guess in a lighter color). Each settled phrase is appended to `Meetings/live.ndjson` in the App Group folder (`MeetingJournal`). If the app is killed or the phone restarts, the next launch turns the journal into a note.
+- Audio is never stored: buffers go from the microphone to the transcriber and nowhere else. The recording screen says so and asks the person to let the others know they are being recorded.
+- Stopping saves the note (`.md` and `.json`, the Mac format), then writes the summary, decisions, tasks and open questions with the on-device model when Brain is on and Apple Intelligence is available (`SummaryPlan`). Otherwise the transcript stays and the note says what the summary needs.
+- Preview: `--preview meeting-recording` (a made-up meeting, nothing is recorded).
+
 ## App screens
 
 Bottom tab bar (Liquid Glass): **Home** (start or stop session, streak, words, time saved, last dictations), **Notes** (meetings and scratchpad), **Library** (dictionary, voice snippets, styles), **Settings** (language, session length, brain on/off, auto-edits, sounds, haptics, keyboard setup, privacy, "Hecho por Martín Urbano para Open Source Everything"). Onboarding: mic and speech permission, add the keyboard and allow Full Access (with a button to Settings), a first test dictation inside the app.

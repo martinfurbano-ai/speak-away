@@ -148,6 +148,41 @@ enum SampleData {
         }
     }
 
+    // MARK: Recording
+
+    /// A fictional meeting in progress: twelve minutes in, one pause behind it, and the engine's guess for the sentence
+    /// being said now.
+    static func recording(spanish: Bool) -> MeetingRecorder.Snapshot {
+        let lines: [TranscriptLine]
+        let guess: String
+        if spanish {
+            lines = [
+                TranscriptLine(speaker: .room, start: 0, text: "Repasemos el calendario de las sesiones de fotos de diciembre. Tenemos dos sábados libres y el estudio está disponible el segundo."),
+                TranscriptLine(speaker: .room, start: 38, text: "Mateo puede reservar el estudio hoy si confirmamos la fecha. Carla manda los primeros diseños antes del viernes."),
+                TranscriptLine(speaker: .marker, start: 74, text: MeetingMarker.paused.text(english: false)),
+                TranscriptLine(speaker: .marker, start: 74, text: MeetingMarker.resumed.text(english: false)),
+                TranscriptLine(speaker: .room, start: 75, text: "De vuelta. El último punto abierto es quién se encarga de la entrega a la imprenta."),
+            ]
+            guess = "Laura, ¿puedes confirmar la fecha de entrega con la"
+        } else {
+            lines = [
+                TranscriptLine(speaker: .room, start: 0, text: "Let's go over the photo shoot calendar for December. We have two Saturdays open and the studio is free on the second one."),
+                TranscriptLine(speaker: .room, start: 38, text: "Mateo can book the studio today if we confirm the date. Carla is sending the first layouts before Friday."),
+                TranscriptLine(speaker: .marker, start: 74, text: MeetingMarker.paused.text(english: true)),
+                TranscriptLine(speaker: .marker, start: 74, text: MeetingMarker.resumed.text(english: true)),
+                TranscriptLine(speaker: .room, start: 75, text: "Back. The last open point is who handles the delivery to the printer."),
+            ]
+            guess = "Laura, can you confirm the delivery date with the"
+        }
+        return MeetingRecorder.Snapshot(
+            stage: .recording,
+            title: spanish ? "Planificación del estudio" : "Studio planning",
+            defaultTitle: spanish ? "Reunión 09:30" : "Meeting 09:30",
+            transcript: LiveTranscript(lines: lines, volatile: guess),
+            level: 0.55,
+            elapsed: 754)
+    }
+
     // MARK: Meeting
 
     private static func meeting(now: Date, spanish: Bool, calendar: Calendar) -> Meeting {
@@ -158,13 +193,11 @@ enum SampleData {
         let summary: MeetingSummary
         if spanish {
             lines = [
-                TranscriptLine(speaker: .me, start: 0, text: "Buenos días a todos, empezamos con las novedades de la semana."),
-                TranscriptLine(speaker: .them, start: 18, text: "Cerramos el contrato con el proveedor y ya tenemos la fecha de entrega."),
-                TranscriptLine(speaker: .me, start: 41, text: "Perfecto. ¿Y el presupuesto de noviembre?"),
-                TranscriptLine(speaker: .them, start: 55, text: "Falta la aprobación de Mateo, la tendremos el miércoles."),
-                TranscriptLine(speaker: .me, start: 80, text: "Entonces el jueves lo revisamos todo y se lo enviamos a Carla."),
-                TranscriptLine(speaker: .them, start: 102, text: "De acuerdo. Yo preparo la presentación para ese día."),
-                TranscriptLine(speaker: .me, start: 130, text: "Quedó claro. Gracias a todos."),
+                TranscriptLine(speaker: .room, start: 0, text: "Buenos días a todos, empezamos con las novedades de la semana. Cerramos el contrato con el proveedor y ya tenemos la fecha de entrega."),
+                TranscriptLine(speaker: .room, start: 41, text: "Perfecto. ¿Y el presupuesto de noviembre? Falta la aprobación de Mateo, la tendremos el miércoles."),
+                TranscriptLine(speaker: .marker, start: 96, text: MeetingMarker.paused.text(english: false)),
+                TranscriptLine(speaker: .marker, start: 96, text: MeetingMarker.resumed.text(english: false)),
+                TranscriptLine(speaker: .room, start: 102, text: "Entonces el jueves lo revisamos todo y se lo enviamos a Carla. De acuerdo, yo preparo la presentación para ese día. Quedó claro, gracias a todos."),
             ]
             summary = MeetingSummary(
                 summary: "El equipo cerró el contrato con el proveedor y confirmó la fecha de entrega. El presupuesto de noviembre espera la aprobación de Mateo.",
@@ -173,13 +206,11 @@ enum SampleData {
                 questions: ["¿Se mantiene la fecha de entrega si la aprobación se retrasa?"])
         } else {
             lines = [
-                TranscriptLine(speaker: .me, start: 0, text: "Good morning everyone, let's start with this week's news."),
-                TranscriptLine(speaker: .them, start: 18, text: "We closed the contract with the supplier and we already have the delivery date."),
-                TranscriptLine(speaker: .me, start: 41, text: "Perfect. And the November budget?"),
-                TranscriptLine(speaker: .them, start: 55, text: "We still need Mateo's approval, we'll have it on Wednesday."),
-                TranscriptLine(speaker: .me, start: 80, text: "Then on Thursday we review everything and send it to Carla."),
-                TranscriptLine(speaker: .them, start: 102, text: "Agreed. I'll prepare the presentation for that day."),
-                TranscriptLine(speaker: .me, start: 130, text: "That's clear. Thanks, everyone."),
+                TranscriptLine(speaker: .room, start: 0, text: "Good morning everyone, let's start with this week's news. We closed the contract with the supplier and we already have the delivery date."),
+                TranscriptLine(speaker: .room, start: 41, text: "Perfect. And the November budget? We still need Mateo's approval, we'll have it on Wednesday."),
+                TranscriptLine(speaker: .marker, start: 96, text: MeetingMarker.paused.text(english: true)),
+                TranscriptLine(speaker: .marker, start: 96, text: MeetingMarker.resumed.text(english: true)),
+                TranscriptLine(speaker: .room, start: 102, text: "Then on Thursday we review everything and send it to Carla. Agreed, I'll prepare the presentation for that day. That's clear, thanks, everyone."),
             ]
             summary = MeetingSummary(
                 summary: "The team closed the contract with the supplier and confirmed the delivery date. The November budget is waiting for Mateo's approval.",

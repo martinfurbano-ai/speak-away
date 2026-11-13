@@ -4,8 +4,8 @@
 #
 #   ios/scripts/screens.sh <udid> <outdir> [screen ...]
 #
-# Without screens it takes all of them: home history notes meetings meeting-detail voice dictionary snippets style
-# settings onboarding-1 ... onboarding-5 session keyboard keyboard-recording keyboard-result.
+# Without screens it takes all of them: home history notes meetings meeting-detail meeting-recording voice dictionary
+# snippets style settings onboarding-1 ... onboarding-5 session keyboard keyboard-recording keyboard-result.
 # The files are named <screen>-<lang>-<appearance>.png, for example home-es-dark.png.
 #
 # The simulator has to be booted already: this script never boots one (it can add several GB of swap on a Mac with
@@ -30,7 +30,7 @@ IOS=${0:A:h:h}
 APP=${SPEAKAWAY_APP:-$IOS/.build/dd/Build/Products/Debug-iphonesimulator/SpeakAway.app}
 SETTLE=${SPEAKAWAY_SETTLE:-3}
 MIN_FREE_GB=3
-ALL_SCREENS=(home history notes meetings meeting-detail voice dictionary snippets style settings
+ALL_SCREENS=(home history notes meetings meeting-detail meeting-recording voice dictionary snippets style settings
              onboarding-1 onboarding-2 onboarding-3 onboarding-4 onboarding-5
              session keyboard keyboard-recording keyboard-result)
 LOOKS=(light dark)
