@@ -4,7 +4,7 @@ import XCTest
 final class PreviewRequestTests: XCTestCase {
     func testTheScreenNamesAreTheOnesTheScreenshotScriptUses() {
         XCTAssertEqual(PreviewScreen.allCases.map(\.rawValue), [
-            "home", "history", "notes", "meetings", "meeting-detail", "voice", "dictionary", "snippets", "style", "settings",
+            "home", "history", "notes", "meetings", "meeting-detail", "meeting-recording", "voice", "dictionary", "snippets", "style", "settings",
             "onboarding-1", "onboarding-2", "onboarding-3", "onboarding-4", "onboarding-5",
             "session", "keyboard", "keyboard-recording", "keyboard-result",
         ])

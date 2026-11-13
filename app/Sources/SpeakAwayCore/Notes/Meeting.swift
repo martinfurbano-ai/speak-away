@@ -3,6 +3,13 @@ import Foundation
 public enum Speaker: String, Codable, Sendable {
     case me
     case them
+    /// The only microphone of a meeting recorded in a room (the iPhone): it cannot tell the voices apart.
+    case room
+    /// Not speech: a note about the recording itself ("Paused"), shown between the lines.
+    case marker
+
+    /// The two sides of a call, whose consecutive lines read better as one turn.
+    var mergesConsecutiveLines: Bool { self == .me || self == .them }
 }
 
 public struct TranscriptLine: Codable, Equatable, Sendable, Identifiable {
@@ -64,8 +71,7 @@ public struct Meeting: Codable, Equatable, Sendable, Identifiable {
         out += "---\n\n"
         out += "# \(title)\n\n"
         for turn in Meeting.turns(lines) {
-            let label = turn.speaker == .me ? (english ? "Me" : "Yo") : (english ? "Them" : "Ellos")
-            out += "**\(label)** \(Meeting.clock(turn.start)) \(turn.text)\n\n"
+            out += Meeting.markdownLine(turn, english: english) + "\n\n"
         }
         if let summary, !summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             out += "## \(english ? "Summary" : "Resumen")\n\n\(summary.trimmingCharacters(in: .whitespacesAndNewlines))\n"
@@ -81,7 +87,19 @@ public struct Meeting: Codable, Equatable, Sendable, Identifiable {
         return ask + "\n\n" + markdown(timeZone: timeZone, english: english)
     }
 
-    /// Lines ordered by time, with consecutive lines of the same speaker merged under the first one's time.
+    /// One turn of the note. A call has a label for each side; a room has only the time; a marker is in italics.
+    private static func markdownLine(_ turn: TranscriptLine, english: Bool) -> String {
+        let time = Meeting.clock(turn.start)
+        switch turn.speaker {
+        case .me: return "**\(english ? "Me" : "Yo")** \(time) \(turn.text)"
+        case .them: return "**\(english ? "Them" : "Ellos")** \(time) \(turn.text)"
+        case .room: return "**\(time)** \(turn.text)"
+        case .marker: return "*\(time) \(turn.text)*"
+        }
+    }
+
+    /// Lines ordered by time. Consecutive lines of the same side of a call are merged under the first one's time;
+    /// lines of a room and markers stay as they are.
     public static func turns(_ lines: [TranscriptLine]) -> [TranscriptLine] {
         let ordered = lines.enumerated()
             .sorted { $0.element.start != $1.element.start ? $0.element.start < $1.element.start : $0.offset < $1.offset }
@@ -89,7 +107,7 @@ public struct Meeting: Codable, Equatable, Sendable, Identifiable {
         return ordered.reduce(into: [TranscriptLine]()) { turns, line in
             let text = line.text.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else { return }
-            if let last = turns.last, last.speaker == line.speaker {
+            if line.speaker.mergesConsecutiveLines, let last = turns.last, last.speaker == line.speaker {
                 turns[turns.count - 1] = TranscriptLine(speaker: last.speaker, start: last.start, text: last.text + " " + text)
             } else {
                 turns.append(TranscriptLine(speaker: line.speaker, start: line.start, text: text))

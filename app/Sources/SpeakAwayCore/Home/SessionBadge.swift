@@ -12,16 +12,21 @@ public enum SessionBadge: Equatable, Sendable {
     case writing
     /// The last dictation failed.
     case problem
+    /// A meeting is being recorded (`paused`: waiting). The microphone is not free for dictating.
+    case meeting(paused: Bool)
 
     /// `sessionEnd` comes from the app's own session controller, not from the published state: the state
     /// the keyboard reads only says "ready", the controller knows when the time is up.
     public static func make(state: SessionState, sessionEnd: Date?, active: Bool, now: Date) -> SessionBadge {
+        // A meeting is on even when no dictation session is.
+        if case .meeting(let paused) = state { return .meeting(paused: paused) }
         guard active else { return .off }
         switch state {
         case .recording: return .listening
         case .transcribing: return .writing
         case .failed: return .problem
-        case .idle, .ready, .done: return .ready(minutesLeft: minutesLeft(until: sessionEnd, now: now))
+        // `.meeting` was answered above; it is listed so the switch stays exhaustive.
+        case .idle, .ready, .done, .meeting: return .ready(minutesLeft: minutesLeft(until: sessionEnd, now: now))
         }
     }
 

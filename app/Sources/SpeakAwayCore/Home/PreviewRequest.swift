@@ -7,6 +7,7 @@ public enum PreviewScreen: String, CaseIterable, Sendable {
     case notes
     case meetings
     case meetingDetail = "meeting-detail"
+    case meetingRecording = "meeting-recording"
     case voice
     case dictionary
     case snippets

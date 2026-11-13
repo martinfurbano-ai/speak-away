@@ -25,8 +25,9 @@ public enum SessionTick {
         case .ready:
             if SessionPolicy.isExpired(until: sessionEnd, at: now) { return .expire }
             return age >= SessionLiveness.heartbeatInterval ? .heartbeat : .none
-        case .recording, .transcribing:
-            // A dictation in progress is finished first, even when the session time is up.
+        case .recording, .transcribing, .meeting:
+            // A dictation in progress is finished first, even when the session time is up. A meeting has no
+            // session time: it lasts until the user stops it, and only needs to be seen alive.
             return age >= SessionLiveness.heartbeatInterval ? .heartbeat : .none
         case .done, .failed:
             guard age >= resultHold else { return .none }

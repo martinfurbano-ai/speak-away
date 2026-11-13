@@ -97,6 +97,9 @@ public enum SessionState: Equatable, Sendable {
     /// The text to insert. `id` lets the keyboard insert each result once.
     case done(id: UUID, text: String)
     case failed(reason: String)
+    /// A meeting is being recorded from the microphone (`paused`: it is waiting). The keyboard cannot dictate
+    /// until it ends, and says so.
+    case meeting(paused: Bool)
 
     /// Loudness clamped to 0...1 (0 when not recording).
     public var level: Double {
@@ -112,8 +115,8 @@ public enum SessionState: Equatable, Sendable {
 }
 
 extension SessionState: Codable {
-    private enum Kind: String, Codable { case idle, ready, recording, transcribing, done, failed }
-    private enum Key: String, CodingKey { case type, until, level, id, text, reason }
+    private enum Kind: String, Codable { case idle, ready, recording, transcribing, done, failed, meeting }
+    private enum Key: String, CodingKey { case type, until, level, id, text, reason, paused }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: Key.self)
@@ -124,6 +127,7 @@ extension SessionState: Codable {
         case .transcribing: self = .transcribing
         case .done: self = .done(id: try c.decode(UUID.self, forKey: .id), text: try c.decode(String.self, forKey: .text))
         case .failed: self = .failed(reason: try c.decode(String.self, forKey: .reason))
+        case .meeting: self = .meeting(paused: try c.decodeIfPresent(Bool.self, forKey: .paused) ?? false)
         }
     }
 
@@ -145,6 +149,9 @@ extension SessionState: Codable {
         case .failed(let reason):
             try c.encode(Kind.failed, forKey: .type)
             try c.encode(reason, forKey: .reason)
+        case .meeting(let paused):
+            try c.encode(Kind.meeting, forKey: .type)
+            try c.encode(paused, forKey: .paused)
         }
     }
 }

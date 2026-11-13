@@ -36,7 +36,7 @@ public enum SessionDispatch {
     private static func isFree(_ state: SessionState) -> Bool {
         switch state {
         case .ready, .done, .failed: return true
-        case .idle, .recording, .transcribing: return false
+        case .idle, .recording, .transcribing, .meeting: return false
         }
     }
 

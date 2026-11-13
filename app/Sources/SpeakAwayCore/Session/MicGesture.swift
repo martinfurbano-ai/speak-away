@@ -46,6 +46,9 @@ public struct MicGesture: Equatable, Sendable {
             return (MicGesture(recording: false, pressedAt: nil, startedByPress: false, requestedAt: nil), .none)
         case .idle, .failed:
             return (MicGesture(recording: false, pressedAt: nil, startedByPress: false, requestedAt: nil), .openApp)
+        case .meeting:
+            // The microphone belongs to the meeting: the key only tells the user so.
+            return (MicGesture(recording: false, pressedAt: nil, startedByPress: false, requestedAt: nil), .none)
         }
     }
 
@@ -65,7 +68,7 @@ public struct MicGesture: Equatable, Sendable {
         case .ready, .done:
             if recording, let requestedAt, time.timeIntervalSince(requestedAt) < Self.startGrace { return self }
             return MicGesture(recording: false, pressedAt: pressedAt, startedByPress: startedByPress, requestedAt: nil)
-        case .transcribing, .idle, .failed:
+        case .transcribing, .idle, .failed, .meeting:
             return MicGesture(recording: false, pressedAt: pressedAt, startedByPress: startedByPress, requestedAt: nil)
         }
     }
