@@ -58,13 +58,25 @@ final class BrainAvailabilityTests: XCTestCase {
         XCTAssertFalse(BrainAvailability.needsAppleIntelligence.isUsable)
         XCTAssertFalse(BrainAvailability.unsupportedOS.isUsable)
         XCTAssertTrue(BrainAvailability.needsAppleIntelligence.message.contains("Apple Intelligence"))
-        XCTAssertTrue(BrainAvailability.unsupportedOS.message.contains("macOS 26"))
+        XCTAssertTrue(BrainAvailability.unsupportedOS.message.contains("26"))
         XCTAssertEqual(BrainAvailability.available.message, "")
+    }
+
+    /// The same words are shown on the Mac and on the iPhone, so they name neither.
+    func testMessagesNameNoParticularDevice() {
+        let statuses: [BrainAvailability] = [.needsAppleIntelligence, .unsupportedOS, .deviceNotEligible, .modelNotReady]
+        for status in statuses {
+            for word in ["Mac", "macOS", "iPhone", "iOS", "Ajustes del Sistema"] {
+                XCTAssertFalse(status.message.contains(word), "\(status) mentions \(word)")
+            }
+            XCTAssertFalse(status.message.isEmpty, "\(status)")
+        }
+        XCTAssertFalse((BrainError.tooLong.errorDescription ?? "").contains("Mac"))
     }
 
     func testBrainErrorDescriptions() {
         XCTAssertEqual(BrainError.unavailable(.unsupportedOS).errorDescription, BrainAvailability.unsupportedOS.message)
-        XCTAssertEqual(BrainError.tooLong.errorDescription, "El texto es demasiado largo para el modelo del Mac.")
+        XCTAssertEqual(BrainError.tooLong.errorDescription, "El texto es demasiado largo para el modelo del dispositivo.")
         XCTAssertEqual(BrainError.failed("x").errorDescription, "x")
     }
 }

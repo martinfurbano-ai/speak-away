@@ -27,6 +27,20 @@ public struct Snippets: Equatable, Codable, Sendable {
         return Snippets(items: items + [snippet])
     }
 
+    /// A new list where the snippet with `trigger` (ignoring case and accents) is swapped for `snippet`, in the
+    /// same place. Another snippet with the same trigger as `snippet` is dropped. With no snippet for `trigger`
+    /// this adds `snippet`.
+    public func replacing(trigger: String, with snippet: Snippet) -> Snippets {
+        let old = Snippets.key(trigger)
+        guard let place = items.firstIndex(where: { Snippets.key($0.trigger) == old }) else { return adding(snippet) }
+        let key = Snippets.key(snippet.trigger)
+        let swapped = items.enumerated().compactMap { item -> Snippet? in
+            if item.offset == place { return snippet }
+            return Snippets.key(item.element.trigger) == key ? nil : item.element
+        }
+        return Snippets(items: swapped)
+    }
+
     public func removing(trigger: String) -> Snippets {
         let key = Snippets.key(trigger)
         return Snippets(items: items.filter { Snippets.key($0.trigger) != key })

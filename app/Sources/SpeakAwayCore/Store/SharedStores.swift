@@ -29,6 +29,9 @@ public struct SharedStores {
     public func save(_ dictionary: PersonalDictionary) throws { try store(SharedFiles.dictionary).save(dictionary) }
     public func save(_ snippets: Snippets) throws { try store(SharedFiles.snippets).save(snippets) }
     public func save(_ styles: StyleSettings) throws { try store(SharedFiles.style).save(styles) }
+    /// The whole history, for example after one dictation was deleted.
+    public func save(_ history: [HistoryItem]) throws { try store(SharedFiles.history).save(history) }
+    public func save(_ stats: UsageStats) throws { try store(SharedFiles.stats).save(stats) }
 
     /// Counts a finished dictation in the stats (numbers only) and, when the history is on, keeps its text.
     /// Returns the history item, or `nil` when the history is off or the text is empty.

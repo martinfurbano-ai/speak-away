@@ -54,7 +54,8 @@ public struct Meeting: Codable, Equatable, Sendable, Identifiable {
 
     // MARK: Markdown
 
-    public func markdown(timeZone: TimeZone = .current) -> String {
+    /// The meeting as a Markdown note. `english` only changes the words we add ("Me", "Them", "Summary").
+    public func markdown(timeZone: TimeZone = .current, english: Bool = false) -> String {
         var out = "---\n"
         out += "title: \(Meeting.quoted(title))\n"
         out += "app: \(Meeting.yamlScalar(app))\n"
@@ -63,13 +64,21 @@ public struct Meeting: Codable, Equatable, Sendable, Identifiable {
         out += "---\n\n"
         out += "# \(title)\n\n"
         for turn in Meeting.turns(lines) {
-            let label = turn.speaker == .me ? "Yo" : "Ellos"
+            let label = turn.speaker == .me ? (english ? "Me" : "Yo") : (english ? "Them" : "Ellos")
             out += "**\(label)** \(Meeting.clock(turn.start)) \(turn.text)\n\n"
         }
         if let summary, !summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            out += "## Resumen\n\n\(summary.trimmingCharacters(in: .whitespacesAndNewlines))\n"
+            out += "## \(english ? "Summary" : "Resumen")\n\n\(summary.trimmingCharacters(in: .whitespacesAndNewlines))\n"
         }
         return out.hasSuffix("\n\n") ? String(out.dropLast()) : out
+    }
+
+    /// What to paste into a chat assistant to get the notes: the ask, then the whole meeting.
+    public func chatPrompt(english: Bool = false, timeZone: TimeZone = .current) -> String {
+        let ask = english
+            ? "Summarize this meeting as: Summary, Decisions, Action items (who, what, when) and Open questions."
+            : "Resume esta reunión en: Resumen, Decisiones, Pendientes (quién, qué, cuándo) y Preguntas abiertas."
+        return ask + "\n\n" + markdown(timeZone: timeZone, english: english)
     }
 
     /// Lines ordered by time, with consecutive lines of the same speaker merged under the first one's time.

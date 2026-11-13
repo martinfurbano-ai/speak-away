@@ -61,9 +61,8 @@ final class MeetingsModel: ObservableObject {
 
     /// For people without Apple Intelligence: the note, ready to paste into ChatGPT or Claude.
     func copyForChat(_ meeting: Meeting) {
-        let prompt = "Resume esta reunión en: Resumen, Decisiones, Pendientes (quién, qué, cuándo) y Preguntas abiertas.\n\n" + meeting.markdown()
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(prompt, forType: .string)
+        NSPasteboard.general.setString(meeting.chatPrompt(), forType: .string)
         message = "Copiado. Pégalo en ChatGPT o Claude."
     }
 }

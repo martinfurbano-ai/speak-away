@@ -13,10 +13,12 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
     public var sounds: Bool
     public var haptics: Bool
     public var historyEnabled: Bool
+    /// The unique id of the input to listen with. Empty means the one the system picks.
+    public var microphone: String
 
     public init(language: String = "auto", autoEdit: Bool = true, polish: Bool = false,
                 sessionLength: SessionLength = .fifteenMinutes, sounds: Bool = true, haptics: Bool = true,
-                historyEnabled: Bool = true) {
+                historyEnabled: Bool = true, microphone: String = "") {
         self.language = language
         self.autoEdit = autoEdit
         self.polish = polish
@@ -24,6 +26,7 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
         self.sounds = sounds
         self.haptics = haptics
         self.historyEnabled = historyEnabled
+        self.microphone = microphone
     }
 
     /// A copy with `change` applied; the original stays as it was.
@@ -41,7 +44,7 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
     }
 
     private enum Key: String, CodingKey {
-        case language, autoEdit, polish, sessionLength, sounds, haptics, historyEnabled
+        case language, autoEdit, polish, sessionLength, sounds, haptics, historyEnabled, microphone
     }
 
     public init(from decoder: Decoder) throws {
@@ -55,5 +58,6 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
         sounds = try c.decodeIfPresent(Bool.self, forKey: .sounds) ?? defaults.sounds
         haptics = try c.decodeIfPresent(Bool.self, forKey: .haptics) ?? defaults.haptics
         historyEnabled = try c.decodeIfPresent(Bool.self, forKey: .historyEnabled) ?? defaults.historyEnabled
+        microphone = try c.decodeIfPresent(String.self, forKey: .microphone) ?? defaults.microphone
     }
 }

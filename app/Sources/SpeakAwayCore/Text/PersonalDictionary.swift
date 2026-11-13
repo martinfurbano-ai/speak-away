@@ -28,6 +28,19 @@ public struct PersonalDictionary: Equatable, Codable, Sendable {
         return PersonalDictionary(entries: entries + [entry])
     }
 
+    /// A new dictionary where the entry for `word` (ignoring case) is swapped for `entry`, in the same place.
+    /// Another entry already spelled like `entry.word` is dropped, so a word never appears twice.
+    /// With no entry for `word` this adds `entry`.
+    public func replacing(word: String, with entry: DictionaryEntry) -> PersonalDictionary {
+        guard let place = entries.firstIndex(where: { $0.word.folded == word.folded }) else { return adding(entry) }
+        let key = entry.word.folded
+        let swapped = entries.enumerated().compactMap { item -> DictionaryEntry? in
+            if item.offset == place { return entry }
+            return item.element.word.folded == key ? nil : item.element
+        }
+        return PersonalDictionary(entries: swapped)
+    }
+
     /// A new dictionary without the entry for that word (ignoring case).
     public func removing(word: String) -> PersonalDictionary {
         let key = word.folded

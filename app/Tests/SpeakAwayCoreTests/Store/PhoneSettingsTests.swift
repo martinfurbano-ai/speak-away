@@ -11,6 +11,16 @@ final class PhoneSettingsTests: XCTestCase {
         XCTAssertTrue(s.sounds)
         XCTAssertTrue(s.haptics)
         XCTAssertTrue(s.historyEnabled)
+        XCTAssertEqual(s.microphone, "", "empty means the one the system picks")
+    }
+
+    func testTheChosenMicrophoneIsKeptAndAnOldFileStillLoads() throws {
+        let chosen = PhoneSettings().changing { $0.microphone = "BuiltInMicrophoneBottom" }
+        let data = try JSONEncoder().encode(chosen)
+        XCTAssertEqual(try JSONDecoder().decode(PhoneSettings.self, from: data).microphone, "BuiltInMicrophoneBottom")
+        let old = try JSONDecoder().decode(PhoneSettings.self, from: Data(#"{"language":"es","sounds":false}"#.utf8))
+        XCTAssertEqual(old.microphone, "")
+        XCTAssertFalse(old.sounds)
     }
 
     func testChangingReturnsANewValue() {
@@ -102,6 +112,22 @@ final class SharedStoresTests: XCTestCase {
         _ = try stores.recordDictation(text: "first one ", raw: "first one", seconds: 1, at: now)
         _ = try stores.recordDictation(text: "second one ", raw: "second one", seconds: 1, at: now.addingTimeInterval(60))
         XCTAssertEqual(stores.history().map(\.text), ["second one ", "first one "])
+    }
+
+    func testTheHistoryCanBeSavedAfterADelete() throws {
+        let stores = SharedStores(folder: folder)
+        _ = try stores.recordDictation(text: "first one ", raw: "first one", seconds: 1, at: now)
+        _ = try stores.recordDictation(text: "second one ", raw: "second one", seconds: 1, at: now.addingTimeInterval(60))
+        let doomed = try XCTUnwrap(stores.history().first)
+        try stores.save(History.removing(doomed.id, from: stores.history()))
+        XCTAssertEqual(SharedStores(folder: folder).history().map(\.text), ["first one "])
+        XCTAssertEqual(stores.stats().totalWords, 4, "the numbers are not taken back")
+    }
+
+    func testStatsCanBeSavedForTheSamplePreview() throws {
+        let stats = UsageStats().recording(words: 120, seconds: 60, on: DayKey(ordinal: 20_000))
+        try SharedStores(folder: folder).save(stats)
+        XCTAssertEqual(SharedStores(folder: folder).stats(), stats)
     }
 
     func testEmptyTextRecordsNothing() throws {
