@@ -25,16 +25,17 @@ struct MeetingRecordingView: View {
         .navigationTitle("Recording")
         .navigationBarTitleDisplayMode(.inline)
         .toast($recorder.notice)
+        .onAppear(perform: leaveIfOver)
         .onChange(of: recorder.stage) { old, new in
-            // The meeting ended, whoever ended it: its note opens, or the list comes back when nothing was kept.
-            // A start that failed stays here, so the reason can be read.
-            guard new == .idle, old != .idle else { return }
-            if let saved = recorder.lastSaved {
-                model.openSavedMeeting(saved)
-            } else if recorder.problem == nil {
-                model.openSavedMeeting(nil)
-            }
+            if new == .idle, old != .idle { leaveIfOver() }
         }
+    }
+
+    /// The meeting ended, whoever ended it (and even while another tab was open): its note opens, or the list comes
+    /// back when nothing was kept. A start that failed stays here, so the reason can be read.
+    private func leaveIfOver() {
+        guard recorder.stage == .idle, recorder.problem == nil else { return }
+        model.openSavedMeeting(recorder.lastSaved)
     }
 
     // MARK: Getting ready
