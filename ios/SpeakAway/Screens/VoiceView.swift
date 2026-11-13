@@ -396,11 +396,11 @@ struct StylePage: View {
         var id: AppCategory { category }
     }
 
+    /// The keyboard tells two kinds of field apart: email fields and everything else. Core still has Work and Other
+    /// for the Mac, so the iPhone page lists only these two.
     private let kinds: [Kind] = [
-        Kind(category: .messages, title: "Messages", apps: "WhatsApp, iMessage, Telegram, Slack", icon: "message"),
-        Kind(category: .email, title: "Email", apps: "Mail, Gmail, Outlook, Spark", icon: "envelope"),
-        Kind(category: .work, title: "Work", apps: "Notes, Notion, Word, Pages, Teams", icon: "doc.text"),
-        Kind(category: .other, title: "Other", apps: "Browser and other apps", icon: "square.grid.2x2"),
+        Kind(category: .messages, title: "Messages", apps: "WhatsApp, iMessage, Notes and everything else", icon: "message"),
+        Kind(category: .email, title: "Email", apps: "Email fields in any app", icon: "envelope"),
     ]
 
     var body: some View {
@@ -430,11 +430,6 @@ struct StylePage: View {
                         }
                     }
                 }
-                Text("For now the keyboard uses Email in email fields and Messages everywhere else.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 6)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

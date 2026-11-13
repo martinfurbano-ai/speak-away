@@ -176,13 +176,6 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Cerebro" } }
       }
     },
-    "Browser and other apps" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Browser and other apps" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Navegador y otras apps" } }
-      }
-    },
     "call" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -477,6 +470,13 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Correo" } }
       }
     },
+    "Email fields in any app" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Email fields in any app" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Campos de correo en cualquier app" } }
+      }
+    },
     "End session" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -496,13 +496,6 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "for example “my calendar link”" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "por ejemplo «mi link de calendario»" } }
-      }
-    },
-    "For now the keyboard uses Email in email fields and Messages everywhere else." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "For now the keyboard uses Email in email fields and Messages everywhere else." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Por ahora el teclado usa Correo en los campos de correo y Mensajes en todo lo demás." } }
       }
     },
     "Formal" : {
@@ -708,13 +701,6 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho por Martín Urbano para Open Source Everything" } }
       }
     },
-    "Mail, Gmail, Outlook, Spark" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mail, Gmail, Outlook, Spark" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mail, Gmail, Outlook, Spark" } }
-      }
-    },
     "Me" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -883,13 +869,6 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Las notas de tus reuniones aparecerán aquí, con la transcripción y un resumen." } }
       }
     },
-    "Notes, Notion, Word, Pages, Teams" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes, Notion, Word, Pages, Teams" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas, Notion, Word, Pages, Teams" } }
-      }
-    },
     "Nothing dictated yet" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -958,13 +937,6 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Speak Away" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir Speak Away" } }
-      }
-    },
-    "Other" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } }
       }
     },
     "Privacy" : {
@@ -1632,11 +1604,11 @@
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Lo que dictaste, guardado solo en tu iPhone." } }
       }
     },
-    "WhatsApp, iMessage, Telegram, Slack" : {
+    "WhatsApp, iMessage, Notes and everything else" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "WhatsApp, iMessage, Telegram, Slack" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "WhatsApp, iMessage, Telegram, Slack" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "WhatsApp, iMessage, Notes and everything else" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "WhatsApp, iMessage, Notas y todo lo demás" } }
       }
     },
     "When I say…" : {
@@ -1665,13 +1637,6 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Words per minute" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Palabras por minuto" } }
-      }
-    },
-    "Work" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Work" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Trabajo" } }
       }
     },
     "Write this" : {
