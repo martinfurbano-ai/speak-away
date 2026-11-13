@@ -17,6 +17,8 @@ final class AppModel: ObservableObject {
     enum NotesRoute: Hashable {
         case note(UUID)
         case meeting(UUID)
+        /// The meeting being recorded.
+        case recording
     }
 
     enum VoiceRoute: Hashable {
@@ -45,6 +47,7 @@ final class AppModel: ObservableObject {
     let session: SessionController
     let store: PhoneStore
     let noteDictation: NoteDictation
+    let recorder: MeetingRecorder
     /// Set when the app was launched with `--preview`.
     let preview: PreviewRequest?
     /// The folder of the sample data in preview mode.
@@ -58,6 +61,7 @@ final class AppModel: ObservableObject {
         self.store = store
         self.session = session
         self.noteDictation = NoteDictation(session: session, store: store)
+        self.recorder = MeetingRecorder(session: session, store: store)
         self.preview = nil
         self.previewFolder = nil
         if !UserDefaults.standard.bool(forKey: Self.onboardingKey) { cover = .onboarding(.welcome) }
@@ -74,6 +78,7 @@ final class AppModel: ObservableObject {
         self.store = store
         self.session = session
         self.noteDictation = NoteDictation(session: session, store: store)
+        self.recorder = MeetingRecorder(session: session, store: store)
         self.preview = request
         self.previewFolder = folder
 
@@ -83,9 +88,15 @@ final class AppModel: ObservableObject {
         case .home: tab = .home
         case .history: tab = .history
         case .notes: tab = .notes
-        case .meetings, .meetingRecording:
+        case .meetings:
             tab = .notes
             notesSegment = .meetings
+        case .meetingRecording:
+            tab = .notes
+            notesSegment = .meetings
+            notesPath = [.recording]
+            session.showPreview(state: .meeting(paused: false), sessionEnd: nil, live: false)
+            recorder.showPreview(SampleData.recording(spanish: UILanguage.isSpanish))
         case .meetingDetail:
             tab = .notes
             notesSegment = .meetings
@@ -120,13 +131,34 @@ final class AppModel: ObservableObject {
         guard preview == nil, url.scheme?.lowercased() == SessionChannel.urlScheme else { return }
         switch url.host?.lowercased() {
         case "session":
-            cover = .listening
-            Task { await session.startSession() }
+            if recorder.isActive {
+                // The microphone belongs to the meeting: show it instead of asking for a dictation session.
+                cover = nil
+                tab = .notes
+                notesSegment = .meetings
+                notesPath = [.recording]
+            } else {
+                cover = .listening
+                Task { await session.startSession() }
+            }
         case "setup":
             cover = .onboarding(.keyboard)
         default:
             break
         }
+    }
+
+    /// Starts a meeting and shows its screen, or just shows it when one is already going.
+    func startMeetingRecording() {
+        tab = .notes
+        notesSegment = .meetings
+        if !recorder.isActive { recorder.begin() }
+        notesPath = [.recording]
+    }
+
+    /// The meeting was saved: its note replaces the recording screen. `nil`: nothing was kept, back to the list.
+    func openSavedMeeting(_ id: UUID?) {
+        notesPath = id.map { [.meeting($0)] } ?? []
     }
 
     /// The first-launch tour was finished (or skipped to the end) at least once.

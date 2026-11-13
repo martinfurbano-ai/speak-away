@@ -5,60 +5,107 @@ import SpeakAwayBrain
 
 // MARK: List
 
-/// Reuniones: the saved meeting notes, newest first.
+/// Reuniones: the meeting being recorded on top, then the saved meeting notes, newest first.
 struct MeetingsList: View {
     @EnvironmentObject private var store: PhoneStore
-    /// Starts a recording. The recorder arrives in a later step, so nothing is wired to this yet.
-    var recordMeeting: () -> Void = {}
+    @EnvironmentObject private var model: AppModel
+    @EnvironmentObject private var recorder: MeetingRecorder
 
     private var meetings: [Meeting] {
         store.meetings.sorted { $0.startedAt > $1.startedAt }
     }
 
     var body: some View {
-        if meetings.isEmpty {
-            ScrollView {
-                VStack(spacing: 8) {
-                    EmptyState(icon: "person.2.wave.2", title: "No meeting notes yet",
-                               detail: "Notes from your meetings will show up here, with the transcript and a summary.")
-                    recordButton
+        Group {
+            if meetings.isEmpty && !recorder.isActive {
+                ScrollView {
+                    VStack(spacing: 8) {
+                        EmptyState(icon: "person.2.wave.2", title: "No meeting notes yet",
+                                   detail: "Notes from your meetings will show up here, with the transcript and a summary.")
+                        recordButton
+                    }
                 }
-            }
-        } else {
-            List {
-                if Features.meetingRecorder {
-                    Section { recordButton.listRowBackground(Color.clear) }
-                }
-                Section {
-                    ForEach(meetings) { meeting in
-                        NavigationLink(value: AppModel.NotesRoute.meeting(meeting.id)) {
-                            MeetingRow(meeting: meeting)
+            } else {
+                List {
+                    if Features.meetingRecorder || recorder.isActive {
+                        Section {
+                            if recorder.isActive {
+                                NavigationLink(value: AppModel.NotesRoute.recording) {
+                                    RecordingRow(title: recorder.shownTitle, stage: recorder.stage, meter: recorder.meter)
+                                }
+                                .cardRow()
+                            } else {
+                                recordButton.listRowBackground(Color.clear)
+                            }
                         }
-                        .cardRow()
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button(role: .destructive) {
-                                store.deleteMeeting(meeting.id)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
+                    }
+                    Section {
+                        ForEach(meetings) { meeting in
+                            NavigationLink(value: AppModel.NotesRoute.meeting(meeting.id)) {
+                                MeetingRow(meeting: meeting)
+                            }
+                            .cardRow()
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    store.deleteMeeting(meeting.id)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
                             }
                         }
                     }
                 }
+                .listStyle(.insetGrouped)
+                .appList()
             }
-            .listStyle(.insetGrouped)
-            .appList()
         }
+        .toast($recorder.notice)
     }
 
-    /// Only while the recorder is on: the flag stays off until the recorder exists.
     @ViewBuilder private var recordButton: some View {
         if Features.meetingRecorder {
-            Button(action: recordMeeting) {
+            Button { model.startMeetingRecording() } label: {
                 PrimaryButtonLabel(title: "Record meeting", systemImage: "record.circle")
             }
             .buttonStyle(.glassProminent)
             .controlSize(.large)
             .padding(.horizontal, 56)
+        }
+    }
+}
+
+/// The meeting being recorded, as a row: the way back to its screen.
+private struct RecordingRow: View {
+    let title: String
+    let stage: MeetingRecorder.Stage
+    let meter: MeterModel
+
+    var body: some View {
+        HStack(spacing: 14) {
+            IconTile(systemName: "record.circle")
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: title).font(.headline).lineLimit(1)
+                HStack(spacing: 6) {
+                    status
+                    if stage == .recording || stage == .paused {
+                        Text(verbatim: "·")
+                        ElapsedClock(meter: meter)
+                    }
+                }
+                .font(.footnote)
+                .foregroundStyle(stage == .recording ? Theme.accent : Color.secondary)
+                .lineLimit(1)
+            }
+        }
+        .padding(.vertical, 2)
+    }
+
+    @ViewBuilder private var status: some View {
+        switch stage {
+        case .idle, .preparing: Text("Getting ready")
+        case .recording: Text("Recording")
+        case .paused: Text("Paused")
+        case .finishing: Text("Saving the notes")
         }
     }
 }
@@ -98,6 +145,7 @@ struct MeetingDetailView: View {
     let meetingID: UUID
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var store: PhoneStore
+    @EnvironmentObject private var recorder: MeetingRecorder
     @State private var toast: String?
     @State private var confirmDelete = false
 
@@ -110,6 +158,7 @@ struct MeetingDetailView: View {
             }
         }
         .toast($toast)
+        .toast($recorder.notice)
         .screenBackground()
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -135,7 +184,10 @@ struct MeetingDetailView: View {
 
                 VStack(alignment: .leading, spacing: 10) {
                     SectionHeader(title: "Transcript")
-                    ForEach(Meeting.turns(meeting.lines)) { TranscriptBubble(line: $0) }
+                    // Two markers can share a time (a pause and its resume), so the position is the identity.
+                    ForEach(Array(Meeting.turns(meeting.lines).enumerated()), id: \.offset) { _, line in
+                        TranscriptBubble(line: line)
+                    }
                 }
 
                 Button(role: .destructive) { confirmDelete = true } label: {
@@ -175,17 +227,55 @@ struct MeetingDetailView: View {
             } else {
                 SummaryCard(title: "Summary", icon: "sparkles", paragraph: text)
             }
-        } else {
+        } else if recorder.summarizing == meeting.id {
             Card {
-                VStack(alignment: .leading, spacing: 6) {
-                    Label("No summary yet", systemImage: "sparkles")
-                        .font(.headline)
-                        .foregroundStyle(Theme.accent)
-                    Text("Copy the meeting and paste it into ChatGPT or Claude to get one.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                HStack(spacing: 12) {
+                    ProgressView()
+                    Text("Summarizing on your iPhone").font(.headline)
                 }
             }
+        } else {
+            noSummary(meeting)
+        }
+    }
+
+    /// No notes yet: why, and the way to get them when this iPhone can write them.
+    private func noSummary(_ meeting: Meeting) -> some View {
+        let plan = recorder.summaryPlan(for: meeting)
+        let title: LocalizedStringKey = plan == .needsAppleIntelligence ? "The summary needs Apple Intelligence" : "No summary yet"
+        return Card {
+            VStack(alignment: .leading, spacing: 10) {
+                Label(title, systemImage: "sparkles")
+                    .font(.headline)
+                    .foregroundStyle(Theme.accent)
+                Text(verbatim: noSummaryDetail(plan))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                if plan == .summarizeNow || plan == .leaveForLater {
+                    Button {
+                        Task { await recorder.summarize(meeting.id) }
+                    } label: {
+                        PrimaryButtonLabel(title: "Summarize", systemImage: "sparkles")
+                    }
+                    .buttonStyle(.glass)
+                }
+            }
+        }
+    }
+
+    private func noSummaryDetail(_ plan: SummaryPlan) -> String {
+        switch plan {
+        case .nothingToSummarize:
+            return String(localized: "Too little was said to make a summary.")
+        case .brainOff:
+            return String(localized: "Turn on Brain in Settings to get a summary on your iPhone.")
+        case .needsAppleIntelligence:
+            return PhoneText.brainSettingsDetail(recorder.brainStatus())
+        case .leaveForLater:
+            return PhoneText.brainSettingsDetail(.modelNotReady)
+        case .summarizeNow:
+            return String(localized: "Write the summary, decisions and tasks on your iPhone. Nothing leaves your phone.")
         }
     }
 
@@ -242,14 +332,24 @@ private struct SummaryCard: View {
     }
 }
 
-/// One turn of the transcript as a chat bubble: yours on the right in red, theirs on the left.
+/// One turn of the transcript. On a call it is a chat bubble, yours on the right in red and theirs on the left.
+/// In a room (one microphone, nobody told apart) it is the time and the paragraph. A marker (a pause, a call that
+/// cut in) is a small note in the middle.
 struct TranscriptBubble: View {
     let line: TranscriptLine
 
     var body: some View {
+        switch line.speaker {
+        case .me, .them: bubble
+        case .room: paragraph
+        case .marker: marker
+        }
+    }
+
+    private var bubble: some View {
         let mine = line.speaker == .me
         let who = mine ? String(localized: "Me") : String(localized: "Them")
-        HStack(alignment: .bottom) {
+        return HStack(alignment: .bottom) {
             if mine { Spacer(minLength: 48) }
             VStack(alignment: mine ? .trailing : .leading, spacing: 3) {
                 Text(verbatim: "\(who) · \(Meeting.clock(line.start))")
@@ -265,5 +365,26 @@ struct TranscriptBubble: View {
             }
             if !mine { Spacer(minLength: 48) }
         }
+    }
+
+    private var paragraph: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(verbatim: Meeting.clock(line.start))
+                .font(.caption2.weight(.medium).monospacedDigit())
+                .foregroundStyle(.secondary)
+            Text(line.text)
+                .font(.body)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var marker: some View {
+        Text(verbatim: "\(Meeting.clock(line.start)) · \(line.text)")
+            .font(.caption.italic())
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 2)
     }
 }

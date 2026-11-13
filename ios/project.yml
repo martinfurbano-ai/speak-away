@@ -82,7 +82,7 @@ targets:
           - UIInterfaceOrientationPortrait
         UIBackgroundModes:
           - audio
-        NSMicrophoneUsageDescription: Speak Away listens to your voice while you dictate and turns it into text on this iPhone. The audio never leaves your phone.
+        NSMicrophoneUsageDescription: Speak Away listens to your voice while you dictate or record a meeting and turns it into text on this iPhone. The audio never leaves your phone and is never kept.
         NSSpeechRecognitionUsageDescription: Speak Away uses Apple's on-device speech recognition to turn your voice into text. Nothing is sent to a server.
         CFBundleURLTypes:
           - CFBundleURLName: com.opensourceeverything.speakaway
