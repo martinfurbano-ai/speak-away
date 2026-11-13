@@ -1,0 +1,1700 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ dictations" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ dictations" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "%@ dictados" } }
+      }
+    },
+    "1 dictation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "1 dictation" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "1 dictado" } }
+      }
+    },
+    "1 hour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "1 hour" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "1 hora" } }
+      }
+    },
+    "15 minutes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "15 minutes" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "15 minutos" } }
+      }
+    },
+    "5 minutes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "5 minutes" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "5 minutos" } }
+      }
+    },
+    "A light tap when you start, stop or copy." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A light tap when you start, stop or copy." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Un toque suave al empezar, detener o copiar." } }
+      }
+    },
+    "A session keeps the microphone ready so the keyboard can start dictating at once." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A session keeps the microphone ready so the keyboard can start dictating at once." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Una sesión mantiene el micrófono listo para que el teclado pueda dictar de inmediato." } }
+      }
+    },
+    "Action items" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Action items" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas" } }
+      }
+    },
+    "Activity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Activity" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Actividad" } }
+      }
+    },
+    "Activity over the last %lld weeks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Activity over the last %lld weeks" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Actividad de las últimas %lld semanas" } }
+      }
+    },
+    "Add a shortcut" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add a shortcut" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Agregar atajo" } }
+      }
+    },
+    "Add a word" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add a word" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Agregar palabra" } }
+      }
+    },
+    "Add it and allow Full Access" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add it and allow Full Access" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Agrégalo y permite el acceso completo" } }
+      }
+    },
+    "Add the keyboard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add the keyboard" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Agrega el teclado" } }
+      }
+    },
+    "Add the name of your company, your clients or your jargon." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add the name of your company, your clients or your jargon." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Agrega el nombre de tu empresa, tus clientes o tu jerga." } }
+      }
+    },
+    "Allow access" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Allow access" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Permitir acceso" } }
+      }
+    },
+    "Allowed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Allowed" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Permitido" } }
+      }
+    },
+    "Another app or a call took the microphone, so the session ended." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Another app or a call took the microphone, so the session ended." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Otra app o una llamada tomó el micrófono, así que la sesión terminó." } }
+      }
+    },
+    "Apple Intelligence is still getting its model ready. Try again in a few minutes." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Apple Intelligence is still getting its model ready. Try again in a few minutes." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Apple Intelligence todavía está preparando su modelo. Inténtalo en unos minutos." } }
+      }
+    },
+    "Auto-edits" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-edits" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Limpiar muletillas y correcciones" } }
+      }
+    },
+    "Auto: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto: %@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Auto: %@" } }
+      }
+    },
+    "Automatic" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Automatic" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Automático" } }
+      }
+    },
+    "Back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Back" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Atrás" } }
+      }
+    },
+    "Brain" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Brain" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cerebro" } }
+      }
+    },
+    "Browser and other apps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Browser and other apps" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Navegador y otras apps" } }
+      }
+    },
+    "Call" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Call" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Llamar" } }
+      }
+    },
+    "Cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } }
+      }
+    },
+    "Casual" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Casual" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Casual" } }
+      }
+    },
+    "Close" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Close" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cerrar" } }
+      }
+    },
+    "Command Mode" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Command Mode" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo comando" } }
+      }
+    },
+    "Command Mode needs an iPhone that supports Apple Intelligence." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Command Mode needs an iPhone that supports Apple Intelligence." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El Modo comando necesita un iPhone compatible con Apple Intelligence." } }
+      }
+    },
+    "Continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Continuar" } }
+      }
+    },
+    "Copied" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copied" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Copiado" } }
+      }
+    },
+    "Copied. Paste it into ChatGPT or Claude." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copied. Paste it into ChatGPT or Claude." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Copiado. Pégalo en ChatGPT o Claude." } }
+      }
+    },
+    "Copies the text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copies the text" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Copia el texto" } }
+      }
+    },
+    "Copy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Copiar" } }
+      }
+    },
+    "Copy for ChatGPT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy for ChatGPT" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Copiar para ChatGPT" } }
+      }
+    },
+    "Copy the meeting and paste it into ChatGPT or Claude to get one." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy the meeting and paste it into ChatGPT or Claude to get one." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Copia la reunión y pégala en ChatGPT o Claude para tener uno." } }
+      }
+    },
+    "Could not get the speech model. Check your connection and try again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Could not get the speech model. Check your connection and try again." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo obtener el modelo de voz. Revisa tu conexión e inténtalo de nuevo." } }
+      }
+    },
+    "Create a note and dictate what is on your mind." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Create a note and dictate what is on your mind." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Crea una nota y dicta lo que tengas en la cabeza." } }
+      }
+    },
+    "day in a row" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "day in a row" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "día seguido" } }
+      }
+    },
+    "days in a row" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "days in a row" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "días seguidos" } }
+      }
+    },
+    "Decisions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Decisions" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Decisiones" } }
+      }
+    },
+    "Delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Borrar" } }
+      }
+    },
+    "Delete meeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete meeting" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Borrar reunión" } }
+      }
+    },
+    "Delete note" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete note" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Borrar nota" } }
+      }
+    },
+    "Delete this meeting?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete this meeting?" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Borrar esta reunión?" } }
+      }
+    },
+    "Delete this note?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete this note?" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Borrar esta nota?" } }
+      }
+    },
+    "Dictate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictate" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dictar" } }
+      }
+    },
+    "Dictate in any app with the Speak Away keyboard. It all happens on your iPhone, with no account and no key." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictate in any app with the Speak Away keyboard. It all happens on your iPhone, with no account and no key." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dicta en cualquier app con el teclado Speak Away. Todo ocurre en tu iPhone, sin cuentas ni claves." } }
+      }
+    },
+    "Dictate something today to keep it going." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictate something today to keep it going." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dicta algo hoy para no perderla." } }
+      }
+    },
+    "Dictate something today to start your streak." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictate something today to start your streak." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dicta algo hoy para empezar tu racha." } }
+      }
+    },
+    "Dictate. Opens Speak Away to start." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictate. Opens Speak Away to start." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dictar. Abre Speak Away para empezar." } }
+      }
+    },
+    "Dictation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictation" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dictado" } }
+      }
+    },
+    "Dictation needs Full Access. Open Speak Away to see how to turn it on." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictation needs Full Access. Open Speak Away to see how to turn it on." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Para dictar se necesita el acceso completo. Abre Speak Away y te muestra cómo activarlo." } }
+      }
+    },
+    "Dictionary" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dictionary" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Diccionario" } }
+      }
+    },
+    "Done" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo" } }
+      }
+    },
+    "Download" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Download" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Descargar" } }
+      }
+    },
+    "Download failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Download failed" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Falló la descarga" } }
+      }
+    },
+    "Downloading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Downloading" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Descargando" } }
+      }
+    },
+    "Edit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar" } }
+      }
+    },
+    "Edit shortcut" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit shortcut" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar atajo" } }
+      }
+    },
+    "Edit word" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit word" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar palabra" } }
+      }
+    },
+    "Email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Email" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Correo" } }
+      }
+    },
+    "End session" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "End session" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Terminar" } }
+      }
+    },
+    "Feedback" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Feedback" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Al dictar" } }
+      }
+    },
+    "for example “my calendar link”" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "for example “my calendar link”" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "por ejemplo «mi link de calendario»" } }
+      }
+    },
+    "For now the keyboard uses Email in email fields and Messages everywhere else." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "For now the keyboard uses Email in email fields and Messages everywhere else." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Por ahora el teclado usa Correo en los campos de correo y Mensajes en todo lo demás." } }
+      }
+    },
+    "Formal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Formal" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Formal" } }
+      }
+    },
+    "Get started" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Get started" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Empezar" } }
+      }
+    },
+    "Get the speech model" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Get the speech model" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Descarga el modelo de voz" } }
+      }
+    },
+    "Getting ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Getting ready" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Preparando" } }
+      }
+    },
+    "Getting the speech model ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Getting the speech model ready" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Preparando el modelo de voz" } }
+      }
+    },
+    "Getting the speech model ready. Stay here until it finishes." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Getting the speech model ready. Stay here until it finishes." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Preparando el modelo de voz. Quédate aquí hasta que termine." } }
+      }
+    },
+    "Go" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Go" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ir" } }
+      }
+    },
+    "Goal: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Goal: %@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Meta: %@" } }
+      }
+    },
+    "Good afternoon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Good afternoon" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buenas tardes" } }
+      }
+    },
+    "Good evening" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Good evening" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buenas noches" } }
+      }
+    },
+    "Good morning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Good morning" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buenos días" } }
+      }
+    },
+    "History" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Historial" } }
+      }
+    },
+    "History is off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "History is off" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El historial está apagado" } }
+      }
+    },
+    "History options" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "History options" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Opciones del historial" } }
+      }
+    },
+    "Home" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Home" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicio" } }
+      }
+    },
+    "How your text sounds in each kind of app" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "How your text sounds in each kind of app" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cómo suena tu texto en cada tipo de app" } }
+      }
+    },
+    "How your text sounds in each kind of app. What you say is the same; how it is written changes." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "How your text sounds in each kind of app. What you say is the same; how it is written changes." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cómo suena tu texto en cada tipo de app. Lo que dices es igual; cambia cómo se escribe." } }
+      }
+    },
+    "If your iPhone often writes the word wrong, list how it writes it. Speak Away fixes it every time." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "If your iPhone often writes the word wrong, list how it writes it. Speak Away fixes it every time." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Si tu iPhone suele escribir mal la palabra, anota cómo la escribe. Speak Away la corrige siempre." } }
+      }
+    },
+    "In any app, hold the globe key and choose Speak Away. Tap its mic to dictate." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "In any app, hold the globe key and choose Speak Away. Tap its mic to dictate." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "En cualquier app, mantén presionada la tecla del globo y elige Speak Away. Toca su micrófono para dictar." } }
+      }
+    },
+    "Instead of %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Instead of %@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "En vez de %@" } }
+      }
+    },
+    "It was deleted." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "It was deleted." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se borró." } }
+      }
+    },
+    "Join" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Join" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Unirse" } }
+      }
+    },
+    "Keyboard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Keyboard" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Teclado" } }
+      }
+    },
+    "Language" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma" } }
+      }
+    },
+    "Last %lld weeks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Last %lld weeks" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Últimas %lld semanas" } }
+      }
+    },
+    "Latest dictations" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Latest dictations" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Últimos dictados" } }
+      }
+    },
+    "Let Speak Away listen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Let Speak Away listen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Deja que Speak Away te escuche" } }
+      }
+    },
+    "Listening" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Listening" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Escuchando" } }
+      }
+    },
+    "Made by Martín Urbano for Open Source Everything" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Made by Martín Urbano for Open Source Everything" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho por Martín Urbano para Open Source Everything" } }
+      }
+    },
+    "Mail, Gmail, Outlook, Spark" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mail, Gmail, Outlook, Spark" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mail, Gmail, Outlook, Spark" } }
+      }
+    },
+    "Me" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Me" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Yo" } }
+      }
+    },
+    "Meetings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meetings" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reuniones" } }
+      }
+    },
+    "Messages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Messages" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mensajes" } }
+      }
+    },
+    "Microphone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Microphone" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Micrófono" } }
+      }
+    },
+    "Microphone access is off. Allow it in Settings to dictate." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Microphone access is off. Allow it in Settings to dictate." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El acceso al micrófono está apagado. Permítelo en Ajustes para dictar." } }
+      }
+    },
+    "Names, brands and words from your work" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Names, brands and words from your work" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombres, marcas y palabras de tu trabajo" } }
+      }
+    },
+    "Names, brands and words from your work. They are written the way you say, and what is often misheard gets fixed." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Names, brands and words from your work. They are written the way you say, and what is often misheard gets fixed." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombres, marcas y palabras de tu trabajo. Se escriben bien y se corrige lo que suele oírse mal." } }
+      }
+    },
+    "New note" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New note" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nueva nota" } }
+      }
+    },
+    "New shortcut" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New shortcut" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Atajo nuevo" } }
+      }
+    },
+    "New word" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New word" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Palabra nueva" } }
+      }
+    },
+    "Next" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Siguiente" } }
+      }
+    },
+    "Next keyboard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next keyboard" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Siguiente teclado" } }
+      }
+    },
+    "No meeting notes yet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No meeting notes yet" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Todavía no hay notas de reuniones" } }
+      }
+    },
+    "No microphone is available right now." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No microphone is available right now." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No hay ningún micrófono disponible ahora." } }
+      }
+    },
+    "No shortcuts yet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No shortcuts yet" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin atajos todavía" } }
+      }
+    },
+    "No summary yet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No summary yet" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Todavía no hay resumen" } }
+      }
+    },
+    "Not asked yet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not asked yet" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún sin pedir" } }
+      }
+    },
+    "Not downloaded yet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not downloaded yet" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún sin descargar" } }
+      }
+    },
+    "Not now" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not now" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Después" } }
+      }
+    },
+    "Notepad" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notepad" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Bloc de notas" } }
+      }
+    },
+    "Notes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas" } }
+      }
+    },
+    "Notes from your meetings will show up here, with the transcript and a summary." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes from your meetings will show up here, with the transcript and a summary." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Las notas de tus reuniones aparecerán aquí, con la transcripción y un resumen." } }
+      }
+    },
+    "Notes, Notion, Word, Pages, Teams" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes, Notion, Word, Pages, Teams" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas, Notion, Word, Pages, Teams" } }
+      }
+    },
+    "Nothing dictated yet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing dictated yet" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Todavía no hay dictados" } }
+      }
+    },
+    "Nothing dictated yet. What you say with the keyboard shows up here." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing dictated yet. What you say with the keyboard shows up here." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Todavía no hay dictados. Lo que digas con el teclado aparece aquí." } }
+      }
+    },
+    "Nothing matches" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing matches" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nada coincide" } }
+      }
+    },
+    "Nothing you dictate leaves your iPhone." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing you dictate leaves your iPhone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nada de lo que dictas sale de tu iPhone." } }
+      }
+    },
+    "Nothing you say leaves your iPhone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing you say leaves your iPhone" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nada de lo que dices sale de tu iPhone" } }
+      }
+    },
+    "Off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Off" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Apagado" } }
+      }
+    },
+    "Open questions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open questions" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Preguntas abiertas" } }
+      }
+    },
+    "Open Settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir Ajustes" } }
+      }
+    },
+    "Open Settings, then General, Keyboard, Keyboards, Add New Keyboard, and pick Speak Away." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings, then General, Keyboard, Keyboards, Add New Keyboard, and pick Speak Away." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Abre Ajustes, luego General, Teclado, Teclados, Agregar teclado nuevo y elige Speak Away." } }
+      }
+    },
+    "Open Speak Away" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Speak Away" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir Speak Away" } }
+      }
+    },
+    "Other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } }
+      }
+    },
+    "Privacy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Privacidad" } }
+      }
+    },
+    "Privacy policy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy policy" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Política de privacidad" } }
+      }
+    },
+    "Ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo" } }
+      }
+    },
+    "Ready to dictate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to dictate" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo para dictar" } }
+      }
+    },
+    "Ready to dictate · %lld min left" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to dictate · %lld min left" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo para dictar · quedan %lld min" } }
+      }
+    },
+    "Ready to dictate · 1 min left" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to dictate · 1 min left" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo para dictar · queda 1 min" } }
+      }
+    },
+    "Record meeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Record meeting" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Grabar reunión" } }
+      }
+    },
+    "Removes “um” and “uh”, and “at 2, no, make it 3” becomes “at 3”." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Removes “um” and “uh”, and “at 2, no, make it 3” becomes “at 3”." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "«eh», «este», y «a las 2, no, mejor a las 3» queda «a las 3»." } }
+      }
+    },
+    "Return" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Return" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Retorno" } }
+      }
+    },
+    "return" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "return" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "return" } }
+      }
+    },
+    "Route" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Route" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ruta" } }
+      }
+    },
+    "Same as the system" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Same as the system" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Del sistema" } }
+      }
+    },
+    "Save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardar" } }
+      }
+    },
+    "Save history" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save history" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardar historial" } }
+      }
+    },
+    "Say a short phrase and a long text is written: your calendar link, your address, an answer you repeat." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Say a short phrase and a long text is written: your calendar link, your address, an answer you repeat." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Di una frase corta y se escribe un texto largo: tu link de calendario, tu dirección, una respuesta que repites." } }
+      }
+    },
+    "Say a short phrase, get a long text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Say a short phrase, get a long text" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Di una frase corta y se escribe un texto largo" } }
+      }
+    },
+    "Say how to change the text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Say how to change the text" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Di cómo cambiar el texto" } }
+      }
+    },
+    "Search" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar" } }
+      }
+    },
+    "Search what you dictated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search what you dictated" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar en lo que dictaste" } }
+      }
+    },
+    "See all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "See all" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver todo" } }
+      }
+    },
+    "Select some text, or write a sentence first, then tap the wand and say what to change." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Select some text, or write a sentence first, then tap the wand and say what to change." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Selecciona un texto, o escribe una frase primero, luego toca la varita y di qué cambiar." } }
+      }
+    },
+    "Select text or write a sentence, tap, and say how to change it." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Select text or write a sentence, tap, and say how to change it." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Selecciona un texto o escribe una frase, toca y di cómo cambiarlo." } }
+      }
+    },
+    "Send" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Send" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Enviar" } }
+      }
+    },
+    "Session length" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Session length" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Duración de la sesión" } }
+      }
+    },
+    "Session off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Session off" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sesión apagada" } }
+      }
+    },
+    "Settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajustes" } }
+      }
+    },
+    "Short tones when a session starts and ends." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Short tones when a session starts and ends." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tonos cortos cuando una sesión empieza y termina." } }
+      }
+    },
+    "Show the setup again" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Show the setup again" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver la configuración otra vez" } }
+      }
+    },
+    "So your iPhone can turn your voice into text." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "So your iPhone can turn your voice into text." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Para que tu iPhone convierta tu voz en texto." } }
+      }
+    },
+    "Something went wrong" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Something went wrong" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Algo salió mal" } }
+      }
+    },
+    "Something went wrong. Try again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Something went wrong. Try again." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Algo salió mal. Inténtalo de nuevo." } }
+      }
+    },
+    "Sounds" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sounds" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sonidos" } }
+      }
+    },
+    "Space" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Space" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Espacio" } }
+      }
+    },
+    "space" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "space" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "espacio" } }
+      }
+    },
+    "Speak Away is listening. Swipe back to keep typing." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away is listening. Swipe back to keep typing." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away está escuchando. Desliza hacia atrás para seguir escribiendo." } }
+      }
+    },
+    "Speak Away is not keeping what you dictate. Turn it on to see it here." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away is not keeping what you dictate. Turn it on to see it here." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away no está guardando lo que dictas. Actívalo para verlo aquí." } }
+      }
+    },
+    "Speak Away is not listening." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away is not listening." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Speak Away no está escuchando." } }
+      }
+    },
+    "Speak. It writes itself." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speak. It writes itself." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Habla. Se escribe solo." } }
+      }
+    },
+    "Speech model" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speech model" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modelo de voz" } }
+      }
+    },
+    "Speech recognition" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speech recognition" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reconocimiento de voz" } }
+      }
+    },
+    "Speech recognition is not available for %@ on this iPhone." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speech recognition is not available for %@ on this iPhone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El reconocimiento de voz no está disponible para %@ en este iPhone." } }
+      }
+    },
+    "Start dictating" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start dictating" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Empezar a dictar" } }
+      }
+    },
+    "Start session" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start session" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Empezar sesión" } }
+      }
+    },
+    "Step %lld of %lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Step %lld of %lld" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Paso %lld de %lld" } }
+      }
+    },
+    "Still getting the speech model ready. Try again in a moment." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Still getting the speech model ready. Try again in a moment." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Todavía se está preparando el modelo de voz. Inténtalo en un momento." } }
+      }
+    },
+    "Stop" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stop" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Detener" } }
+      }
+    },
+    "Stop dictation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stop dictation" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Detener dictado" } }
+      }
+    },
+    "Stopped." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stopped." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Detenido." } }
+      }
+    },
+    "Style" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Style" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estilo" } }
+      }
+    },
+    "Summary" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Summary" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Resumen" } }
+      }
+    },
+    "Tap here and dictate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap here and dictate" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca aquí y dicta" } }
+      }
+    },
+    "Tap Speak Away in that list and turn on Allow Full Access. The keyboard needs it to talk to this app. Your voice and text stay on this iPhone." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap Speak Away in that list and turn on Allow Full Access. The keyboard needs it to talk to this app. Your voice and text stay on this iPhone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca Speak Away en esa lista y activa Permitir acceso completo. El teclado lo necesita para comunicarse con esta app. Tu voz y tu texto se quedan en este iPhone." } }
+      }
+    },
+    "Tap the field, switch to the Speak Away keyboard with the globe key, and tap its mic." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the field, switch to the Speak Away keyboard with the globe key, and tap its mic." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca el campo, cambia al teclado Speak Away con la tecla del globo y toca su micrófono." } }
+      }
+    },
+    "Tap the mic and talk" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the mic and talk" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca el micrófono y habla" } }
+      }
+    },
+    "Tap the mic on the Speak Away keyboard and what you say shows up here." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the mic on the Speak Away keyboard and what you say shows up here." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca el micrófono del teclado Speak Away y lo que digas aparece aquí." } }
+      }
+    },
+    "Tap the mic on the Speak Away keyboard to dictate in any app." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the mic on the Speak Away keyboard to dictate in any app." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca el micrófono del teclado Speak Away para dictar en cualquier app." } }
+      }
+    },
+    "Tap the mic. Speak Away opens, then swipe back." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the mic. Speak Away opens, then swipe back." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca el micrófono. Speak Away se abre, luego desliza para volver." } }
+      }
+    },
+    "Teach Speak Away your words, your phrases and the way you write." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Teach Speak Away your words, your phrases and the way you write." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Enséñale a Speak Away tus palabras, tus frases y tu forma de escribir." } }
+      }
+    },
+    "Text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Text" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Texto" } }
+      }
+    },
+    "That text is too long for Command Mode." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "That text is too long for Command Mode." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ese texto es demasiado largo para el Modo comando." } }
+      }
+    },
+    "The audio could not be read. Try again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The audio could not be read. Try again." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo leer el audio. Inténtalo de nuevo." } }
+      }
+    },
+    "The microphone could not start. Close other apps that are using it and try again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The microphone could not start. Close other apps that are using it and try again." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo iniciar el micrófono. Cierra las otras apps que lo estén usando e inténtalo de nuevo." } }
+      }
+    },
+    "The model did not return any text. Try another instruction." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The model did not return any text. Try another instruction." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El modelo no devolvió ningún texto. Prueba con otra instrucción." } }
+      }
+    },
+    "The speech engine and the brain run on your iPhone. There is no account, no key and no server." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The speech engine and the brain run on your iPhone. There is no account, no key and no server." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El motor de voz y el cerebro corren en tu iPhone. No hay cuenta, ni clave, ni servidor." } }
+      }
+    },
+    "The text lands where you are typing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The text lands where you are typing" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El texto aparece donde estás escribiendo" } }
+      }
+    },
+    "Them" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Them" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ellos" } }
+      }
+    },
+    "This iPhone does not support Apple Intelligence." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This iPhone does not support Apple Intelligence." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Este iPhone no es compatible con Apple Intelligence." } }
+      }
+    },
+    "This is your best streak. Keep it up." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This is your best streak. Keep it up." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Es tu mejor racha. Sigue así." } }
+      }
+    },
+    "This meeting is gone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This meeting is gone" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Esta reunión ya no existe" } }
+      }
+    },
+    "This needs iOS 26 or later with Apple Intelligence." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This needs iOS 26 or later with Apple Intelligence." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Esto necesita iOS 26 o posterior con Apple Intelligence." } }
+      }
+    },
+    "Three steps in the Settings app." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Three steps in the Settings app." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tres pasos en la app Ajustes." } }
+      }
+    },
+    "Tidies up the sentence on your iPhone before it is written. A bit slower." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tidies up the sentence on your iPhone before it is written. A bit slower." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ordena la frase en tu iPhone antes de escribirla. Tarda un poco más." } }
+      }
+    },
+    "Time saved" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time saved" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tiempo ahorrado" } }
+      }
+    },
+    "To hear you when you dictate." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "To hear you when you dictate." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Para oírte cuando dictas." } }
+      }
+    },
+    "Today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hoy" } }
+      }
+    },
+    "Transcript" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcript" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Transcripción" } }
+      }
+    },
+    "Try again" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try again" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Intentar de nuevo" } }
+      }
+    },
+    "Try another word." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try another word." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Prueba con otra palabra." } }
+      }
+    },
+    "Try it" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try it" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pruébalo" } }
+      }
+    },
+    "Turn on Apple Intelligence in Settings to use Command Mode." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Turn on Apple Intelligence in Settings to use Command Mode." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Activa Apple Intelligence en Ajustes para usar el Modo comando." } }
+      }
+    },
+    "Turn on Apple Intelligence in the Settings app to use this." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Turn on Apple Intelligence in the Settings app to use this." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Activa Apple Intelligence en la app Ajustes para usar esto." } }
+      }
+    },
+    "Turn on history" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Turn on history" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Activar historial" } }
+      }
+    },
+    "Two permissions. Both are used only on your iPhone." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Two permissions. Both are used only on your iPhone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dos permisos. Los dos se usan solo en tu iPhone." } }
+      }
+    },
+    "Typing: about 40" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Typing: about 40" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Escribiendo: unas 40" } }
+      }
+    },
+    "Undo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Undo" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Deshacer" } }
+      }
+    },
+    "Until I stop it" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Until I stop it" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hasta que la apague" } }
+      }
+    },
+    "Uses Apple Intelligence on your iPhone. No keys, no accounts, nothing leaves your phone." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Uses Apple Intelligence on your iPhone. No keys, no accounts, nothing leaves your phone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Usa Apple Intelligence en tu iPhone. Sin claves, sin cuentas, nada sale de tu teléfono." } }
+      }
+    },
+    "Version" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Version" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Versión" } }
+      }
+    },
+    "Very casual" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Very casual" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Muy casual" } }
+      }
+    },
+    "Vibration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Vibration" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vibración" } }
+      }
+    },
+    "Voice shortcuts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Voice shortcuts" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Atajos de voz" } }
+      }
+    },
+    "What it mishears, with commas (optional)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "What it mishears, with commas (optional)" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Lo que oye mal, con comas (opcional)" } }
+      }
+    },
+    "What you dictated, kept only on your iPhone." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "What you dictated, kept only on your iPhone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Lo que dictaste, guardado solo en tu iPhone." } }
+      }
+    },
+    "WhatsApp, iMessage, Telegram, Slack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "WhatsApp, iMessage, Telegram, Slack" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "WhatsApp, iMessage, Telegram, Slack" } }
+      }
+    },
+    "When I say…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "When I say…" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cuando diga…" } }
+      }
+    },
+    "Word, for example “Speak Away”" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Word, for example “Speak Away”" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Palabra, por ejemplo «Speak Away»" } }
+      }
+    },
+    "Words dictated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Words dictated" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Palabras dictadas" } }
+      }
+    },
+    "Words per minute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Words per minute" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Palabras por minuto" } }
+      }
+    },
+    "Work" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Work" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Trabajo" } }
+      }
+    },
+    "Write this" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Write this" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "…escribe esto" } }
+      }
+    },
+    "Writing it down" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Writing it down" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Escribiendo" } }
+      }
+    },
+    "Writing style" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Writing style" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estilo de escritura" } }
+      }
+    },
+    "Yesterday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Yesterday" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ayer" } }
+      }
+    },
+    "You can use the keyboard in any app now. The session keeps the microphone ready." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "You can use the keyboard in any app now. The session keeps the microphone ready." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ya puedes usar el teclado en cualquier app. La sesión mantiene el micrófono listo." } }
+      }
+    },
+    "Your best streak: %lld days." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your best streak: %lld days." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tu mejor racha: %lld días." } }
+      }
+    },
+    "Your dictionary is empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your dictionary is empty" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tu diccionario está vacío" } }
+      }
+    },
+    "Your first shortcut saves you from typing the same thing every day." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your first shortcut saves you from typing the same thing every day." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tu primer atajo te ahorra escribir lo mismo cada día." } }
+      }
+    },
+    "Your iPhone needs a small speech model for your language. It downloads once and then works without internet." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your iPhone needs a small speech model for your language. It downloads once and then works without internet." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tu iPhone necesita un modelo de voz pequeño para tu idioma. Se descarga una sola vez y después funciona sin internet." } }
+      }
+    },
+    "Your notepad is empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your notepad is empty" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tu bloc está vacío" } }
+      }
+    },
+    "Your voice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your voice" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tu voz" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
