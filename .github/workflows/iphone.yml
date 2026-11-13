@@ -19,9 +19,10 @@ on:
         required: false
         default: ""
 
+# One run at a time per branch: a newer push waits for the running one instead of cancelling it.
 concurrency:
   group: iphone-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   simulator:
