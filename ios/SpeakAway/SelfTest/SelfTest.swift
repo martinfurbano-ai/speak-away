@@ -47,6 +47,31 @@ enum SelfTest {
             print("  [\(ok ? "pass" : "FAIL")] \(name)\(detail.isEmpty ? "" : ": \(detail)")")
         }
 
+        /// A check this machine cannot run. It is reported, and it is not a failure.
+        func skip(_ name: String) {
+            print("  [skip] needs a real iPhone (simulator has no speech audio format): \(name)")
+        }
+
+        /// The simulator has no audio format for the speech engine, so there the engine always fails with exactly
+        /// `noAudioFormat`. That is a limit of the simulator, not a bug, so the checks that need real transcription
+        /// are skipped. On a device, and for any other error, a failure stays a failure.
+        private func simulatorHasNoSpeechAudioFormat(_ error: Error) -> Bool {
+            #if targetEnvironment(simulator)
+            return (error as? TranscriberError) == .noAudioFormat
+            #else
+            return false
+            #endif
+        }
+
+        /// The same, for the session controller, which keeps only the text of the last error it hit.
+        private func simulatorHasNoSpeechAudioFormat(detail: String?) -> Bool {
+            #if targetEnvironment(simulator)
+            return detail == String(describing: TranscriberError.noAudioFormat)
+            #else
+            return false
+            #endif
+        }
+
         func run() async -> Bool {
             print("SELF TEST start (\(Date()))")
             groupContainer()
@@ -166,7 +191,11 @@ enum SelfTest {
                     print("  after the text pipeline: \"\(prepared.text)\" (style \(prepared.style.rawValue))")
                 }
             } catch {
-                check("AppleSpeech transcribed the file", false, "\(error)")
+                if simulatorHasNoSpeechAudioFormat(error) {
+                    skip("AppleSpeech transcribed the file")
+                } else {
+                    check("AppleSpeech transcribed the file", false, "\(error)")
+                }
             }
         }
 
@@ -226,13 +255,20 @@ enum SelfTest {
             check("the level bars got a signal while the file played", peak.value > 0)
             send(keyboard, controller, .stop, loopsBack: loopsBack)
             let finished = await waitFor(timeout: 90) { self.pending(files) != nil }
-            check("the app transcribes after the keyboard's stop", finished, "\(keyboard.state)")
+            let noSpeechAudio = !finished && simulatorHasNoSpeechAudioFormat(detail: controller.lastErrorDetail)
+            if noSpeechAudio {
+                skip("the app transcribes after the keyboard's stop")
+            } else {
+                check("the app transcribes after the keyboard's stop", finished, "\(keyboard.state)")
+            }
             if let result = keyboard.takePendingResult() {
                 print("  result for the keyboard: \"\(result.text)\" (command: \(result.command))")
                 check("the result is plain text for insertion", !result.text.isEmpty && !result.command)
                 check("the result is delivered once", keyboard.takePendingResult() == nil)
                 check("it was added to the history and the stats", stores.history().first?.text == result.text && stores.stats().totalWords > 0,
                       "history \(stores.history().count) item(s)")
+            } else if noSpeechAudio {
+                skip("a result came back")
             } else {
                 check("a result came back", false, controller.lastErrorDetail ?? "\(keyboard.state)")
             }
@@ -249,6 +285,8 @@ enum SelfTest {
                 print("  command result for the keyboard: \"\(result.text)\" (command: \(result.command))")
                 check("Command Mode returns the spoken instruction applied to the keyboard's text",
                       result.command && result.text.hasSuffix("applied to: \(target)"))
+            } else if simulatorHasNoSpeechAudioFormat(detail: controller.lastErrorDetail) {
+                skip("Command Mode produced a result")
             } else {
                 check("Command Mode produced a result", false, controller.lastErrorDetail ?? "\(keyboard.state)")
             }
