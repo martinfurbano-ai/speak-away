@@ -19,7 +19,7 @@ Creado por **Martín Urbano** para [Open Source Everything](https://www.instagra
 
 Requiere una Mac con Apple Silicon (M1 o posterior) y macOS 14 o posterior.
 
-Con Accesibilidad, Speak Away pega por ti y después restaura lo que habías copiado, salvo que hayas copiado otra cosa entre tanto. Sin ese permiso, Speak Away no puede pegar por ti.
+Con Accesibilidad, Speak Away pega por ti y después intenta devolver lo que habías copiado, salvo que hayas copiado otra cosa entre tanto. Sin ese permiso, Speak Away no puede pegar por ti.
 
 ## Qué hace
 

@@ -42,7 +42,7 @@ Dictation runs on your Mac with Whisper. No account, no analytics, no tracking, 
 
 Requires a Mac with Apple Silicon (M1 or newer) and macOS 14 or later.
 
-With Accessibility permission, Speak Away pastes for you and then restores what you had copied, unless you copied something else in between. Without it, Speak Away cannot paste for you.
+With Accessibility permission, Speak Away pastes for you and then tries to put back what you had copied, unless you copied something else in between. Without it, Speak Away cannot paste for you.
 
 ## FAQ
 
