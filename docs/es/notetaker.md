@@ -91,5 +91,5 @@ Grabar a otros puede requerir su permiso según el país. La página de reunione
 
 ## Qué ya existe y qué falta
 
-- Ya existe (app 0.2.0): micrófono, audio del sistema, transcripción local en trozos, `live.ndjson`, notas, detección de posibles reuniones y resúmenes con Apple Intelligence.
+- Ya existe (app 0.2.1): micrófono, audio del sistema, transcripción local en trozos, `live.ndjson`, notas, detección de posibles reuniones y resúmenes con Apple Intelligence.
 - La detección de Google Meet no está conectada.

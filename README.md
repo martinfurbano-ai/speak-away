@@ -8,7 +8,7 @@ Created by **Martín Urbano** for [Open Source Everything](https://www.instagram
 
 **[Download for Mac](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg)** · [Website](https://speakaway.heliospanama.com)
 
-> Version 0.2 ships dictation, Command Mode, meeting notes, dictionary, voice shortcuts, styles per kind of app, history and a scratchpad. What comes next: [docs/roadmap.md](docs/roadmap.md).
+> Version 0.2.1 ships dictation, Command Mode, meeting notes, dictionary, voice shortcuts, styles per kind of app, history and a scratchpad. What comes next: [docs/roadmap.md](docs/roadmap.md).
 
 [Leer en español](README.es.md)
 

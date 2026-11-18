@@ -8,7 +8,7 @@ Creado por **Martín Urbano** para [Open Source Everything](https://www.instagra
 
 **[Descargar para Mac](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg)** · [Sitio](https://speakaway.heliospanama.com)
 
-> La versión 0.2 trae dictado, modo comando, notas de reuniones, diccionario, atajos de voz, estilo por tipo de app, historial y bloc de notas. Lo que sigue: [docs/roadmap.md](docs/roadmap.md).
+> La versión 0.2.1 trae dictado, modo comando, notas de reuniones, diccionario, atajos de voz, estilo por tipo de app, historial y bloc de notas. Lo que sigue: [docs/roadmap.md](docs/roadmap.md).
 
 ## Instalar
 
