@@ -1,5 +1,5 @@
 {
-  // Landing de Speak Away: solo archivos estáticos de site/, servidos por Workers.
+  // Redirecciones de Speak Away al hub Open Source Everything.
   "name": "speak-away-site",
   "compatibility_date": "2026-10-01",
   "assets": { "directory": "./site", "not_found_handling": "404-page" },

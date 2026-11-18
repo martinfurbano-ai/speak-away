@@ -6,7 +6,7 @@ Free, open source dictation. Hold Fn, talk, let go, and the text appears whereve
 
 Created by **Martín Urbano** for [Open Source Everything](https://www.instagram.com/opensourceeverything/).
 
-**[Download for Mac](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg)** · [Website](https://speakaway.heliospanama.com)
+**[Download for Mac](https://github.com/martinfurbano-ai/speak-away/releases/latest/download/SpeakAway.dmg)** · [Website](https://opensource.dalepanama.com/speak-away/)
 
 > Version 0.2.1 ships dictation, Command Mode, meeting notes, dictionary, voice shortcuts, styles per kind of app, history and a scratchpad. What comes next: [docs/roadmap.md](docs/roadmap.md).
 
