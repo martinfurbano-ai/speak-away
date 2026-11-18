@@ -1,18 +1,11 @@
 # Roadmap
 
+Released: v0.2.0 for Mac. Rows marked planned describe future work, not features in the app today.
+
 | Version | What | Done when |
 |---|---|---|
-| 0.1 | **Dictation (done).** Native Mac app in `app/` (Swift + WhisperKit), menu bar, HUD, downloadable .dmg | Fn twice, talk, Fn, text pasted |
-| 0.2 | **Brain.** Cleanup of dictation with none / Ollama / user key, keys in Keychain | Same dictation, with filler words and punctuation fixed when a brain is on |
-| 0.3 | **Notetaker, local.** Must work exactly like Wispr Flow's notetaker. Mic + system audio, chunks, `live.ndjson`, Markdown note | A 30-minute call produces a note with "Me" and "Them" lines |
-| 0.4 | **Summaries.** Summary template, "Copy for ChatGPT" button | Note gets Summary, Decisions, Action items, Open questions |
-| 0.5 | **Connectors.** MCP server: stdio for Claude Desktop, HTTP + tunnel for ChatGPT | "Summarize my last meeting" works from both |
-| 1.0 | **Polished.** Notarized .dmg (done in 0.1.1) and Mac App Store listing (submitted in 0.1.1) | Someone who never opened Terminal installs and dictates in under 3 minutes |
-| 0.2 | **Wispr Flow parity, local.** Hub with Liquid Glass sidebar; history, scratchpad, dictionary, voice snippets, styles per app, auto-edits and backtracking, hold-to-talk, Command Mode and meeting summaries with Apple's on-device model (no key), notetaker with mic + system audio, sounds, mic picker | Everything Wispr Flow does on Mac, without an account or a key |
-| Pro (later) | **Paid, optional, about $5/month.** Cloud sync of notes and history across devices in our own database, and hosted model keys for meeting summaries so nobody needs their own. The free local app stays complete | Same app, signs in only if you want sync |
-| Later | Windows and Linux (faster-whisper), speaker separation inside "Them", custom vocabulary | |
-
-## Open decisions
-
-- **License:** MIT (anyone can reuse, even in closed apps) or AGPL (forks must stay open).
-- **Mac only for 1.0?** Recommended yes.
+| 0.2.0 (released) | **Local dictation and meeting notes.** Native Mac app in `app/` (Swift + WhisperKit), menu bar, HUD, downloadable .dmg. Hub with a Liquid Glass sidebar on macOS 26; history, scratchpad, dictionary, voice snippets, styles per kind of app, rule-based filler-word cleanup and backtracking, hold-to-talk, mic + system audio notes, sounds, mic picker. Optional polish, Command Mode and user-triggered meeting summaries use Apple's on-device model and need macOS 26 with Apple Intelligence | Press "Resumir" for up to four sections: Resumen, Decisiones, Tareas, Preguntas abiertas; empty sections are omitted. "Copiar para ChatGPT" copies a prompt for manual pasting |
+| Later (planned) | **Provider options.** Ollama, user-supplied keys and Keychain storage | Not implemented in the Mac app |
+| Later (planned) | **Connectors.** MCP server: stdio for Claude Desktop, HTTP + tunnel for ChatGPT | Not implemented in the Mac app |
+| Later (planned) | **iPhone app and keyboard.** | Coming soon |
+| Later (planned) | Windows and Linux (faster-whisper), speaker separation inside "Ellos" | Not implemented in the Mac app |

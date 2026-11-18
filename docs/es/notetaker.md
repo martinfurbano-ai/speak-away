@@ -1,104 +1,95 @@
 # Cómo funciona el notetaker
 
-**Regla:** tiene que funcionar exactamente como el notetaker de Wispr Flow. Lo de abajo es cómo lo hacemos en local y sin API key.
+Las notas de reuniones están disponibles desde v0.2.0 y se transcriben en tu Mac.
 
-La idea: entras a una reunión, Speak Away la transcribe en tu Mac mientras hablan, y al colgar tienes una nota en Markdown con la transcripción. El resumen es opcional y lo puede hacer tu Mac, tu propia llave, o tu ChatGPT.
+Speak Away transcribe la reunión en tu Mac mientras hablan y guarda una nota en Markdown al detener la grabación. La nota no tiene resumen hasta que pulses «Resumir».
 
 ## El recorrido
 
 ```
- Zoom / Meet / Teams / WhatsApp
+ Zoom / Teams / FaceTime / Webex / Slack / WhatsApp
             │
    ┌────────┴────────┐
    │                 │
- Tu micrófono    Audio de la llamada        1. Captura en dos pistas
-  («Tú»)          («Ellos»)
+ Tu micrófono    Audio del sistema        1. Captura en dos pistas
+  («Yo»)          («Ellos»)
    │                 │
-   └──── trozos de ~20 s, cortados en silencios ────┐   2. Trozos
+   └──── trozos de ~20 s, buscando pausas ───────────┐   2. Trozos
                                                     │
-                     Whisper local en tu Mac  ◄─────┘   3. Transcribe (sin internet)
+                     Whisper local en tu Mac  ◄─────┘   3. Transcribe (sin internet tras descargar el modelo)
                               │
-                 live.ndjson (línea por frase)          4. Transcripción en vivo
+              live.ndjson (línea por trozo transcrito)  4. Transcripción en vivo
                               │
-                  Al colgar: Nota.md en tu carpeta      5. Nota
+              <fecha> <título>.md y .json al detener    5. Nota
                               │
-            ┌─────────────────┼──────────────────┐
-         Sin cerebro     Ollama / tu llave    ChatGPT o Claude     6. Resumen (opcional)
-       (solo la nota)     (resumen solo)      (por conector)
+                 «Resumir» con Apple Intelligence       6. Resumen (opcional)
 ```
 
 ### 1. Empezar
 
-Tres formas:
-- **Sola:** Speak Away nota que Zoom, Meet, Teams, FaceTime o WhatsApp está usando el micrófono y pregunta una vez: «¿Tomo notas de esta reunión?».
+Dos formas:
+
+- **Sola:** Speak Away detecta posibles reuniones a partir de las apps abiertas y el uso del micrófono, y pregunta una vez: «¿Tomo notas?». Reconoce Zoom, Microsoft Teams, FaceTime y Webex. Slack y WhatsApp cuentan solo en macOS 14.2 o posterior, cuando macOS indica que están usando el micrófono. La detección de Google Meet no está conectada.
 - **Botón** en la barra de menú.
-- **Tecla:** un atajo propio, distinto al del dictado.
 
 ### 2. Captura en dos pistas
 
 - **Tu voz:** el micrófono.
-- **La voz de los demás:** el audio que sale de la app de la reunión. En macOS 14.4 o más nuevo se usa Core Audio (pide el permiso «Grabación de audio del sistema»); en macOS 13 se usa ScreenCaptureKit (pide «Grabación de pantalla», pero solo toma el audio). No hace falta instalar BlackHole ni drivers raros.
+- **Audio del sistema:** todo lo que reproduce tu Mac excepto los sonidos de Speak Away, así que la música o los videos pueden aparecer en la transcripción. En macOS 14.4 o posterior intenta usar Core Audio, que necesita permiso para grabar el audio del sistema. ScreenCaptureKit es la alternativa: se usa en macOS 14.0 a 14.3 y cuando la captura con Core Audio no puede arrancar. Con ScreenCaptureKit, macOS pide en su lugar el permiso de grabación de pantalla, y Speak Away usa solo el sonido: descarta los fotogramas de video. No hace falta instalar BlackHole ni drivers raros.
 
-Tener dos pistas regala algo: sin ningún modelo extra ya sabes qué dijiste tú y qué dijeron los demás. Separar a «los demás» entre varias personas viene después.
+Las dos pistas separan la entrada del micrófono del audio del sistema, no a cada persona.
 
 ### 3. Transcribir en trozos
 
-El audio se corta cada ~20 segundos, siempre en un silencio para no partir palabras. Cada trozo pasa por el mismo Whisper del dictado (`large-v3 turbo` con WhisperKit, en el Neural Engine). Una Mac M1 transcribe más rápido de lo que la gente habla, así que la transcripción va casi en vivo.
+El audio se corta en trozos de unos 20 segundos, buscando pausas; si no hay una pausa, corta a los 30 segundos. Cada trozo pasa por el mismo Whisper del dictado, con WhisperKit.
 
 ### 4. Transcripción en vivo
 
-Cada frase se agrega como una línea a `live.ndjson`:
+Cada trozo transcrito se agrega como una línea a `live.ndjson`:
 
 ```json
-{"t": 754.2, "who": "ellos", "text": "Entonces el martes mandamos la cotización."}
+{"speaker":"them","start":754.2,"text":"Entonces el martes mandamos la cotización."}
 ```
 
-Una ventanita (o el HUD) la va mostrando. Si la app se cierra a la mitad, nada se pierde.
+La página de reuniones muestra la transcripción en vivo. El diario no garantiza recuperar una reunión si la app se cierra inesperadamente.
 
 ### 5. La nota
 
-Al colgar, Speak Away escribe un archivo en `~/Documents/Speak Away/Notes/`:
+Al detener la grabación (la detienes tú, o se detiene sola poco después de que termina una llamada que detectó), Speak Away guarda `<fecha> <título>.md` y un `.json` al lado para la app en `~/Library/Application Support/Speak Away/Meetings/`:
 
 ```markdown
 ---
-fecha: 2026-11-01 15:30
-duracion: 42 min
+title: "Reunión de ventas"
 app: Zoom
+date: 2026-11-01 15:30
+duration: 00:42:00
 ---
 
 # Reunión de ventas
 
-## Transcripción
-**Tú (00:00):** Buenas, ¿me escuchan?
-**Ellos (00:04):** Sí, perfecto...
+**Yo** 00:00:00 Buenas, ¿me escuchan?
+
+**Ellos** 00:00:04 Sí, perfecto...
 ```
 
-El audio se borra apenas está transcrito (se puede cambiar en ajustes). Son archivos normales: los abres en Notas, Obsidian, VS Code o lo que quieras.
+El audio nunca se escribe en almacenamiento. El diario temporal se borra cuando se guarda la nota. Si la nota no se puede guardar, o la app se interrumpe, el diario se queda en esa carpeta hasta que la próxima reunión lo reemplace. Los archivos son planos, sin cifrado de Speak Away.
 
 ### 6. El resumen (opcional)
 
-Aquí está la pregunta de la llave. Hay cuatro caminos y la persona elige:
+Pulsa «Resumir» para generar el resumen con el modelo de Apple en tu Mac. Requiere macOS 26 con Apple Intelligence. «Resumir otra vez» vuelve a generar el resumen. «Copiar para ChatGPT» copia las notas como un prompt que puedes pegar tú en ChatGPT o Claude.
 
-| Camino | Necesita | Qué pasa |
-|---|---|---|
-| **Sin cerebro** | Nada | Queda la transcripción. Un botón «Copiar para ChatGPT» copia la transcripción con las instrucciones del resumen; lo pegas en ChatGPT (sirve hasta el plan gratis). |
-| **Ollama** | Instalar Ollama | Un modelo local escribe el resumen. Cero internet, cero costo. Más lento y menos fino. |
-| **Tu llave** | Una API key | El resumen sale solo y bueno. Pagas centavos por reunión directo al proveedor. Ver [llaves-api.md](llaves-api.md). |
-| **Conector** | ChatGPT o Claude | Le dices a ChatGPT «resume mi última reunión» y él lee la nota desde Speak Away. Usa tu suscripción, no una llave. Ver [conectar-chatgpt.md](conectar-chatgpt.md). |
+El resumen puede tener hasta cuatro secciones; las vacías se omiten:
 
-El resumen siempre trae lo mismo:
-- **Resumen** en tres a cinco líneas.
+- **Resumen.**
 - **Decisiones.**
-- **Tareas:** quién, qué y para cuándo.
+- **Tareas.**
 - **Preguntas abiertas.**
 
-Y se agrega arriba de la transcripción en la misma nota.
+En el archivo Markdown, el resumen se agrega después de la transcripción.
 
-## Consentimiento
-
-Grabar a otros puede requerir su permiso según el país. Mientras graba, Speak Away muestra un punto rojo visible, y puede escribir en el chat de la reunión «Esta reunión se está transcribiendo con Speak Away» cuando la app lo permite.
+Grabar a otros puede requerir su permiso según el país. La página de reuniones muestra un indicador mientras graba.
 
 ## Qué ya existe y qué falta
 
-- Ya existe (app 0.1): micrófono, Whisper local con WhisperKit, HUD.
-- Falta: audio del sistema, trozos con detección de silencio, `live.ndjson`, la nota, el detector de reuniones, el resumen y el conector.
+- Ya existe (app 0.2.0): micrófono, audio del sistema, transcripción local en trozos, `live.ndjson`, notas, detección de posibles reuniones y resúmenes con Apple Intelligence.
+- La detección de Google Meet no está conectada.
