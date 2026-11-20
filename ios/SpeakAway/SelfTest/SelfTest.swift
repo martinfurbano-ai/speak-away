@@ -7,7 +7,8 @@ import SpeakAwayCore
 /// The app checks itself when launched with `--self-test`, for a machine without a person to tap things:
 ///
 ///     xcrun simctl launch --console-pty <device> com.opensourceeverything.speakaway --self-test \
-///         [--transcribe-file <audio>] [--session-file <audio>] [--command-file <audio>] [--locale <id>]
+///         [--transcribe-file <audio>] [--session-file <audio>] [--command-file <audio>]
+///         [--meeting-file <audio>] [--locale <id>] [--expect-language <es|en>]
 ///
 /// It prints what happened and exits with 0 when every check passed. Nothing here ships a feature; it only
 /// proves the pieces work together on a device that cannot be driven by hand.
@@ -76,9 +77,16 @@ enum SelfTest {
             print("SELF TEST start (\(Date()))")
             groupContainer()
             textPipeline()
+            RetentionSelfTest.run(check: check)
+            JournalRetentionSelfTest.run(check: check)
+            await SpeechReadinessSelfTest.run(check: check)
+            await BilingualSessionSelfTest.run(check: check)
             brainStatus()
             if let path = value(after: "--transcribe-file") { await transcribeFile(path) }
             if let path = value(after: "--session-file") { await sessionDemo(path, commandPath: value(after: "--command-file") ?? path) }
+            if let path = value(after: "--meeting-file") {
+                await MeetingSpeechSelfTest.run(path: path, expectedLanguage: value(after: "--expect-language") ?? "es", check: check)
+            }
             return failures == 0
         }
 
@@ -154,15 +162,19 @@ enum SelfTest {
             let url = URL(fileURLWithPath: path)
             guard FileManager.default.fileExists(atPath: path) else { return check("the audio file exists", false, path) }
             let speech = AppleSpeech()
-            let setting = value(after: "--locale") ?? "auto"
-            let locale = await speech.resolveLocale(setting: setting)
+            let setting = value(after: "--locale") ?? PhoneSettings().language
+            let locales = await speech.resolveLocales(setting: setting)
             let supported = await DictationTranscriber.supportedLocales
             let installed = await DictationTranscriber.installedLocales
-            print("  locale setting \"\(setting)\", system languages \(Locale.preferredLanguages), resolved \(locale.identifier)")
+            print("  locale setting \"\(setting)\", system languages \(Locale.preferredLanguages), resolved \(locales.map(\.identifier))")
             print("  supported locales: \(supported.count), installed before: \(installed.map(\.identifier))")
+            if setting == "auto", let expected = value(after: "--expect-language") {
+                check("the default setting prepares Spanish and English",
+                      Set(locales.map { SpeechLocale.languageCode($0.identifier) }) == Set(["es", "en"]), expected)
+            }
             let lastStep = Peak()
             do {
-                try await speech.prepare(locale: locale) { fraction in
+                try await speech.prepare(locales: locales) { fraction in
                     let step = (fraction * 10).rounded(.down) / 10
                     if step > lastStep.value {
                         lastStep.raise(to: step)
@@ -170,27 +182,38 @@ enum SelfTest {
                     }
                 }
                 let installedNow = await DictationTranscriber.installedLocales.map(\.identifier)
-                check("the speech model for \(locale.identifier) is installed", true, "installed now: \(installedNow)")
+                for locale in locales {
+                    check("the speech model for \(locale.identifier) is installed",
+                          await AppleSpeech.modelState(for: [locale]) == .installed, "installed now: \(installedNow)")
+                }
             } catch {
-                return check("the speech model for \(locale.identifier) is installed", false, "\(error)")
+                return check("every requested speech model is installed", false, "\(error)")
             }
+            let stream = speech.startStream(locales: locales)
+            let input = FileInput(url: url, speed: 4)
+            defer { input.stop() }
             do {
                 let started = Date()
-                let stream = speech.startStream(locale: locale)
-                let input = FileInput(url: url, speed: 4)
                 try await input.start { stream.feed($0) }
                 try await input.play()
                 input.stop()
-                let raw = try await stream.finish()
+                let candidate = try await stream.finish()
+                let raw = candidate.text
+                print("  selected locale: \(candidate.locale), confidence: \(candidate.confidence.map { String($0) } ?? "unavailable")")
+                if let expected = value(after: "--expect-language") {
+                    check("the spoken language wins", SpeechLocale.languageCode(candidate.locale) == expected, candidate.locale)
+                    check("the expected words were heard", containsFixture(raw, language: expected), raw)
+                }
                 print("  transcript (\(String(format: "%.1f", Date().timeIntervalSince(started))) s): \"\(raw)\"")
                 check("AppleSpeech returned text", !raw.trimmingCharacters(in: .whitespaces).isEmpty)
                 let stores = SharedStores()
-                let language = PhoneSettings().pipelineLanguage(resolvedLocale: locale.identifier)
+                let language = PhoneSettings().pipelineLanguage(resolvedLocale: candidate.locale)
                 if let prepared = DictationFlow.prepare(transcript: raw, language: language, field: .general, dictionary: stores.dictionary(),
                                                         snippets: stores.snippets(), styles: stores.styles(), autoEdit: true) {
                     print("  after the text pipeline: \"\(prepared.text)\" (style \(prepared.style.rawValue))")
                 }
             } catch {
+                await stream.cancel()
                 if simulatorHasNoSpeechAudioFormat(error) {
                     skip("AppleSpeech transcribed the file")
                 } else {
@@ -218,7 +241,7 @@ enum SelfTest {
             let controller = SessionController(files: files, stores: stores, brain: brain, makeInput: { dictationAudio })
             let keyboard = SessionClient(files: files)
             try? stores.save(PhoneSettings().changing {
-                $0.language = value(after: "--locale") ?? "auto"
+                $0.language = value(after: "--locale") ?? PhoneSettings().language
                 $0.sounds = false
                 $0.haptics = false
             })
@@ -264,6 +287,9 @@ enum SelfTest {
             if let result = keyboard.takePendingResult() {
                 print("  result for the keyboard: \"\(result.text)\" (command: \(result.command))")
                 check("the result is plain text for insertion", !result.text.isEmpty && !result.command)
+                if let expected = value(after: "--expect-language") {
+                    check("the keyboard receives words in the spoken language", containsFixture(result.text, language: expected), result.text)
+                }
                 check("the result is delivered once", keyboard.takePendingResult() == nil)
                 check("it was added to the history and the stats", stores.history().first?.text == result.text && stores.stats().totalWords > 0,
                       "history \(stores.history().count) item(s)")
@@ -303,6 +329,13 @@ enum SelfTest {
 
             controller.endSession()
             check("ending the session publishes idle", keyboard.state == .idle)
+        }
+
+        private func containsFixture(_ text: String, language: String) -> Bool {
+            let words = text.lowercased()
+            return language == "es"
+                ? words.contains("equipo") && words.contains("informe")
+                : words.contains("team") && words.contains("report")
         }
 
         /// What the keyboard would insert next, without taking it.

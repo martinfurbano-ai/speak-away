@@ -30,7 +30,7 @@ free_gb() { df -k /System/Volumes/Data | awk 'NR==2{printf "%.1f", $4/1048576}';
 
 cleanup() {
   xcrun simctl terminate $DEVICE $BUNDLE >/dev/null 2>&1
-  xcrun simctl shutdown all >/dev/null 2>&1
+  xcrun simctl shutdown $DEVICE >/dev/null 2>&1
   [[ $WORK == */ios/.build/selftest ]] && rm -rf $WORK
   echo "cleanup: simulator shut down, test folder removed"
 }
@@ -66,6 +66,7 @@ run_test() {
   echo "=== $name"
   guarded $limit xcrun simctl launch --console-pty $DEVICE $BUNDLE --self-test "$@" > $WORK/$name.log 2>&1
   tail -n 45 $WORK/$name.log
+  grep -F "[FAIL]" $WORK/$name.log || true
   grep -q "SELF TEST RESULT: PASS" $WORK/$name.log || failures=$((failures + 1))
 }
 
@@ -94,9 +95,13 @@ G=$(xcrun simctl get_app_container $DEVICE $BUNDLE $GROUP 2>&1)
 echo "$G"
 ls -la "$G" 2>&1 | head -12
 
-run_test c-en 420 --transcribe-file $T/en.wav --locale en-US
-run_test c-es 420 --transcribe-file $T/es.wav --locale es-MX
-run_test d-session 600 --session-file $T/en.wav --command-file $T/command.aiff --locale en-US
+run_test c-en 420 --transcribe-file $T/en.wav --locale en-US --expect-language en
+run_test c-es 420 --transcribe-file $T/es.wav --locale es-MX --expect-language es
+run_test c-auto-es 600 --transcribe-file $T/es.wav --expect-language es -AppleLanguages "(en)" -AppleLocale en_US
+run_test c-auto-en 600 --transcribe-file $T/en.wav --expect-language en -AppleLanguages "(en)" -AppleLocale en_US
+run_test d-session 600 --session-file $T/en.wav --command-file $T/command.aiff --locale en-US --expect-language en
+run_test d-auto-es 600 --session-file $T/es.wav --command-file $T/command.aiff --expect-language es -AppleLanguages "(en)" -AppleLocale en_US
+run_test e-auto-es 600 --meeting-file $T/es.wav --expect-language es -AppleLanguages "(en)" -AppleLocale en_US
 
 echo "runs that did not end in PASS: $failures"
 exit $(( failures > 0 ))

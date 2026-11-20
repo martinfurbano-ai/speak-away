@@ -1,6 +1,7 @@
 import AVFoundation
 import Combine
 import Foundation
+import OSLog
 import SpeakAwayCore
 
 /// How loud the room is and how long the meeting has run, on their own object so the level bars and the clock
@@ -15,8 +16,8 @@ final class MeterModel: ObservableObject {
 /// Records a meeting with the iPhone's microphone and writes it down on the phone, live.
 ///
 /// One microphone hears the whole room, so the notes have no "me" and "them": they are paragraphs with their time.
-/// Everything said is appended to a journal file as it settles, so a crash or a restart loses nothing; the audio
-/// itself is never kept. A call, Siri or an alarm pauses the meeting (with a note in the transcript) and it carries on
+/// Final words are checkpointed atomically as the winning interpretation settles, so a crash can recover the
+/// latest complete transcript. Audio itself is never kept. A call, Siri or an alarm pauses the meeting (with a note in the transcript) and it carries on
 /// by itself when the system gives the microphone back. When the meeting stops it is saved, and summarized on the
 /// phone when Apple Intelligence can do it.
 ///
@@ -94,6 +95,10 @@ final class MeetingRecorder: ObservableObject {
     private var meetingID = UUID()
     private var startedAt = Date()
     private var locale = Locale(identifier: SpeechLocale.fallback)
+    private var speechSnapshot: MeetingSpeechSnapshot?
+    private var pendingSpeechFailure: Error?
+    private var markers: [TranscriptLine] = []
+    private static let logger = Logger(subsystem: "com.opensourceeverything.speakaway", category: "MeetingRecorder")
     private var journaledTitle = ""
 
     init(session: SessionController, store: PhoneStore, brain: OnDeviceBrain = .live, speech: MeetingSpeech = MeetingSpeech(),
@@ -134,6 +139,9 @@ final class MeetingRecorder: ObservableObject {
         run = thisRun
         meetingID = UUID()
         transcript = LiveTranscript()
+        speechSnapshot = nil
+        pendingSpeechFailure = nil
+        markers = []
         title = ""
         meter.elapsed = 0
         meter.level = 0
@@ -152,11 +160,11 @@ final class MeetingRecorder: ObservableObject {
 
     private func start(run thisRun: UUID) async {
         let settings = store.settings
-        let resolved = await speech.resolveLocale(setting: settings.language)
+        let resolved = await speech.resolveLocales(setting: settings.language)
         guard run == thisRun else { return }
-        locale = resolved
+        locale = resolved.first ?? Locale(identifier: SpeechLocale.fallback)
         do {
-            try await speech.prepare(locale: resolved) { fraction in
+            try await speech.prepare(locales: resolved) { fraction in
                 Task { @MainActor [weak self] in
                     guard let self, self.run == thisRun, self.stage == .preparing else { return }
                     self.speechProgress = fraction >= 1 ? nil : fraction
@@ -174,9 +182,9 @@ final class MeetingRecorder: ObservableObject {
         }
 
         let listener = speech.listen(
-            locale: resolved,
-            onPhrase: { [weak self] phrase in await self?.heard(phrase) },
-            onFailure: { [weak self] error in Task { @MainActor in self?.speechFailed(error) } })
+            locales: resolved,
+            onSnapshot: { [weak self] snapshot in await self?.heard(snapshot, run: thisRun) },
+            onFailure: { [weak self] error in Task { @MainActor in self?.speechFailed(error, run: thisRun) } })
         let gate = self.gate
         gate.open { buffer in listener.feed(buffer) }
 
@@ -198,6 +206,14 @@ final class MeetingRecorder: ObservableObject {
             await listener.cancel()
             session.endMeeting()
             return
+        }
+
+        if let pendingSpeechFailure {
+            mic.stop()
+            gate.close()
+            await listener.cancel()
+            session.endMeeting()
+            return failStart(thisRun, pendingSpeechFailure)
         }
 
         self.mic = mic
@@ -223,6 +239,7 @@ final class MeetingRecorder: ObservableObject {
     private func failStart(_ thisRun: UUID, _ error: Error) {
         guard run == thisRun else { return }
         speechProgress = nil
+        Self.logger.error("Starting meeting failed: \(String(describing: error), privacy: .public)")
         problem = PhoneText.meetingReason(for: error)
         problemNeedsSettings = PhoneText.needsSettings(error)
         stage = .idle
@@ -356,27 +373,48 @@ final class MeetingRecorder: ObservableObject {
     }
 
     /// The engine stopped working in the middle of the meeting: keep what was said and save it.
-    private func speechFailed(_ error: Error) {
-        guard stage == .recording || stage == .paused else { return }
+    private func speechFailed(_ error: Error, run expectedRun: UUID? = nil) {
+        if let expectedRun, expectedRun != run { return }
+        if stage == .preparing {
+            pendingSpeechFailure = error
+            return
+        }
+        guard stage == .recording || stage == .paused || stage == .finishing else { return }
         problem = PhoneText.meetingReason(for: error)
         problemNeedsSettings = false
-        Task { await stop() }
+        Self.logger.error("Meeting speech failed: \(String(describing: error), privacy: .public)")
+        if stage != .finishing { Task { await stop() } }
     }
 
     // MARK: The words
 
-    /// A result of the speech engine. Settled sentences go to the journal at once.
-    private func heard(_ phrase: RecognizedPhrase) {
+    /// Each update is a complete candidate. Replacing it cannot mix independent language segment boundaries.
+    private func heard(_ snapshot: MeetingSpeechSnapshot, run expectedRun: UUID? = nil) {
+        if let expectedRun, expectedRun != run { return }
         guard stage == .recording || stage == .paused || stage == .finishing else { return }
-        transcript = transcript.applying(phrase)
-        if phrase.isFinal, !phrase.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            journal?.append(.phrase(phrase))
+        let next = snapshot.transcript(markers: markers)
+        let changed = next.lines != transcript.lines
+        speechSnapshot = snapshot
+        locale = Locale(identifier: snapshot.locale)
+        transcript = next
+        if changed { checkpoint() }
+    }
+
+    private func checkpoint() {
+        guard let speechSnapshot else { return }
+        do {
+            try journal?.checkpoint(entries: speechSnapshot.journalEntries(markers: markers), title: journaledTitle)
+        } catch {
+            Self.logger.error("Checkpointing meeting failed: \(String(describing: error), privacy: .public)")
+            problem = String(localized: "The meeting could not be saved safely. Stop recording and try again.")
+            if stage != .finishing { Task { await stop() } }
         }
     }
 
     private func addMarker(_ marker: MeetingMarker) {
         let text = marker.text(english: english)
         let at = listener?.fedSeconds ?? 0
+        markers = markers + [TranscriptLine(speaker: .marker, start: at, text: text)]
         transcript = transcript.appendingMarker(text, at: at)
         journal?.append(.marker(start: at, text: text))
     }
@@ -394,10 +432,12 @@ final class MeetingRecorder: ObservableObject {
         meter.level = 0
         clock = clock?.paused(at: now())
         let fed = listener?.fedSeconds ?? 0
-        await listener?.finish()
+        if let selected = await listener?.finish() {
+            heard(selected.settled(endingAt: fed))
+        } else if let speechSnapshot {
+            heard(speechSnapshot.settled(endingAt: fed))
+        }
         listener = nil
-        // A guess the engine never settled (it stopped working) is still what was said: keep it.
-        if let last = transcript.unsettledPhrase(endingAt: fed) { heard(last) }
         events?.finish()
         events = nil
 
@@ -429,6 +469,7 @@ final class MeetingRecorder: ObservableObject {
         problem = nil
         problemNeedsSettings = false
         journal = nil
+        store.reload()
         session.endMeeting()
         clock = nil
         transcript = LiveTranscript()

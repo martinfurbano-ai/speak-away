@@ -111,7 +111,7 @@ final class AppModel: ObservableObject {
         case .style:
             tab = .voice
             voicePath = [.style]
-        case .settings: tab = .settings
+        case .settings, .settingsPrivacy: tab = .settings
         case .onboarding1, .onboarding2, .onboarding3, .onboarding4, .onboarding5, .session, .keyboard,
              .keyboardRecording, .keyboardResult:
             break   // the root view shows these directly

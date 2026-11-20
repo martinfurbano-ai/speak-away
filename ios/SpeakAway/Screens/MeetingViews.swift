@@ -20,6 +20,7 @@ struct MeetingsList: View {
             if meetings.isEmpty && !recorder.isActive {
                 ScrollView {
                     VStack(spacing: 8) {
+                        RetentionNotice()
                         EmptyState(icon: "person.2.wave.2", title: "No meeting notes yet",
                                    detail: "Notes from your meetings will show up here, with the transcript and a summary.")
                         recordButton
@@ -27,6 +28,7 @@ struct MeetingsList: View {
                 }
             } else {
                 List {
+                    RetentionNotice().listRowBackground(Color.clear)
                     if Features.meetingRecorder || recorder.isActive {
                         Section {
                             if recorder.isActive {

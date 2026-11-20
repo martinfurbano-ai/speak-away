@@ -27,10 +27,14 @@ struct HistoryView: View {
     @ViewBuilder private var content: some View {
         let items = History.search(store.history, query)
         if items.isEmpty {
-            ScrollView { emptyState }
+            ScrollView {
+                VStack(spacing: 8) { RetentionNotice(); emptyState }
+            }
                 .refreshable { store.reload() }
         } else {
             List {
+                RetentionNotice()
+                    .listRowBackground(Color.clear)
                 Text("What you dictated, kept only on your iPhone.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)

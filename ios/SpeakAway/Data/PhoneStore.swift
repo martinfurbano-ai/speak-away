@@ -31,6 +31,8 @@ final class PhoneStore: ObservableObject {
 
     /// Reads everything again from the folder.
     func reload() {
+        do { try stores.purgeTranscripts() }
+        catch { NSLog("Transcript retention failed in %@: %@", folder.path, String(describing: error)) }
         settings = stores.settings()
         history = stores.history()
         stats = stores.stats()
@@ -44,18 +46,17 @@ final class PhoneStore: ObservableObject {
     // MARK: Settings
 
     func updateSettings(_ change: (inout PhoneSettings) -> Void) {
-        let next = settings.changing(change)
-        guard next != settings else { return }
-        try? stores.save(next)
-        settings = next
+        do { settings = try stores.updateSettings(change) }
+        catch { NSLog("Saving iPhone settings failed in %@: %@", folder.path, String(describing: error)) }
+        reload()
     }
 
     // MARK: History
 
     func deleteHistory(_ id: UUID) {
-        let next = History.removing(id, from: history)
-        try? stores.save(next)
-        history = next
+        do { try stores.deleteHistory(id) }
+        catch { NSLog("Deleting dictation failed in %@: %@", folder.path, String(describing: error)) }
+        history = stores.history()
     }
 
     // MARK: Voice
@@ -115,19 +116,21 @@ final class PhoneStore: ObservableObject {
     }
 
     func deleteMeeting(_ id: UUID) {
-        meetingStore.delete(id)
-        meetings = meetings.filter { $0.id != id }
+        do { try stores.deleteMeeting(id) }
+        catch { NSLog("Deleting meeting failed in %@: %@", folder.path, String(describing: error)) }
+        meetings = meetingStore.list()
     }
 
     /// Saves a meeting (or its newer version, with a summary) and shows it at once. `false`: it could not be written.
     @discardableResult
     func saveMeeting(_ meeting: Meeting) -> Bool {
         do {
-            try meetingStore.save(meeting)
+            try stores.saveMeeting(meeting)
         } catch {
+            NSLog("Saving meeting failed in %@: %@", folder.path, String(describing: error))
             return false
         }
-        meetings = ([meeting] + meetings.filter { $0.id != meeting.id }).sorted { $0.startedAt > $1.startedAt }
+        meetings = meetingStore.list()
         return true
     }
 
@@ -140,9 +143,13 @@ final class PhoneStore: ObservableObject {
         let known = Set(meetingStore.list().map(\.id))
         for leftover in MeetingJournalFile.leftovers(in: meetingStore.folder, english: !UILanguage.isSpanish) {
             if let meeting = leftover.meeting, !known.contains(meeting.id) {
-                do { try meetingStore.save(meeting) } catch { continue }
+                do { try stores.saveMeeting(meeting) }
+                catch {
+                    NSLog("Recovering meeting failed in %@: %@", folder.path, String(describing: error))
+                    continue
+                }
             }
-            try? FileManager.default.removeItem(at: leftover.url)
+            try? stores.withTranscriptAccess { try FileManager.default.removeItem(at: leftover.url) }
         }
     }
 }

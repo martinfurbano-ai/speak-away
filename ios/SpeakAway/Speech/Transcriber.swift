@@ -1,24 +1,25 @@
 import AVFoundation
+import SpeakAwayCore
 
 /// Turns speech into text. The session depends on this, not on Apple's framework, so the session
 /// logic can be checked with a stand-in and the engine can change without touching the rest.
 protocol Transcriber: AnyObject {
-    /// The locale to listen in for a language setting ("auto", "es", "en-GB"): a supported one, else en-US.
-    func resolveLocale(setting: String) async -> Locale
+    /// Locales to listen in: automatic Spanish and English, or one explicit/system language.
+    func resolveLocales(setting: String) async -> [Locale]
 
-    /// Makes sure everything needed to listen in `locale` is on this phone, installing it when missing.
+    /// Makes sure everything needed to listen in all `locales` is on this phone, installing it when missing.
     /// `progress` reports 0...1 while a download runs, from any thread.
-    func prepare(locale: Locale, progress: @escaping @Sendable (Double) -> Void) async throws
+    func prepare(locales: [Locale], progress: @escaping @Sendable (Double) -> Void) async throws
 
     /// Starts one dictation. Audio can be fed at once; it is held until the engine is ready.
-    func startStream(locale: Locale) -> TranscriptionStream
+    func startStream(locales: [Locale]) -> TranscriptionStream
 }
 
 protocol TranscriptionStream: AnyObject {
     /// Adds audio in any format. Called from the audio thread; the buffer is copied.
     func feed(_ buffer: AVAudioPCMBuffer)
-    /// No more audio: finishes the analysis and returns the final text.
-    func finish() async throws -> String
+    /// No more audio: finishes the analysis and returns the chosen text and its actual recognition locale.
+    func finish() async throws -> SpeechCandidate
     /// Throws the dictation away.
     func cancel() async
 }

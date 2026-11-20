@@ -6,10 +6,11 @@ name: iPhone
 
 on:
   push:
-    branches: [iphone, "iphone-*"]
+    branches: [iphone, "iphone-*", codex/es-y-borrado]
     paths:
       - "ios/**"
       - "app/Sources/SpeakAwayCore/**"
+      - "app/Tests/SpeakAwayCoreTests/**"
       - "app/Sources/SpeakAwayBrain/**"
       - ".github/workflows/iphone.yml"
   workflow_dispatch:
@@ -36,7 +37,11 @@ jobs:
           XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -1)
           echo "Using $XCODE"
           sudo xcode-select -s "$XCODE"
+          echo "DEVELOPER_DIR=$XCODE/Contents/Developer" >> $GITHUB_ENV
           xcodebuild -version
+
+      - name: Core tests
+        run: ios/scripts/test-core.sh
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -67,9 +72,16 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
 
       - name: Screenshots
+        env:
+          CAPTURE_SCREENS: ${{ github.event.inputs.screens }}
         run: |
           mkdir -p screens
-          SPEAKAWAY_SETTLE=4 ios/scripts/screens.sh "$UDID" "$PWD/screens" ${{ github.event.inputs.screens }}
+          read -ra REQUESTED_SCREENS <<< "$CAPTURE_SCREENS"
+          SPEAKAWAY_SETTLE=4 ios/scripts/screens.sh "$UDID" "$PWD/screens" "${REQUESTED_SCREENS[@]}"
+          # Privacy must be visible even when a dispatch asks for a smaller screenshot set.
+          if [[ -n "$CAPTURE_SCREENS" ]]; then
+            SPEAKAWAY_SETTLE=4 ios/scripts/screens.sh "$UDID" "$PWD/screens" settings-privacy
+          fi
           ls screens | wc -l
 
       - uses: actions/upload-artifact@v4
@@ -82,3 +94,11 @@ jobs:
 
       - name: Self test
         run: SPEAKAWAY_SIM_DEVICE="$UDID" ios/scripts/self-test.sh
+
+      - name: Shut down the task's simulator
+        if: always()
+        run: |
+          if [[ -n "$UDID" ]]; then
+            xcrun simctl terminate "$UDID" com.opensourceeverything.speakaway || true
+            xcrun simctl shutdown "$UDID" || true
+          fi

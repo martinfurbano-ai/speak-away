@@ -22,6 +22,7 @@ struct OnboardingFlow: View {
     /// Whether the speech model was already on the phone when the tour began, which decides if its screen is shown.
     @State private var modelInstalledAtStart: Bool?
     @State private var languageName = ""
+    @State private var bilingual = true
     @State private var downloadProblem: String?
     @State private var trial = ""
 
@@ -247,7 +248,9 @@ struct OnboardingFlow: View {
     private var speechModel: some View {
         VStack(spacing: 24) {
             StepHeading(icon: "waveform", title: "Get the speech model",
-                        detail: "Your iPhone needs a small speech model for your language. It downloads once and then works without internet.")
+                        detail: bilingual
+                            ? "Automatic dictation uses Spanish and English speech models from Apple. They download once, then work without internet."
+                            : "Your iPhone needs a small speech model for your language. It downloads once and then works without internet.")
             Card {
                 VStack(alignment: .leading, spacing: 14) {
                     HStack {
@@ -359,9 +362,10 @@ struct OnboardingFlow: View {
 
     private func checkModel() async {
         let speech = AppleSpeech()
-        let locale = await speech.resolveLocale(setting: store.settings.language)
-        languageName = Self.displayName(locale)
-        let state = await AppleSpeech.modelState(for: locale)
+        let locales = await speech.resolveLocales(setting: store.settings.language)
+        languageName = locales.map(Self.displayName).joined(separator: ", ")
+        bilingual = locales.count == 2
+        let state = await AppleSpeech.modelState(for: locales)
         modelState = state
         modelInstalledAtStart = state == .installed
     }
@@ -371,10 +375,11 @@ struct OnboardingFlow: View {
         downloadProblem = nil
         modelState = .downloading(0)
         let speech = AppleSpeech()
-        let locale = await speech.resolveLocale(setting: store.settings.language)
-        languageName = Self.displayName(locale)
+        let locales = await speech.resolveLocales(setting: store.settings.language)
+        languageName = locales.map(Self.displayName).joined(separator: ", ")
+        bilingual = locales.count == 2
         do {
-            try await speech.prepare(locale: locale) { fraction in
+            try await speech.prepare(locales: locales) { fraction in
                 Task { @MainActor in modelState = .downloading(fraction) }
             }
             modelState = .installed
@@ -386,7 +391,7 @@ struct OnboardingFlow: View {
 
     private func showSampleState(for step: OnboardingStep) {
         modelInstalledAtStart = false
-        languageName = Self.displayName(Locale(identifier: UILanguage.isSpanish ? "es-PA" : "en-US"))
+        languageName = [Locale(identifier: "es-MX"), Locale(identifier: "en-US")].map(Self.displayName).joined(separator: ", ")
         modelState = step == .speechModel ? .downloading(0.42) : .installed
     }
 

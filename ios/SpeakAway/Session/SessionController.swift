@@ -50,7 +50,9 @@ final class SessionController: ObservableObject {
     private var publishedAt = Date.distantPast
     private var publishedCommand = false
     private var lastRequest: UUID?
-    private var speechLocale = Locale(identifier: SpeechLocale.fallback)
+    private var speechLocales = [Locale(identifier: SpeechLocale.fallback)]
+    private var preparedSetting: String?
+    private var speechRun = UUID()
     private var starting = false
     private var sounds: SessionSounds?
     /// A meeting holds the microphone, recording or paused. A dictation waits until it ends.
@@ -88,6 +90,7 @@ final class SessionController: ObservableObject {
     func startSession() async {
         if input != nil {
             extendSession()
+            if preparedSetting != stores.settings().language || !speechReady { await prepareSpeech() }
             return
         }
         guard !starting else { return }
@@ -124,7 +127,6 @@ final class SessionController: ObservableObject {
         input = source
         live = true
         lastRequest = files.readRequest()?.id   // anything already in the file is old news
-        speechLocale = await transcriber.resolveLocale(setting: settings.language)
 
         let started = now()
         sessionEnd = SessionPolicy(length: settings.sessionLength).expiry(from: started)
@@ -135,12 +137,13 @@ final class SessionController: ObservableObject {
             MainActor.assumeIsolated { self?.tick() }
         }
         publish(readyState)
-        prepareSpeech()
+        await prepareSpeech()
     }
 
     /// The user stopped it, or the time ran out, or the mic was lost.
     func endSession() {
         tearDown()
+        purgeTranscripts()
         // A meeting that is recording owns the published state; the keyboard keeps showing it.
         if !meetingActive { publish(.idle) }
     }
@@ -166,6 +169,8 @@ final class SessionController: ObservableObject {
         sessionEnd = nil
         speechProgress = nil
         speechReady = false
+        speechRun = UUID()
+        preparedSetting = nil
     }
 
     private func extendSession() {
@@ -208,6 +213,12 @@ final class SessionController: ObservableObject {
         meetingHeartbeat?.invalidate()
         meetingHeartbeat = nil
         publish(.idle)
+        purgeTranscripts()
+    }
+
+    private func purgeTranscripts() {
+        do { try stores.purgeTranscripts(now: now()) }
+        catch { NSLog("Transcript retention failed: %@", String(describing: error)) }
     }
 
     // MARK: Requests from the keyboard
@@ -235,12 +246,19 @@ final class SessionController: ObservableObject {
 
     private func beginRecording(field: FieldContext, commandTarget: String?) {
         guard input != nil, dictation == nil else { return }
-        // The very first session downloads the speech model for the language; say so instead of recording into nothing.
-        guard speechProgress == nil else {
-            publish(.failed(reason: String(localized: "Still getting the speech model ready. Try again in a moment.")))
+        if speechProgress == nil, preparedSetting != stores.settings().language {
+            Task {
+                await prepareSpeech()
+                if speechReady { beginRecording(field: field, commandTarget: commandTarget) }
+            }
             return
         }
-        let stream = transcriber.startStream(locale: speechLocale)
+        // No recording starts until every required model is installed, including after a failed download.
+        guard speechReady, speechProgress == nil else {
+            publish(.failed(reason: problem ?? String(localized: "Still getting the speech model ready. Try again in a moment.")))
+            return
+        }
+        let stream = transcriber.startStream(locales: speechLocales)
         dictation = Dictation(stream: stream, field: field, commandTarget: commandTarget)
         gate.open { buffer in stream.feed(buffer) }
         smoother = LevelSmoother()
@@ -286,16 +304,18 @@ final class SessionController: ObservableObject {
             await running.stream?.cancel()
             return settle(running)
         }
-        let transcript: String
+        let candidate: SpeechCandidate
         do {
-            transcript = try await running.stream?.finish() ?? ""
+            candidate = try await running.stream?.finish()
+                ?? SpeechCandidate(locale: speechLocales[0].identifier, text: "", confidence: nil)
         } catch {
             return fail(running, error)
         }
         guard dictation?.id == running.id else { return }
 
+        let transcript = candidate.text
         let settings = stores.settings()
-        let language = settings.pipelineLanguage(resolvedLocale: speechLocale.identifier)
+        let language = settings.pipelineLanguage(resolvedLocale: candidate.locale)
 
         if let target = running.commandTarget {
             let instruction = SpeechGate.clean(transcript).trimmingCharacters(in: .whitespacesAndNewlines)
@@ -325,7 +345,7 @@ final class SessionController: ObservableObject {
         let running = Dictation(stream: nil, field: field, commandTarget: target)
         dictation = running
         publish(.transcribing, command: true)
-        let language = stores.settings().pipelineLanguage(resolvedLocale: speechLocale.identifier)
+        let language = stores.settings().pipelineLanguage(resolvedLocale: speechLocales.first?.identifier)
         Task { await applyCommand(instruction, on: target, language: language, running: running) }
     }
 
@@ -385,21 +405,36 @@ final class SessionController: ObservableObject {
 
     // MARK: Speech model
 
-    private func prepareSpeech() {
-        let locale = speechLocale
-        Task {
-            do {
-                try await transcriber.prepare(locale: locale) { fraction in
-                    Task { @MainActor [weak self] in self?.speechProgress = fraction >= 1 ? nil : fraction }
+    private func prepareSpeech() async {
+        guard input != nil, speechProgress == nil else { return }
+        let thisRun = UUID()
+        speechRun = thisRun
+        speechReady = false
+        speechProgress = 0
+        let setting = stores.settings().language
+        preparedSetting = setting
+        let locales = await transcriber.resolveLocales(setting: setting)
+        guard speechRun == thisRun, input != nil else { return }
+        speechLocales = locales
+        do {
+            try await transcriber.prepare(locales: locales) { fraction in
+                Task { @MainActor [weak self] in
+                    guard let self, self.speechRun == thisRun, !self.speechReady else { return }
+                    self.speechProgress = fraction
                 }
-                speechProgress = nil
-                speechReady = input != nil
-            } catch {
-                speechProgress = nil
-                problem = PhoneText.reason(for: error)
-                problemNeedsSettings = false
-                lastErrorDetail = String(describing: error)
             }
+            guard speechRun == thisRun, input != nil else { return }
+            speechProgress = nil
+            speechReady = true
+            problem = nil
+        } catch {
+            guard speechRun == thisRun, input != nil else { return }
+            speechRun = UUID()
+            speechProgress = nil
+            problem = PhoneText.reason(for: error)
+            problemNeedsSettings = false
+            lastErrorDetail = String(describing: error)
+            publish(.failed(reason: problem ?? ""))
         }
     }
 

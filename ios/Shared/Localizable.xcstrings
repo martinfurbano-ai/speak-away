@@ -1,6 +1,142 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "The meeting could not be saved safely. Stop recording and try again." : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The meeting could not be saved safely. Stop recording and try again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo guardar la reunión de forma segura. Deja de grabar e inténtalo de nuevo."
+          }
+        }
+      }
+    },
+    "Automatic dictation uses Spanish and English speech models from Apple. They download once, then work without internet." : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic dictation uses Spanish and English speech models from Apple. They download once, then work without internet."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El dictado automático usa modelos de voz de Apple en español e inglés. Se descargan una vez y después funcionan sin internet."
+          }
+        }
+      }
+    },
+    "Deleted automatically after 10 days. Change it in Settings." : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deleted automatically after 10 days. Change it in Settings."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se borran solos a los 10 días. Cámbialo en Ajustes."
+          }
+        }
+      }
+    },
+    "When this is off, dictations and meeting notes are deleted from this iPhone 10 days after they are made." : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When this is off, dictations and meeting notes are deleted from this iPhone 10 days after they are made."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si está apagado, los dictados y las notas de reuniones se borran de este iPhone 10 días después de hacerse."
+          }
+        }
+      }
+    },
+    "Keep transcripts" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep transcripts"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar transcripciones"
+          }
+        }
+      }
+    },
+    "English" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        }
+      }
+    },
+    "Español" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Español"
+          }
+        }
+      }
+    },
+    "Automatic (Spanish and English)" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic (Spanish and English)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automático (español e inglés)"
+          }
+        }
+      }
+    },
     "%@ dictations" : {
       "extractionState" : "manual",
       "localizations" : {

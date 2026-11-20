@@ -21,6 +21,19 @@ public enum SpeechLocale {
         return fallback
     }
 
+    /// Automatic English and Spanish listen together. Other system languages keep single-language recognition.
+    /// An unavailable partner stays in the plan so installation fails visibly instead of silently losing Spanish.
+    public static func listeningLocales(setting: String, preferred: [String], supported: [String]) -> [String] {
+        let primary = resolve(setting: setting, preferred: preferred, supported: supported)
+        let automatic = setting.trimmingCharacters(in: .whitespaces).lowercased()
+        guard automatic.isEmpty || automatic == "auto" else { return [primary] }
+        let language = languageCode(primary).lowercased()
+        guard language == "en" || language == "es" else { return [primary] }
+        let partner = language == "en" ? "es" : "en"
+        let partnerLocale = match(partner, in: supported) ?? (partner == "es" ? "es-MX" : fallback)
+        return [primary, partnerLocale]
+    }
+
     /// "es-MX" and "es_MX" give "es".
     public static func languageCode(_ identifier: String) -> String {
         let normalized = identifier.replacingOccurrences(of: "_", with: "-")

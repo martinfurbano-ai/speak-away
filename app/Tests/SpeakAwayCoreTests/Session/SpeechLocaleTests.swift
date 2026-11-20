@@ -59,4 +59,22 @@ final class SpeechLocaleTests: XCTestCase {
         XCTAssertEqual(SpeechLocale.languageCode("en_US"), "en")
         XCTAssertEqual(SpeechLocale.languageCode("pt"), "pt")
     }
+
+    func testAutomaticListeningPreparesBothLanguagesOnAnEnglishPhone() {
+        XCTAssertEqual(SpeechLocale.listeningLocales(setting: "auto", preferred: ["en-US"], supported: supported),
+                       ["en-US", "es-MX"])
+        XCTAssertEqual(SpeechLocale.listeningLocales(setting: "auto", preferred: ["es-ES"], supported: supported),
+                       ["es-ES", "en-US"])
+    }
+
+    func testOtherSystemLanguagesAndExplicitChoicesStaySingleLanguage() {
+        XCTAssertEqual(SpeechLocale.listeningLocales(setting: "auto", preferred: ["fr-FR", "en-US"], supported: supported),
+                       ["fr-FR"])
+        XCTAssertEqual(SpeechLocale.listeningLocales(setting: "es", preferred: ["en-US"], supported: supported), ["es-MX"])
+    }
+
+    func testMissingSpanishSupportRemainsAnExplicitRequirement() {
+        XCTAssertEqual(SpeechLocale.listeningLocales(setting: "auto", preferred: ["en-US"], supported: ["en-US"]),
+                       ["en-US", "es-MX"])
+    }
 }

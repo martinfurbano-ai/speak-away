@@ -16,22 +16,30 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                dictationSection
-                textSection
-                feedbackSection
-                keyboardSection
-                privacySection
-                aboutSection
-            }
-            .listStyle(.insetGrouped)
-            .appList()
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.large)
-            .task { refresh() }
-            .onChange(of: scenePhase) { _, phase in if phase == .active { refresh() } }
-            .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)) { _ in
-                refresh()
+            ScrollViewReader { proxy in
+                List {
+                    dictationSection
+                    textSection
+                    feedbackSection
+                    keyboardSection
+                    privacySection.id("privacy")
+                    aboutSection
+                }
+                .listStyle(.insetGrouped)
+                .appList()
+                .navigationTitle("Settings")
+                .navigationBarTitleDisplayMode(.large)
+                .task {
+                    refresh()
+                    if model.preview?.screen == .settingsPrivacy {
+                        await Task.yield()
+                        proxy.scrollTo("privacy", anchor: .top)
+                    }
+                }
+                .onChange(of: scenePhase) { _, phase in if phase == .active { refresh() } }
+                .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)) { _ in
+                    refresh()
+                }
             }
         }
     }
@@ -41,9 +49,9 @@ struct SettingsView: View {
     private var dictationSection: some View {
         Section {
             Picker(selection: binding(\.language)) {
-                Text("Same as the system").tag("auto")
-                Text(verbatim: "Español").tag("es")
-                Text(verbatim: "English").tag("en")
+                Text("Automatic (Spanish and English)").tag("auto")
+                Text("Español").tag("es")
+                Text("English").tag("en")
             } label: {
                 Label("Language", systemImage: "globe")
             }
@@ -135,6 +143,12 @@ struct SettingsView: View {
 
     private var privacySection: some View {
         Section {
+            SettingToggle(title: "Keep transcripts", icon: "clock.arrow.circlepath", isOn: binding(\.keepTranscripts)) {
+                Text("When this is off, dictations and meeting notes are deleted from this iPhone 10 days after they are made.")
+            }
+            .accessibilityIdentifier("keep-transcripts")
+            .cardRow()
+
             Label {
                 Text("Nothing you dictate leaves your iPhone.")
             } icon: {

@@ -1,6 +1,6 @@
 import Foundation
 
-/// The file a meeting is written to while it is said, one JSON object per line, appended and never rewritten.
+/// The file a meeting is written to while it is said, one JSON object per line, one JSON object per line.
 /// If the app is killed or the phone restarts, `recover` rebuilds the meeting from what is in it, so nothing
 /// that was said is lost. The Mac's `live.ndjson` plays the same part.
 public enum MeetingJournal {
@@ -42,6 +42,16 @@ public enum MeetingJournal {
         case .marker(let start, let text): return encode(Record(kind: .marker, text: text, start: start))
         case .title(let title): return encode(Record(kind: .title, text: title))
         }
+    }
+
+    /// Reads only the journal identity and creation date, including journals with no finished phrases.
+    public static func header(from text: String) -> Header? {
+        for raw in text.split(whereSeparator: \.isNewline) {
+            guard let record = decode(String(raw)), record.kind == .begin,
+                  let id = record.id, let startedAt = record.startedAt else { continue }
+            return Header(id: id, startedAt: startedAt, app: record.app ?? "", title: record.title ?? "")
+        }
+        return nil
     }
 
     // MARK: Recovering

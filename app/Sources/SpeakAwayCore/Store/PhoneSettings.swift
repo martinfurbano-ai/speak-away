@@ -3,7 +3,7 @@ import Foundation
 /// The iPhone app's settings, kept in one JSON file in the shared folder.
 /// A file with only some keys is fine: the rest keep their defaults.
 public struct PhoneSettings: Codable, Equatable, Sendable {
-    /// "auto" (the system language) or a language/locale such as "es" or "en-GB".
+    /// "auto" (Spanish and English together, or another system language) or an explicit language/locale.
     public var language: String
     /// Remove filler words and apply spoken corrections.
     public var autoEdit: Bool
@@ -13,12 +13,14 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
     public var sounds: Bool
     public var haptics: Bool
     public var historyEnabled: Bool
+    /// Keep dictations and meeting notes beyond the default ten days.
+    public var keepTranscripts: Bool
     /// The unique id of the input to listen with. Empty means the one the system picks.
     public var microphone: String
 
     public init(language: String = "auto", autoEdit: Bool = true, polish: Bool = false,
                 sessionLength: SessionLength = .fifteenMinutes, sounds: Bool = true, haptics: Bool = true,
-                historyEnabled: Bool = true, microphone: String = "") {
+                historyEnabled: Bool = true, microphone: String = "", keepTranscripts: Bool = false) {
         self.language = language
         self.autoEdit = autoEdit
         self.polish = polish
@@ -26,6 +28,7 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
         self.sounds = sounds
         self.haptics = haptics
         self.historyEnabled = historyEnabled
+        self.keepTranscripts = keepTranscripts
         self.microphone = microphone
     }
 
@@ -44,7 +47,7 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
     }
 
     private enum Key: String, CodingKey {
-        case language, autoEdit, polish, sessionLength, sounds, haptics, historyEnabled, microphone
+        case language, autoEdit, polish, sessionLength, sounds, haptics, historyEnabled, microphone, keepTranscripts
     }
 
     public init(from decoder: Decoder) throws {
@@ -59,5 +62,6 @@ public struct PhoneSettings: Codable, Equatable, Sendable {
         haptics = try c.decodeIfPresent(Bool.self, forKey: .haptics) ?? defaults.haptics
         historyEnabled = try c.decodeIfPresent(Bool.self, forKey: .historyEnabled) ?? defaults.historyEnabled
         microphone = try c.decodeIfPresent(String.self, forKey: .microphone) ?? defaults.microphone
+        keepTranscripts = try c.decodeIfPresent(Bool.self, forKey: .keepTranscripts) ?? defaults.keepTranscripts
     }
 }

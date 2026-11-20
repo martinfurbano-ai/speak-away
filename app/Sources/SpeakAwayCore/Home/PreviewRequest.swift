@@ -13,6 +13,7 @@ public enum PreviewScreen: String, CaseIterable, Sendable {
     case snippets
     case style
     case settings
+    case settingsPrivacy = "settings-privacy"
     case onboarding1 = "onboarding-1"
     case onboarding2 = "onboarding-2"
     case onboarding3 = "onboarding-3"

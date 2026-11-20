@@ -76,7 +76,8 @@ struct ListeningView: View {
                     Haptics.tap(enabled: store.settings.haptics)
                     session.endSession()
                 }
-            } else {
+            }
+            if !session.live || (!session.speechReady && session.speechProgress == nil) {
                 Button {
                     Haptics.tap(enabled: store.settings.haptics)
                     Task { await session.startSession() }
@@ -101,10 +102,10 @@ struct ListeningView: View {
     // MARK: State
 
     /// The session is on and the speech model is ready: the person can go back to the app they were typing in.
-    private var isListening: Bool { session.live && session.speechProgress == nil }
+    private var isListening: Bool { session.live && session.speechReady && session.speechProgress == nil }
 
     private var headline: LocalizedStringKey {
-        if !session.live { return "Speak Away is not listening." }
+        if !session.live || (!session.speechReady && session.speechProgress == nil) { return "Speak Away is not listening." }
         if session.speechProgress != nil { return "Getting the speech model ready. Stay here until it finishes." }
         return "Speak Away is listening"
     }
