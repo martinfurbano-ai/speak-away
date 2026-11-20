@@ -71,6 +71,13 @@ jobs:
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
 
+      - name: Deterministic integration tests
+        timeout-minutes: 3
+        run: |
+          xcrun simctl install "$UDID" ios/.build/dd/Build/Products/Debug-iphonesimulator/SpeakAway.app
+          xcrun simctl launch --console-pty "$UDID" com.opensourceeverything.speakaway --self-test | tee selftest-logic.log
+          grep -q "SELF TEST RESULT: PASS" selftest-logic.log
+
       - name: Screenshots
         env:
           CAPTURE_SCREENS: ${{ github.event.inputs.screens }}

@@ -81,6 +81,7 @@ enum SelfTest {
             JournalRetentionSelfTest.run(check: check)
             await SpeechReadinessSelfTest.run(check: check)
             await BilingualSessionSelfTest.run(check: check)
+            await PendingSpeechSelfTest.run(check: check)
             brainStatus()
             if let path = value(after: "--transcribe-file") { await transcribeFile(path) }
             if let path = value(after: "--session-file") { await sessionDemo(path, commandPath: value(after: "--command-file") ?? path) }
