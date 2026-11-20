@@ -47,6 +47,8 @@ The default language is **Automatic (Spanish and English)**. When the phone's fi
 
 On an English-language iPhone, leave the default language selected, finish the speech-model download in onboarding, then speak Spanish or English in the app or keyboard. No language switch is needed. Meetings use the same automatic choice. Both dictation models install during onboarding or the first dictation session; both meeting models install before the first meeting, with progress. An unavailable or failed Spanish model reports a visible error instead of quietly listening only in English.
 
+If you change the explicit language during a live session, let the new model finish preparing and tap the mic again. A released mic gesture or a closed note never starts recording later when a download finishes.
+
 Recognition and language selection run on the iPhone. The only downloads are Apple's speech models through `AssetInventory`; there is no third-party model, account, API key or transcription request to a server. Automatic choice selects a language for an utterance or meeting; recognition quality, accented short phrases and mixed-language speech need validation on a real iPhone.
 
 ## Meeting notes

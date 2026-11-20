@@ -247,9 +247,11 @@ final class SessionController: ObservableObject {
     private func beginRecording(field: FieldContext, commandTarget: String?) {
         guard input != nil, dictation == nil else { return }
         if speechProgress == nil, preparedSetting != stores.settings().language {
+            // A released mic gesture must never become a recording after a download. Ask for a fresh tap.
+            publish(.failed(reason: String(localized: "Still getting the speech model ready. Try again in a moment.")))
             Task {
                 await prepareSpeech()
-                if speechReady { beginRecording(field: field, commandTarget: commandTarget) }
+                if speechReady, input != nil, dictation == nil { publish(readyState) }
             }
             return
         }

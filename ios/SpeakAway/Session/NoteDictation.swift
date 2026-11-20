@@ -25,6 +25,7 @@ final class NoteDictation: ObservableObject {
     private let session: SessionController
     private let store: PhoneStore
     private var noteID: UUID?
+    private var pendingStart: UUID?
     private var follow: AnyCancellable?
 
     init(session: SessionController, store: PhoneStore) {
@@ -42,7 +43,12 @@ final class NoteDictation: ObservableObject {
     func toggle(note id: UUID) {
         switch phase {
         case .idle:
-            Task { await begin(note: id) }
+            let request = UUID()
+            pendingStart = request
+            noteID = id
+            clearMessage()
+            phase = .starting
+            Task { await begin(request: request) }
         case .listening:
             phase = .writing
             session.perform(.finish, field: .general)
@@ -51,9 +57,11 @@ final class NoteDictation: ObservableObject {
         }
     }
 
-    /// The note was closed while listening: throw the recording away.
+    /// Closing a note also cancels a start that is waiting for its model.
     func cancelIfListening() {
-        guard phase == .listening else { return }
+        guard phase == .listening || phase == .starting else { return }
+        pendingStart = nil
+        noteID = nil
         session.perform(.cancel, field: .general)
         phase = .idle
     }
@@ -63,11 +71,11 @@ final class NoteDictation: ObservableObject {
         messageNeedsSettings = false
     }
 
-    private func begin(note id: UUID) async {
-        noteID = id
-        clearMessage()
-        phase = .starting
+    private func begin(request: UUID) async {
+        guard pendingStart == request, phase == .starting else { return }
         if !session.live { await session.startSession() }
+        guard pendingStart == request, phase == .starting else { return }
+        pendingStart = nil
         guard session.live else {
             phase = .idle
             message = session.problem

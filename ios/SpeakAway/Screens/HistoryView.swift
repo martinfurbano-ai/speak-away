@@ -33,9 +33,13 @@ struct HistoryView: View {
                 .refreshable { store.reload() }
         } else {
             List {
-                RetentionNotice()
-                    .listRowBackground(Color.clear)
-                Text("What you dictated, kept only on your iPhone.")
+                Group {
+                    if store.settings.keepTranscripts {
+                        Text("What you dictated, kept only on your iPhone.")
+                    } else {
+                        RetentionNotice()
+                    }
+                }
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .listRowBackground(Color.clear)
