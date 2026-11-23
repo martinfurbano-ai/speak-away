@@ -1,5 +1,6 @@
 import Foundation
 import WhisperKit
+import SpeakAwayCore
 
 /// Local Whisper through WhisperKit (Core ML, runs on the Neural Engine). No key, no internet after the download.
 @MainActor
@@ -65,16 +66,24 @@ final class Engine: ObservableObject {
         }
     }
 
+    /// Fixed language when chosen; in Automatic, the likelier of Spanish and English (Whisper's own
+    /// detector often picks a wrong language on short clips). Falls back to Spanish, never to a guess.
+    private func resolvedLanguage(for audio: [Float], kit: WhisperKit) async -> String {
+        if Settings.language != "auto" { return Settings.language }
+        guard let detected = try? await kit.detectLangauge(audioArray: audio) else { return "es" }
+        return DictationLanguage.pick(from: detected.langProbs) ?? "es"
+    }
+
     /// `prompt`: words from the personal dictionary, so Whisper spells names and jargon right.
     func transcribe(_ audio: [Float], prompt: String = "") async throws -> String {
         guard let kit else { return "" }
-        let language = Settings.language == "auto" ? nil : Settings.language
+        let language = await resolvedLanguage(for: audio, kit: kit)
         var options = DecodingOptions(
             task: .transcribe,
             language: language,
             temperature: 0,
             usePrefillPrompt: true,
-            detectLanguage: language == nil,
+            detectLanguage: false,
             skipSpecialTokens: true,
             withoutTimestamps: true,
             // Whisper sees 30 s at once: cutting short dictations at pauses loses context and garbles them.
