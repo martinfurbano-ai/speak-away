@@ -3,7 +3,7 @@ import AVFoundation
 /// Records the current microphone as 16 kHz mono floats, the format Whisper wants.
 /// A fresh engine per recording, so switching to AirPods between dictations just works.
 final class Recorder {
-    enum Failure: Error { case noMicrophone }
+    enum Failure: Error { case noMicrophone, noConverter }
 
     static let sampleRate = 16_000
     var onLevel: ((Float) -> Void)?
@@ -16,18 +16,16 @@ final class Recorder {
         let engine = AVAudioEngine()
         Microphones.apply(Settings.microphone, to: engine)
         let input = engine.inputNode
-        // The hardware format of the device in use. outputFormat can still describe the previous
-        // device (AirPods at 24 kHz while the Mac mic runs at 48 kHz): tapping with it crashes, and
-        // converting with the wrong rate speeds the voice up or slows it down, which garbles Whisper.
-        let inFormat = input.inputFormat(forBus: 0)
+        let inFormat = input.outputFormat(forBus: 0)
         guard inFormat.sampleRate > 0, inFormat.channelCount > 0 else { throw Failure.noMicrophone }
+        guard
+            let outFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: Double(Recorder.sampleRate), channels: 1, interleaved: false),
+            let converter = AVAudioConverter(from: inFormat, to: outFormat)
+        else { throw Failure.noConverter }
 
         lock.lock(); samples = []; lock.unlock()
-        // Rebuilds its converter whenever a buffer arrives in another format, so a device switch
-        // mid-dictation keeps the right speed.
-        let resampler = AudioResampler()
         input.installTap(onBus: 0, bufferSize: 2048, format: inFormat) { [weak self] buffer, _ in
-            self?.consume(resampler.convert(buffer))
+            self?.consume(buffer, converter: converter, outFormat: outFormat)
         }
         engine.prepare()
         try engine.start()
@@ -43,8 +41,20 @@ final class Recorder {
         return samples
     }
 
-    private func consume(_ chunk: [Float]) {
-        guard !chunk.isEmpty else { return }
+    private func consume(_ buffer: AVAudioPCMBuffer, converter: AVAudioConverter, outFormat: AVAudioFormat) {
+        let ratio = outFormat.sampleRate / buffer.format.sampleRate
+        let capacity = AVAudioFrameCount(Double(buffer.frameLength) * ratio) + 64
+        guard let out = AVAudioPCMBuffer(pcmFormat: outFormat, frameCapacity: capacity) else { return }
+        var fed = false
+        var error: NSError?
+        converter.convert(to: out, error: &error) { _, status in
+            if fed { status.pointee = .noDataNow; return nil }
+            fed = true
+            status.pointee = .haveData
+            return buffer
+        }
+        guard error == nil, let channel = out.floatChannelData?[0], out.frameLength > 0 else { return }
+        let chunk = Array(UnsafeBufferPointer(start: channel, count: Int(out.frameLength)))
         let rms = sqrt(chunk.reduce(0) { $0 + $1 * $1 } / Float(chunk.count))
         lock.lock(); samples.append(contentsOf: chunk); lock.unlock()
         onLevel?(min(1, rms * 25))

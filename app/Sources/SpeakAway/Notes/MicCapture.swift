@@ -33,7 +33,7 @@ final class MicCapture {
     private func build() throws {
         let engine = AVAudioEngine()
         let input = engine.inputNode
-        let format = input.inputFormat(forBus: 0)  // hardware format; outputFormat can be stale
+        let format = input.outputFormat(forBus: 0)
         guard format.sampleRate > 0, format.channelCount > 0 else { throw Failure.noMicrophone }
         let resampler = self.resampler
         let sink = onSamples
