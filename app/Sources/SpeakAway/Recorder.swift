@@ -35,7 +35,6 @@ final class Recorder {
     func stop() -> [Float] {
         engine?.inputNode.removeTap(onBus: 0)
         engine?.stop()
-        engine?.reset()   // lets go of the input device, so the orange microphone dot turns off
         engine = nil
         lock.lock(); defer { lock.unlock() }
         return samples
