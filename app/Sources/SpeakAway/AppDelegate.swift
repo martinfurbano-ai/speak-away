@@ -146,11 +146,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard mode == .idle else { return }
         guard engine.isReady else { DebugLog.write("not ready: \(waitingLabel)"); return flash(waitingLabel) }
         guard Permission.microphone.granted else {
+            DebugLog.write("microphone permission missing")
             Permission.microphone.request()
             return flash("FALTA EL MICRÓFONO")
         }
         do {
             try recorder.start()
+            DebugLog.write("recording started")
         } catch {
             DebugLog.write("mic error: \(error)")
             return flash("SIN MICRÓFONO")
@@ -172,7 +174,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let audio = recorder.stop()
         sounds.play(.stop)
         hudModel.level = 0
-        guard SpeechGate.check(audio, sampleRate: Recorder.sampleRate) == .speech else {
+        let verdict = SpeechGate.check(audio, sampleRate: Recorder.sampleRate)
+        let peak = audio.reduce(0) { max($0, abs($1)) }
+        DebugLog.write(String(format: "gate %@ %.1fs peak %.4f", String(describing: verdict),
+                              Double(audio.count) / Double(Recorder.sampleRate), peak))
+        guard verdict == .speech else {
             mode = .idle
             return hideHUD(after: 0)
         }
