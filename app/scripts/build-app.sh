@@ -19,7 +19,9 @@ export DEVELOPER_DIR=${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer
 
 cd $APP_DIR
 swift build -c release --arch arm64
-BIN=$APP_DIR/.build/arm64-apple-macosx/release
+# Ask SwiftPM where it put the binary: with Xcode's build system it is .build/out/Products/Release,
+# and the old .build/arm64-apple-macosx/release copy is stale, so a hardcoded path ships old code.
+BIN=$(swift build -c release --arch arm64 --show-bin-path)
 
 rm -rf $DIST && mkdir -p "$BUNDLE/Contents/MacOS" "$BUNDLE/Contents/Resources"
 cp $BIN/SpeakAway "$BUNDLE/Contents/MacOS/SpeakAway"

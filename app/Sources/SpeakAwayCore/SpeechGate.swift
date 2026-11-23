@@ -8,9 +8,26 @@ public enum SpeechGate {
     public static let minSeconds = 0.3
     public static let silencePeak: Float = 0.015
 
+    /// Speech is sustained energy, not one loud instant: a key click or the start chime over room
+    /// noise has a high peak, and Whisper turns it into invented text. Quiet but steady speech counts.
+    public static let windowSeconds = 0.03
+    public static let voicedRMS: Float = 0.004
+    public static let minVoicedSeconds = 0.3
+
     public static func check(_ audio: [Float], sampleRate: Int) -> Verdict {
-        let peak = audio.reduce(Float(0)) { max($0, abs($1)) }
-        return check(duration: Double(audio.count) / Double(sampleRate), peak: peak)
+        let duration = Double(audio.count) / Double(sampleRate)
+        if duration < minSeconds { return .tooShort }
+        return voicedSeconds(audio, sampleRate: sampleRate) >= minVoicedSeconds ? .speech : .silent
+    }
+
+    /// Total time in short windows louder than `voicedRMS`.
+    public static func voicedSeconds(_ audio: [Float], sampleRate: Int) -> Double {
+        let size = max(1, Int(Double(sampleRate) * windowSeconds))
+        let voiced = stride(from: 0, to: audio.count - size + 1, by: size).filter { start in
+            let energy = audio[start..<start + size].reduce(Float(0)) { $0 + $1 * $1 }
+            return (energy / Float(size)).squareRoot() > voicedRMS * 1.001  // float rounding at the limit
+        }
+        return Double(voiced.count * size) / Double(sampleRate)
     }
 
     /// The same verdict from what was measured while recording, when the audio itself is not kept (iPhone).

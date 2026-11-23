@@ -16,7 +16,26 @@ final class SpeechGateTests: XCTestCase {
 
     func testVoiceIsTranscribed() {
         var audio = [Float](repeating: 0.001, count: rate)
-        audio[8_000] = 0.2
+        for i in 4_000..<12_000 { audio[i] = 0.05 * sin(Float(i) * 0.3) }
+        XCTAssertEqual(SpeechGate.check(audio, sampleRate: rate), .speech)
+    }
+
+    /// A key click or the start chime makes one loud instant over room noise. Whisper turns that into
+    /// invented text ("*pick*", "I think it's a good night"), so it must not count as speech.
+    func testAClickOverRoomNoiseIsSilent() {
+        var audio = (0..<rate * 3).map { i in 0.002 * sin(Float(i) * 1.7) }
+        for i in 800..<1_000 { audio[i] += 0.05 }
+        XCTAssertEqual(SpeechGate.check(audio, sampleRate: rate), .silent)
+    }
+
+    func testAShortChimeOverRoomNoiseIsSilent() {
+        var audio = (0..<rate * 3).map { i in 0.002 * sin(Float(i) * 1.7) }
+        for i in 0..<2_400 { audio[i] += 0.03 * sin(Float(i) * 0.35) }
+        XCTAssertEqual(SpeechGate.check(audio, sampleRate: rate), .silent)
+    }
+
+    func testQuietButSustainedSpeechIsTranscribed() {
+        let audio = (0..<rate * 3).map { i in 0.008 * sin(Float(i) * 0.3) }
         XCTAssertEqual(SpeechGate.check(audio, sampleRate: rate), .speech)
     }
 
