@@ -93,6 +93,12 @@ final class Engine: ObservableObject {
             options.promptTokens = tokenizer.encode(text: " " + prompt).filter { $0 < tokenizer.specialTokens.specialTokenBegin }
         }
         let results: [TranscriptionResult] = try await kit.transcribe(audioArray: audio, decodeOptions: options)
-        return results.map(\.text).joined(separator: " ")
+        let text = results.map(\.text).joined(separator: " ")
+        let peak = audio.reduce(0) { max($0, abs($1)) }
+        let rms = audio.isEmpty ? 0 : sqrt(audio.reduce(0) { $0 + $1 * $1 } / Float(audio.count))
+        DebugLog.write(String(format: "transcribe %.1fs peak %.3f rms %.4f lang %@ mic %@ -> %@",
+                              Double(audio.count) / Double(Recorder.sampleRate), peak, rms, language,
+                              Settings.microphone.isEmpty ? "default" : Settings.microphone, String(text.prefix(80))))
+        return text
     }
 }
